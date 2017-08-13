@@ -1,0 +1,32 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // background-color: green;
+    height: 100vh;
+}
+
+
+
+ul {
+    position: relative;
+    top: -7vh;
+    color: $white;
+    transform: rotate(-11deg);
+    * {
+        margin-bottom: 11px;
+        // background-color: red;
+    }
+    h1 {
+        font: {
+            size: 5rem;
+            weight: 700;
+        }
+    }
+    li {
+        font: {
+            size: 2.7rem;
+            weight: 200;
+        }
+    }
+}

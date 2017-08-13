@@ -1,0 +1,27 @@
+// @import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+@import './variables';
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+    root
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+html {
+    background-color: $blacksuit;
+    font: {
+        size: 1em;
+        family: 'Montserrat', sans-serif;
+    }
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+    links
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+Link {
+    cursor: pointer;
+}
+a {
+    &:active, &:hover, &:visited, &:link {
+        text-decoration: none;
+        color: whitesmoke;
+    }
+}
