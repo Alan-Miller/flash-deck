@@ -1,4 +1,4 @@
-main {
+main.Home {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,7 +8,7 @@ main {
 
 
 
-ul {
+.Home ul {
     position: relative;
     top: -7vh;
     color: $white;
