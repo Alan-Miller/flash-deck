@@ -1,10 +1,145 @@
-main.Play  {
+.Play {
+    width: 100vw; 
+    height: 100vh; 
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    height: 100vh;
+    background-color: #205860;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    position: relative;
 
-    font: {
-        size: 2rem;
+
+    // Random deck button 
+    .button {
+        background-color: #bbb;
+        position: absolute;
+        cursor: pointer;
+        margin: 100px;
+        padding: 30px;
+        border: none;
     }
-}
+
+
+    // Deck
+    deck {
+        box-sizing: content-box;
+        position: relative;
+        left: calc(50% - 125px);
+        margin: 0; 
+        padding: 0;
+        display: flex;
+
+        // Card containers
+        .card-container {
+            position: relative;
+            transform: scale(.88);
+            width: 250px;
+            height: 350px;
+            perspective: 1000; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            bottom: 0;
+            left: 0;
+
+            &.drop-left {
+                animation: dropLeft .5s forwards; 
+            }
+            @keyframes dropLeft {
+                0% {bottom: 0; left: 0; transform: rotateZ(0deg)}
+                100% {bottom: -100vh; left: -575px; transform: rotateZ(-120deg)}
+            }
+            &.drop-right {
+                animation: dropRight .5s forwards; 
+            }
+            @keyframes dropRight {
+                0% {bottom: 0; left: 0; transform: rotateZ(0deg)}
+                100% {bottom: -100vh; left: 575px; transform: rotateZ(120deg)}
+            }
+            &.flip .card {
+                transform: rotateX(180deg) 
+            }
+
+            // Cards
+            .card {
+                width: 250px;
+                height: 350px;
+                transform-style: preserve-3d;
+                transition: transform .15s ease;
+                word-wrap: break-word;
+                display: block;
+
+                // Card faces
+                .face {
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    backface-visibility: hidden;
+                    border-radius: 18px;
+                    padding: 10px;
+                    cursor: pointer;
+
+                    &.front {
+                        color: whitesmoke;
+                        background-color: indianred;
+                        border: thick solid whitesmoke;
+                        font-size: 1.7rem;
+                    }
+                    &.back {
+                        color: teal; 
+                        background-color: whitesmoke; 
+                        transform: rotateX(180deg);
+                    }
+
+                    // Answer buttons
+                    .answer {
+                        background-color: teal;
+                        width: 100px;
+                        height: 55px;
+                        color: whitesmoke;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        opacity: 0;
+                        transform: translateX(-50%);
+                        position: absolute;
+                        left: 50%;
+                        transition: opacity .25s ease-in .15s;
+
+                        &.right {
+                            background-color: teal;
+                            top: -80px;
+                        }
+                        &.wrong {
+                            background-color: indianred;
+                            bottom: -80px;
+                        }
+                    }
+
+                }
+
+            }
+
+            // Answer buttons fade in for first card
+            &.fade-in .card .answer {
+                opacity: 1;
+            }
+        }
+    } // End of deck element
+
+
+    // Click barrier
+    barrier {
+        z-index: 100;
+        opacity: .5;
+        width: 50vw;
+        height: 350px;
+        position: absolute;
+        top: calc(50% - 175px);
+        left: calc(50% + 175px);
+    }
+
+} // End of .Play className
