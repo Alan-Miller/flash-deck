@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { shuffle } from '../utils/shuffle';
 import { connect } from 'react-redux';
-import { addCards } from '../redux/reducer';
+import { addCards, setDeckInPlay } from '../redux/reducer';
 
 class Play extends Component {
 
@@ -14,9 +14,9 @@ class Play extends Component {
             // ,collections: {
             //     'All': []
             // }
-            deckInPlay: []
+            // deckInPlay: []
             // ,decks: {}
-            ,firstCardIndex: 0
+            firstCardIndex: 0
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.flip = this.flip.bind(this)
@@ -93,7 +93,7 @@ class Play extends Component {
         else {
             deck = shuffle(cards).slice(0, 4);
         }
-        this.setDeckInPlay(deck);
+        this.props.setDeckInPlay(deck);
         return deck;
     }
 
@@ -111,12 +111,11 @@ class Play extends Component {
             card.classList.remove('drop-left', 'drop-right');
         }, 400);
 
-        this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
+        // this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
+        this.props.setDeckInPlay(this.props.deckInPlay.splice(0));
     }
 
-    setDeckInPlay(deck) {
-        this.setState({deckInPlay: deck})
-    }
+    // setDeckInPlay
 
     //shuffle
 
@@ -142,10 +141,15 @@ class Play extends Component {
 
                     Make random deck
                 </div>
+                
+                <div className="nav">
+                    <h2>PLAY COMPONENT</h2>
+                    <Link to="/"><h4>Home</h4></Link>
+                </div>
 
                 <deck id="deck">
                     { 
-                        !this.state.deckInPlay.length ? null : this.state.deckInPlay.map((card, index) => (
+                        !this.props.deckInPlay.length ? null : this.props.deckInPlay.map((card, index) => (
                             <div    
                                 className="card-container" 
                                 key={index}
@@ -189,13 +193,7 @@ function mapStateToProps(state) {
 
 let outputActions = {
     addCards
+    ,setDeckInPlay
 }
 
 export default connect( mapStateToProps, outputActions )( Play );
-
-
-
-{/* <main className="Play">
-    <h2>PLAY COMPONENT</h2>
-    <Link to="/"><h4>Home</h4></Link>
-</main> */}

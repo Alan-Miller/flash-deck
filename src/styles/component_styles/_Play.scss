@@ -9,6 +9,14 @@
     overflow-y: hidden;
     position: relative;
 
+    .nav {
+        position: fixed;
+        display: flex;
+        font-size: 2rem;
+        bottom: 0;
+        margin: 70px;
+    }
+
 
     // Random deck button 
     .button {
