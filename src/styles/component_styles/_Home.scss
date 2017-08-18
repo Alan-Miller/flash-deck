@@ -2,7 +2,6 @@ main.Home {
     display: flex;
     justify-content: center;
     align-items: center;
-    // background-color: green;
     height: 100vh;
 }
 
@@ -15,7 +14,6 @@ main.Home {
     transform: rotate(-11deg);
     * {
         margin-bottom: 11px;
-        // background-color: red;
     }
     h1 {
         font: {

@@ -4,11 +4,12 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    background-color: #205860;
+    // background-color: #205860;
+    background-color: $teal;
     overflow-x: hidden;
     overflow-y: hidden;
     position: relative;
-
+        
     .nav {
         position: fixed;
         display: flex;
@@ -52,21 +53,75 @@
             left: 0;
 
             &.drop-left {
-                animation: dropLeft .5s forwards; 
+                animation: dropLeft .55s forwards; 
             }
             @keyframes dropLeft {
-                0% {bottom: 0; left: 0; transform: rotateZ(0deg)}
-                100% {bottom: -100vh; left: -575px; transform: rotateZ(-120deg)}
+                0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
+                10% {bottom: 20px;}
+                40% {left: -450px;}
+                100% {bottom: -100vh; left: -700px; transform: rotateZ(-360deg);}
             }
             &.drop-right {
-                animation: dropRight .5s forwards; 
+                animation: dropRight .55s forwards; 
             }
             @keyframes dropRight {
-                0% {bottom: 0; left: 0; transform: rotateZ(0deg)}
-                100% {bottom: -100vh; left: 575px; transform: rotateZ(120deg)}
+                0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
+                10% {bottom: 20px;}
+                40%{left: 450px;}
+                100% {bottom: -100vh; left: 700px; transform: rotateZ(360deg);}
             }
             &.flip .card {
                 transform: rotateX(180deg) 
+            }
+
+            // Suit styles
+            &:nth-child(-n+13) {
+                .front {
+                    border: medium solid $blacksuit;
+                    color: $blacksuit;
+                    & .pip suit {
+                        background-color: $blacksuit;
+                    }
+                }
+                .back {
+                    background-color: $blacksuit;
+                }
+            }   
+            &:nth-child(n+14) {
+                .front {
+                    border: medium solid $redsuit;
+                    color: $redsuit; 
+                    & .pip suit {
+                        background-color: $redsuit;
+                    }
+                }
+                .back {
+                    background-color: $redsuit;
+                }
+            }   
+            &:nth-child(n+27) {
+                .front {
+                    border: medium solid $blacksuit;
+                    color: $blacksuit; 
+                    & .pip suit {
+                        background-color: $blacksuit;
+                    }
+                }
+                .back {
+                    background-color: $blacksuit;
+                }
+            }
+            &:nth-child(n+40) {
+                .front {
+                    border: medium solid $redsuit;
+                    color: $redsuit; 
+                    & .pip suit {
+                        background-color: $redsuit;
+                    }
+                }
+                .back {
+                    background-color: $redsuit;
+                }
             }
 
             // Cards
@@ -76,6 +131,7 @@
                 transform-style: preserve-3d;
                 transition: transform .15s ease;
                 word-wrap: break-word;
+                word-break: break-word;
                 display: block;
 
                 // Card faces
@@ -85,24 +141,53 @@
                     position: absolute;
                     backface-visibility: hidden;
                     border-radius: 18px;
+                    box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
                     padding: 10px;
                     cursor: pointer;
 
                     &.front {
-                        color: whitesmoke;
-                        background-color: indianred;
-                        border: thick solid whitesmoke;
+                        background-color: whitesmoke; 
                         font-size: 1.7rem;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        & .content {
+                            display: flex;
+                            justify-content: center;
+                        }
+                        
+                        & pip {
+                            font-size: 2.3rem;
+                            word-break: normal;
+                            display: flex;
+                            &.bottomRight {
+                                transform: rotate(180deg);
+                                // display: flex;
+                                // justify-content: flex-end;
+                            }
+                            & div {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                            }
+                            & suit {
+                                display: block;
+                                width: 35px;
+                                height: 35px;
+                                border-radius: 50%;
+                            }
+                        }
                     }
                     &.back {
-                        color: teal; 
-                        background-color: whitesmoke; 
+                        color: whitesmoke;
+                        border: thick solid whitesmoke;
                         transform: rotateX(180deg);
+                        font-size: 1.2rem;
+                        font-weight: 200;
                     }
 
                     // Answer buttons
                     .answer {
-                        background-color: teal;
                         width: 100px;
                         height: 55px;
                         color: whitesmoke;
@@ -116,13 +201,15 @@
                         position: absolute;
                         left: 50%;
                         transition: opacity .25s ease-in .15s;
+                        border: medium solid $white;
 
                         &.right {
-                            background-color: teal;
+                            background-color: $white;
+                            color: $gray;
                             top: -80px;
                         }
                         &.wrong {
-                            background-color: indianred;
+                            background-color: $gray;
                             bottom: -80px;
                         }
                     }
@@ -151,3 +238,4 @@
     }
 
 } // End of .Play className
+
