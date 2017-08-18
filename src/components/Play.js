@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { shuffle } from '../utils/shuffle';
 import { connect } from 'react-redux';
 import { addCards, setDeckInPlay } from '../redux/reducer';
+
+import { buildDeck} from '../utils/buildDeck';
+import { dropCard} from '../utils/dropCard';
+import { flip } from '../utils/flip';
 
 class Play extends Component {
 
@@ -19,23 +22,34 @@ class Play extends Component {
             firstCardIndex: 0
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
-        this.flip = this.flip.bind(this)
+        this.handleKeyDown= this.handleKeyDown.bind(this)
     }
 
     componentDidMount() {
-        // Check localStorage for any saved items. If none, set state to empty array
-        let cards = localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) : [];
-        // this.setState({cards: cards});
-        this.props.addCards(cards);
 
-        // Add event listeners to drop zone
+        //~~~~~~~~~~~~~~~~~~~~~~~ EVENT LISTENERS
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
+        
+        document.addEventListener('keyup', this.handleKeyDown);
 
-        setTimeout(() => {
-            this.buildDeck(this.props.cards);
-        }, 100)
+
+        //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
+        (() => {
+            // Check localStorage for any cards. If none, set empty array
+            let cards = localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) : [];
+            this.props.addCards(cards);
+
+            // Handle async (can't set state till cards come down on props)
+            const promise = new Promise((resolve, reject) => {
+                if (this.props.cards) resolve('Cards are now on props');
+                else reject(new Error('Something bad happened'));
+            });
+            // Set state when cards are ready
+            promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
+            // NOTE: Previously used setTimeout below to handle async (100 millisecond)
+        })()
     }
 
     handleDragOver(e) {
@@ -61,63 +75,35 @@ class Play extends Component {
             this.props.addCards(cards)
         }
     }
+    handleKeyDown(e) {
+        const firstIndex = this.state.firstCardIndex;
+        const card = document.getElementById(firstIndex)
+        if (!card || firstIndex > 51) return;
+        
+        card.classList.contains('flip') && e.which === 37 && flip(e, firstIndex);
+        (!card.classList.contains('flip')) && e.which === 39 && flip(e, firstIndex);
+        // card.classList.contains('flip') && e.which === 39 && flip(e, firstIndex);
 
-    flip(e) {
-        e.stopPropagation();
-        const card = e.currentTarget;
-        card.classList.toggle('flip');
-        card.classList.add('fade-in');
+        let direction = '';
+        if (card.classList.contains('flip') && e.which === 38) direction = 'left';
+        if (card.classList.contains('flip') && e.which === 40) direction = 'right';
+        direction && this.dropCardAndSetDeck(e, direction);
     }
 
-    buildDeck() {
+    buildAndSetDeck(cards) {
         this.setState({firstCardIndex: 0})
-        const cardContainers = document.getElementsByClassName('card-container');
-        [].forEach.call(cardContainers, (container, index) => {
-            container.style.display = 'flex';
-            container.classList.remove('flip');
-            container.classList.remove('fade-in');
-        });
-        [].forEach.call(document.getElementsByClassName('answer'), container => {
-            container.style.display = 'flex';
-        });
-
-        const cards = Array.from(arguments).reduce((a, b) => a.concat(b)); // Make array of all decks passed in
-        if (!cards.length) return;
-
-        let deck = [];
-        if (cards.length < 4) {
-            while (deck.length < 4) {
-                deck = deck.concat(shuffle(cards))
-            }
-        }
-        else {
-            deck = shuffle(cards).slice(0, 4);
-        }
+        const deck = buildDeck(cards);
         this.props.setDeckInPlay(deck);
-        return deck;
     }
 
-    dropCard(e, direction, index) {
-        e.stopPropagation();
-        [].forEach.call(e.target.parentNode.children, button => button.style.display = 'none');
-
-        const card = e.target.parentNode.parentNode.parentNode;
-        card.classList.add(`drop-${direction}`);
-
+    dropCardAndSetDeck(e, direction) {
+        const firstCard = document.getElementById(this.state.firstCardIndex);
+        // Drop card
+        dropCard(e, direction, firstCard);
+        // Set index and deck 
         this.setState(Object.assign({}, {firstCardIndex: this.state.firstCardIndex + 1}))
-
-        setTimeout(() => {
-            card.style.display = 'none';
-            card.classList.remove('drop-left', 'drop-right');
-        }, 400);
-
-        // this.setState({deckInPlay: this.state.deckInPlay.splice(0)})
         this.props.setDeckInPlay(this.props.deckInPlay.splice(0));
     }
-
-    // setDeckInPlay
-
-    //shuffle
 
     render() {
         let z = Array.from(Array(53).keys()).reverse();
@@ -126,18 +112,26 @@ class Play extends Component {
         const cardContainerStyles = {
             marginRight: '-230px'
             ,display: 'flex'
+            ,wordWrap: 'break-word'
         }
         const firstCardContainerStyles = {
             marginRight: '50px'
             ,transform: 'scale(1)'
         }
-        let firstIndex = this.state.firstCardIndex;
+        const firstFaceStyles = {
+            boxShadow: '32px 32px 22px 0px rgba(22, 22, 22, .3)'
+            ,borderRadius: '18px'
+        }
+        const showRank = index => {
+            index = index % 13;
+            return ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'][index];
+        }
 
         return (
             <main className="Play" id="dropZone">
                 <div 
                     className="button" 
-                    onClick={() => this.buildDeck(this.props.cards)}>
+                    onClick={() => this.buildAndSetDeck(this.props.cards)}>
 
                     Make random deck
                 </div>
@@ -149,27 +143,54 @@ class Play extends Component {
 
                 <deck id="deck">
                     { 
-                        !this.props.deckInPlay.length ? null : this.props.deckInPlay.map((card, index) => (
+                        !this.props.deckInPlay ? null : this.props.deckInPlay.map((card, index) => (
                             <div    
                                 className="card-container" 
+                                id={index}
                                 key={index}
                                 style={Object.assign({}, cardContainerStyles, this.state.firstCardIndex === index && firstCardContainerStyles, {'zIndex': z[index]})}
-                                onClick={(e) => this.flip(e)}>
+                                onClick={(e) => flip(e, index)}>
 
                                 <card className="card">
-                                    <div className="front face">{ card[0] }, index: {index}, firstIndex: {firstIndex}, zIndex: {z[index]}</div>
-                                    <div className="back face">{ card[1] }
+                                    <div 
+                                        className="front face"
+                                        style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
+                                        <pip className="topLeft pip">
+                                            <div>
+                                                <rank>{ showRank(index) }</rank>
+                                                <suit></suit>
+                                            </div>
+                                        </pip>
+
+                                        <div className="content">
+                                          
+                                            { card[0] }
+
+                                        </div>
+
+                                        <pip className="bottomRight pip">
+                                            <div>
+                                                <rank>{ showRank(index) }</rank>
+                                                <suit></suit>
+                                            </div>
+                                        </pip>
+                                    </div>
+                                    
+                                    <div className="back face"
+                                        style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
+                                        
+                                        { card[1] }
 
                                         <div    
                                             className="right answer" 
                                             ref="right" 
-                                            onClick={(e) => this.dropCard(e, 'left', index)}>
+                                            onClick={(e) => this.dropCardAndSetDeck(e, 'left')}>
                                             Right
                                         </div>
                                         <div 
                                             className="wrong answer" 
                                             ref="wrong" 
-                                            onClick={(e) => this.dropCard(e, 'right', index)}>
+                                            onClick={(e) => this.dropCardAndSetDeck(e, 'right')}>
 
                                             Wrong
                                         </div>
