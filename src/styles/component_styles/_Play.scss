@@ -31,7 +31,7 @@
 
 
     // Deck
-    deck {
+    #deck {
         box-sizing: content-box;
         position: relative;
         left: calc(50% - 125px);
@@ -79,7 +79,7 @@
                 .front {
                     border: medium solid $blacksuit;
                     color: $blacksuit;
-                    & .pip suit {
+                    & .pip .suit {
                         background-color: $blacksuit;
                     }
                 }
@@ -91,7 +91,7 @@
                 .front {
                     border: medium solid $redsuit;
                     color: $redsuit; 
-                    & .pip suit {
+                    & .pip .suit {
                         background-color: $redsuit;
                     }
                 }
@@ -103,7 +103,7 @@
                 .front {
                     border: medium solid $blacksuit;
                     color: $blacksuit; 
-                    & .pip suit {
+                    & .pip .suit {
                         background-color: $blacksuit;
                     }
                 }
@@ -115,7 +115,7 @@
                 .front {
                     border: medium solid $redsuit;
                     color: $redsuit; 
-                    & .pip suit {
+                    & .pip .suit {
                         background-color: $redsuit;
                     }
                 }
@@ -142,7 +142,7 @@
                     backface-visibility: hidden;
                     border-radius: 18px;
                     box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
-                    padding: 10px;
+                    padding: 5px 10px;
                     cursor: pointer;
 
                     &.front {
@@ -156,25 +156,25 @@
                             justify-content: center;
                         }
                         
-                        & pip {
+                        & .pipArea {
                             font-size: 2.3rem;
                             word-break: normal;
                             display: flex;
-                            &.bottomRight {
+                            flex-direction: flex-start;
+                            &.lower {
                                 transform: rotate(180deg);
-                                // display: flex;
-                                // justify-content: flex-end;
                             }
-                            & div {
+                            & .pip {
                                 display: flex;
                                 flex-direction: column;
                                 align-items: center;
                             }
-                            & suit {
+                            & .suit {
                                 display: block;
                                 width: 35px;
                                 height: 35px;
                                 border-radius: 50%;
+                                margin-top: 5px;
                             }
                         }
                     }
@@ -227,7 +227,7 @@
 
 
     // Click barrier
-    barrier {
+    .clickBarrier {
         z-index: 100;
         opacity: .5;
         width: 50vw;

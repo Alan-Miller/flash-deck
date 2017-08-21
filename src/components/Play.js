@@ -141,10 +141,10 @@ class Play extends Component {
                     <Link to="/"><h4>Home</h4></Link>
                 </div>
 
-                <deck id="deck">
+                <div id="deck">
                     { 
                         !this.props.deckInPlay ? null : this.props.deckInPlay.map((card, index) => (
-                            <div    
+                            <div
                                 className="card-container" 
                                 id={index}
                                 key={index}
@@ -155,12 +155,12 @@ class Play extends Component {
                                     <div 
                                         className="front face"
                                         style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
-                                        <pip className="topLeft pip">
-                                            <div>
-                                                <rank>{ showRank(index) }</rank>
-                                                <suit></suit>
+                                        <div className="upper pipArea">
+                                            <div className="pip">
+                                                <div className="rank">{ showRank(index) }</div>
+                                                <div className="suit"></div>
                                             </div>
-                                        </pip>
+                                        </div>
 
                                         <div className="content">
                                           
@@ -168,12 +168,12 @@ class Play extends Component {
 
                                         </div>
 
-                                        <pip className="bottomRight pip">
-                                            <div>
-                                                <rank>{ showRank(index) }</rank>
-                                                <suit></suit>
+                                        <div className="lower pipArea">
+                                            <div className="pip">
+                                                <div className="rank">{ showRank(index) }</div>
+                                                <div className="suit"></div>
                                             </div>
-                                        </pip>
+                                        </div>
                                     </div>
                                     
                                     <div className="back face"
@@ -199,9 +199,9 @@ class Play extends Component {
                             </div>
                         ))
                     }  
-                </deck>
+                </div>
 
-                <barrier className="barrier"></barrier>
+                <div className="clickBarrier"></div>
             </main> 
         )
     }
