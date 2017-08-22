@@ -21,27 +21,25 @@ class Play extends Component {
             // ,decks: {}
             firstCardIndex: 0
             ,face: 'front'
+            ,humanScore: 0
+            ,enemyScore: 0
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.handleKeyDown= this.handleKeyDown.bind(this)
     }
 
     componentDidMount() {
-
         //~~~~~~~~~~~~~~~~~~~~~~~ EVENT LISTENERS
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
-        
         document.addEventListener('keydown', this.handleKeyDown);
-
 
         //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
         (() => {
             // Check localStorage for any cards. If none, set empty array
             let cards = localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) : [];
             this.props.addCards(cards);
-
             // Handle async (can't set state till cards come down on props)
             const promise = new Promise((resolve, reject) => {
                 if (this.props.cards) resolve('Cards are now on props');
@@ -58,20 +56,25 @@ class Play extends Component {
 
     handleFileSelect(e) {
         e.preventDefault();
+        
+        // Drop event saves document
+        var file = e.dataTransfer.files[0];
+        // Make new reader object with FileReader methods
+        var reader = new FileReader();
+        // FileReader reads file and puts result on reader.result
+        reader.readAsText(file);
 
-        var file = e.dataTransfer.files[0]; // Drop event saves document
-        var reader = new FileReader(); // Make new reader object with FileReader methods
-        reader.readAsText(file); // FileReader reads file and places result on reader.result
-
-        reader.onload = () => { // Give FileReader time to finish, then map result
+        // Once FileReader finishes, map reader.result
+        reader.onload = () => {
             let newCards= reader.result.split('\r').map((card, index) => {
-                // Turn each card string into array having a front and back
                 return card.split(/,(.+)/).filter(item => item);
-            })
-
-            let cards = this.props.cards.concat(newCards); // Add newCards to current cards
-            localStorage.setItem('cards', JSON.stringify(cards)); // Save to localStorage
-
+            })  // newCards array: each item (card) is array with two items (front and back)
+            
+            // Add newCards to current cards
+            let cards = this.props.cards.concat(newCards);
+            // Save to localStorage   
+            localStorage.setItem('cards', JSON.stringify(cards));
+            // Put cards on Redux state
             this.props.addCards(cards)
         }
     }
@@ -130,7 +133,7 @@ class Play extends Component {
         }
         const showRank = index => {
             index = index % 13;
-            return ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'][index];
+            return ['A','2','3','4','5','6','7','8','9','10','J','Q','K'][index];
         }
 
         return (
