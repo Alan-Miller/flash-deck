@@ -20,6 +20,7 @@ class Play extends Component {
             // deckInPlay: []
             // ,decks: {}
             firstCardIndex: 0
+            ,face: 'front'
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.handleKeyDown= this.handleKeyDown.bind(this)
@@ -32,7 +33,7 @@ class Play extends Component {
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
         
-        document.addEventListener('keyup', this.handleKeyDown);
+        document.addEventListener('keydown', this.handleKeyDown);
 
 
         //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
@@ -48,7 +49,6 @@ class Play extends Component {
             });
             // Set state when cards are ready
             promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
-            // NOTE: Previously used setTimeout below to handle async (100 millisecond)
         })()
     }
 
@@ -79,14 +79,20 @@ class Play extends Component {
         const firstIndex = this.state.firstCardIndex;
         const card = document.getElementById(firstIndex)
         if (!card || firstIndex > 51) return;
-        
-        card.classList.contains('flip') && e.which === 37 && flip(e, firstIndex);
-        (!card.classList.contains('flip')) && e.which === 39 && flip(e, firstIndex);
-        // card.classList.contains('flip') && e.which === 39 && flip(e, firstIndex);
 
+        let { face } = this.state;
         let direction = '';
-        if (card.classList.contains('flip') && e.which === 38) direction = 'left';
-        if (card.classList.contains('flip') && e.which === 40) direction = 'right';
+
+        if (face === 'front') {
+            if ( e.which >= 38 && e.which <= 40 )   { flip(e, firstIndex); }
+            this.setState({ face: 'back' })
+        }
+        if (face === 'back') {
+            if (e.which === 37)                     { flip(e, firstIndex); }
+            if (e.which === 38 || e.which === 39)   { direction = 'left'; }
+            if (e.which === 40)                     { direction = 'right'; }
+            this.setState({ face: 'front' })
+        } 
         direction && this.dropCardAndSetDeck(e, direction);
     }
 
@@ -97,12 +103,12 @@ class Play extends Component {
     }
 
     dropCardAndSetDeck(e, direction) {
-        const firstCard = document.getElementById(this.state.firstCardIndex);
-        // Drop card
-        dropCard(e, direction, firstCard);
-        // Set index and deck 
-        this.setState(Object.assign({}, {firstCardIndex: this.state.firstCardIndex + 1}))
-        this.props.setDeckInPlay(this.props.deckInPlay.splice(0));
+        const { firstCardIndex } = this.state;
+        const firstCard = document.getElementById(firstCardIndex);
+
+        dropCard(e, direction, firstCard); // Drop card
+        this.setState(Object.assign( {}, {firstCardIndex: firstCardIndex + 1} )) // Set index
+        this.props.setDeckInPlay(this.props.deckInPlay.splice(0)); // Set deck
     }
 
     render() {
