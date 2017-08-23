@@ -14,3 +14,11 @@ $gray: #222;
 
 $redsuit: #C24444;
 $blacksuit: #205050;
+
+$cardWidth: 250px;
+$halfCardWidth: 125px;
+
+$cardHeight: 350px;
+$halfCardHeight: 175px;
+
+$barrierWidth: calc(50% - $halfCardWidth);

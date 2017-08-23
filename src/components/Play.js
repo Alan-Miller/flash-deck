@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import { addCards, setDeckInPlay } from '../redux/reducer';
 
 import { buildDeck} from '../utils/buildDeck';
 import { dropCard} from '../utils/dropCard';
+import { getRank } from '../utils/getRank';
 import { flip } from '../utils/flip';
+
+import Header from './Header';
 
 class Play extends Component {
 
@@ -13,16 +17,15 @@ class Play extends Component {
         super()
 
         this.state = {
-            // cards: []
             // ,collections: {
             //     'All': []
             // }
-            // deckInPlay: []
             // ,decks: {}
             firstCardIndex: 0
             ,face: 'front'
-            ,humanScore: 0
-            ,enemyScore: 0
+            ,score: 0
+            ,points: 0
+            ,pointStyle: ''
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.handleKeyDown= this.handleKeyDown.bind(this)
@@ -54,27 +57,33 @@ class Play extends Component {
         e.preventDefault();
     }
 
+    tally(sign) {
+        let points = (Number(getRank(this.state.firstCardIndex)) || 10) * sign;
+        let pointStyle = sign === 1 ? 'pointsUp' : 'pointsDown';
+        let score = this.state.score + points;
+        this.setState({points, pointStyle, score});
+    }
+
     handleFileSelect(e) {
         e.preventDefault();
         
         // Drop event saves document
-        var file = e.dataTransfer.files[0];
-        // Make new reader object with FileReader methods
-        var reader = new FileReader();
         // FileReader reads file and puts result on reader.result
+        var file = e.dataTransfer.files[0];
+        var reader = new FileReader();
         reader.readAsText(file);
-
+        
         // Once FileReader finishes, map reader.result
         reader.onload = () => {
             let newCards= reader.result.split('\r').map((card, index) => {
                 return card.split(/,(.+)/).filter(item => item);
-            })  // newCards array: each item (card) is array with two items (front and back)
-            
+            })  
+            // newCards array: each item (card) is array with two items (front and back)
             // Add newCards to current cards
-            let cards = this.props.cards.concat(newCards);
             // Save to localStorage   
-            localStorage.setItem('cards', JSON.stringify(cards));
             // Put cards on Redux state
+            let cards = this.props.cards.concat(newCards);
+            localStorage.setItem('cards', JSON.stringify(cards));
             this.props.addCards(cards)
         }
     }
@@ -82,6 +91,8 @@ class Play extends Component {
         const firstIndex = this.state.firstCardIndex;
         const card = document.getElementById(firstIndex)
         if (!card || firstIndex > 51) return;
+
+        this.setState({ pointStyle: '' })
 
         let { face } = this.state;
         let direction = '';
@@ -92,8 +103,8 @@ class Play extends Component {
         }
         if (face === 'back') {
             if (e.which === 37)                     { flip(e, firstIndex); }
-            if (e.which === 38 || e.which === 39)   { direction = 'left'; }
-            if (e.which === 40)                     { direction = 'right'; }
+            if (e.which === 38 || e.which === 39)   { direction = 'left'; this.tally(1); }
+            if (e.which === 40)                     { direction = 'right'; this.tally(-1); }
             this.setState({ face: 'front' })
         } 
         direction && this.dropCardAndSetDeck(e, direction);
@@ -131,16 +142,13 @@ class Play extends Component {
             boxShadow: '32px 32px 22px 0px rgba(22, 22, 22, .3)'
             ,borderRadius: '18px'
         }
-        const showRank = index => {
-            index = index % 13;
-            return ['A','2','3','4','5','6','7','8','9','10','J','Q','K'][index];
-        }
 
         return (
             <main className="Play" id="dropZone">
+                <Header score={ this.state.score } points={ this.state.points } pointStyle={ this.state.pointStyle } />
                 <div 
                     className="button" 
-                    onClick={() => this.buildAndSetDeck(this.props.cards)}>
+                    onClick={ () => this.buildAndSetDeck(this.props.cards) }>
 
                     Make random deck
                 </div>
@@ -166,7 +174,7 @@ class Play extends Component {
                                         style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
                                         <div className="upper pipArea">
                                             <div className="pip">
-                                                <div className="rank">{ showRank(index) }</div>
+                                                <div className="rank">{ getRank(index) }</div>
                                                 <div className="suit"></div>
                                             </div>
                                         </div>
@@ -179,7 +187,7 @@ class Play extends Component {
 
                                         <div className="lower pipArea">
                                             <div className="pip">
-                                                <div className="rank">{ showRank(index) }</div>
+                                                <div className="rank">{ getRank(index) }</div>
                                                 <div className="suit"></div>
                                             </div>
                                         </div>
