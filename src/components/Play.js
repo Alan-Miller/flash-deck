@@ -58,10 +58,16 @@ class Play extends Component {
     }
 
     tally(sign) {
-        let points = (Number(getRank(this.state.firstCardIndex)) || 10) * sign;
-        let pointStyle = sign === 1 ? 'pointsUp' : 'pointsDown';
+        const rank = getRank(this.state.firstCardIndex);
+        let points;
+        if (+rank > 1 || rank < 11) points = +rank * sign;
+        if (rank === 'J') { if (sign === 1) points = 1; else points = -25; }
+        if (rank === 'Q') { if (sign === 1) points = 40; else points = -1; }
+        if (rank === 'K') points = 50 * sign;
+        if (rank === 'A') points = [1, 11][Math.floor(Math.random() * 2)] * sign;
         let score = this.state.score + points;
-        this.setState({points, pointStyle, score});
+        let pointStyle = sign === 1 ? 'pointsUp' : 'pointsDown';
+        this.setState({points, score, pointStyle});
     }
 
     handleFileSelect(e) {
@@ -111,7 +117,7 @@ class Play extends Component {
     }
 
     buildAndSetDeck(cards) {
-        this.setState({firstCardIndex: 0})
+        this.setState({firstCardIndex: 0, score: 0})
         const deck = buildDeck(cards);
         this.props.setDeckInPlay(deck);
     }
