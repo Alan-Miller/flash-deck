@@ -1,0 +1,49 @@
+.Header {
+    background-color: $gray;
+    height: $halfCardHeight;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+
+    .scorecard {
+        position: relative;
+        width: 200px;
+        height: 100%;
+        color: $white;
+        background-color: $redsuit;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        .score {
+            font-size: 3rem;
+            margin-top: 7px;
+        }
+        .points {
+            position: absolute;
+            top: $halfCardHeight;
+            opacity: 0;
+            font-size: 2.5rem;
+            &.pointsUp {
+                animation: pointsUp 1s;
+                @keyframes pointsUp {
+                    0% {top: 200px; opacity: 1;}
+                    100% {top: 120px; opacity: 0;}
+                }
+            }
+            &.pointsDown {
+                animation: pointsDown 1s;
+                @keyframes pointsDown {
+                    0% { top: 120px; opacity: 1; }
+                    100% { top: 200px; opacity: 0; }
+                    // 10% { left: 100px }
+                    // 55% { transform: rotate(50deg); transform-origin: 20% 220%; left: 100px }
+                    // 100% { top: 200px; opacity: 0; transform: rotate(50deg); transform-origin: 20% 220%; left: 100px }
+                }
+            }
+        }
+    }
+}

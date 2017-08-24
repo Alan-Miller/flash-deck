@@ -1,14 +1,13 @@
 // Global Sass files
 @import './reset';
-@import './globals';
 @import './variables';
+@import './functions';
+@import './globals';
 
 // Component styles
 @import './component_styles/App';
-@import './component_styles/Deck';
+@import './component_styles/Header';
 @import './component_styles/Home';
 @import './component_styles/Play';
 @import './component_styles/Quiz';
-@import './component_styles/Score';
 @import './component_styles/Settings';
-@import './component_styles/Suit';

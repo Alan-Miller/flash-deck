@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import { addCards, setDeckInPlay } from '../redux/reducer';
 
 import { buildDeck} from '../utils/buildDeck';
 import { dropCard} from '../utils/dropCard';
+import { getRank } from '../utils/getRank';
 import { flip } from '../utils/flip';
+
+import Header from './Header';
 
 class Play extends Component {
 
@@ -13,34 +17,32 @@ class Play extends Component {
         super()
 
         this.state = {
-            // cards: []
             // ,collections: {
             //     'All': []
             // }
-            // deckInPlay: []
             // ,decks: {}
             firstCardIndex: 0
+            ,face: 'front'
+            ,score: 0
+            ,points: 0
+            ,pointStyle: ''
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.handleKeyDown= this.handleKeyDown.bind(this)
     }
 
     componentDidMount() {
-
         //~~~~~~~~~~~~~~~~~~~~~~~ EVENT LISTENERS
         const dropZone = document.getElementById('dropZone');
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
-        
-        document.addEventListener('keyup', this.handleKeyDown);
-
+        document.addEventListener('keydown', this.handleKeyDown);
 
         //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
         (() => {
             // Check localStorage for any cards. If none, set empty array
             let cards = localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) : [];
             this.props.addCards(cards);
-
             // Handle async (can't set state till cards come down on props)
             const promise = new Promise((resolve, reject) => {
                 if (this.props.cards) resolve('Cards are now on props');
@@ -48,7 +50,6 @@ class Play extends Component {
             });
             // Set state when cards are ready
             promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
-            // NOTE: Previously used setTimeout below to handle async (100 millisecond)
         })()
     }
 
@@ -56,22 +57,39 @@ class Play extends Component {
         e.preventDefault();
     }
 
+    tally(sign) {
+        const rank = getRank(this.state.firstCardIndex);
+        let points;
+        if (+rank > 1 || rank < 11) points = +rank * sign;
+        if (rank === 'J') { if (sign === 1) points = 1; else points = -25; }
+        if (rank === 'Q') { if (sign === 1) points = 40; else points = -1; }
+        if (rank === 'K') points = 50 * sign;
+        if (rank === 'A') points = [1, 11][Math.floor(Math.random() * 2)] * sign;
+        let score = this.state.score + points;
+        let pointStyle = sign === 1 ? 'pointsUp' : 'pointsDown';
+        this.setState({points, score, pointStyle});
+    }
+
     handleFileSelect(e) {
         e.preventDefault();
-
-        var file = e.dataTransfer.files[0]; // Drop event saves document
-        var reader = new FileReader(); // Make new reader object with FileReader methods
-        reader.readAsText(file); // FileReader reads file and places result on reader.result
-
-        reader.onload = () => { // Give FileReader time to finish, then map result
+        
+        // Drop event saves document
+        // FileReader reads file and puts result on reader.result
+        var file = e.dataTransfer.files[0];
+        var reader = new FileReader();
+        reader.readAsText(file);
+        
+        // Once FileReader finishes, map reader.result
+        reader.onload = () => {
             let newCards= reader.result.split('\r').map((card, index) => {
-                // Turn each card string into array having a front and back
                 return card.split(/,(.+)/).filter(item => item);
-            })
-
-            let cards = this.props.cards.concat(newCards); // Add newCards to current cards
-            localStorage.setItem('cards', JSON.stringify(cards)); // Save to localStorage
-
+            })  
+            // newCards array: each item (card) is array with two items (front and back)
+            // Add newCards to current cards
+            // Save to localStorage   
+            // Put cards on Redux state
+            let cards = this.props.cards.concat(newCards);
+            localStorage.setItem('cards', JSON.stringify(cards));
             this.props.addCards(cards)
         }
     }
@@ -79,30 +97,38 @@ class Play extends Component {
         const firstIndex = this.state.firstCardIndex;
         const card = document.getElementById(firstIndex)
         if (!card || firstIndex > 51) return;
-        
-        card.classList.contains('flip') && e.which === 37 && flip(e, firstIndex);
-        (!card.classList.contains('flip')) && e.which === 39 && flip(e, firstIndex);
-        // card.classList.contains('flip') && e.which === 39 && flip(e, firstIndex);
 
+        this.setState({ pointStyle: '' })
+
+        let { face } = this.state;
         let direction = '';
-        if (card.classList.contains('flip') && e.which === 38) direction = 'left';
-        if (card.classList.contains('flip') && e.which === 40) direction = 'right';
+
+        if (face === 'front') {
+            if ( e.which >= 38 && e.which <= 40 )   { flip(e, firstIndex); }
+            this.setState({ face: 'back' })
+        }
+        if (face === 'back') {
+            if (e.which === 37)                     { flip(e, firstIndex); }
+            if (e.which === 38 || e.which === 39)   { direction = 'left'; this.tally(1); }
+            if (e.which === 40)                     { direction = 'right'; this.tally(-1); }
+            this.setState({ face: 'front' })
+        } 
         direction && this.dropCardAndSetDeck(e, direction);
     }
 
     buildAndSetDeck(cards) {
-        this.setState({firstCardIndex: 0})
+        this.setState({firstCardIndex: 0, score: 0})
         const deck = buildDeck(cards);
         this.props.setDeckInPlay(deck);
     }
 
     dropCardAndSetDeck(e, direction) {
-        const firstCard = document.getElementById(this.state.firstCardIndex);
-        // Drop card
-        dropCard(e, direction, firstCard);
-        // Set index and deck 
-        this.setState(Object.assign({}, {firstCardIndex: this.state.firstCardIndex + 1}))
-        this.props.setDeckInPlay(this.props.deckInPlay.splice(0));
+        const { firstCardIndex } = this.state;
+        const firstCard = document.getElementById(firstCardIndex);
+
+        dropCard(e, direction, firstCard); // Drop card
+        this.setState(Object.assign( {}, {firstCardIndex: firstCardIndex + 1} )) // Set index
+        this.props.setDeckInPlay(this.props.deckInPlay.splice(0)); // Set deck
     }
 
     render() {
@@ -122,16 +148,13 @@ class Play extends Component {
             boxShadow: '32px 32px 22px 0px rgba(22, 22, 22, .3)'
             ,borderRadius: '18px'
         }
-        const showRank = index => {
-            index = index % 13;
-            return ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K'][index];
-        }
 
         return (
             <main className="Play" id="dropZone">
+                <Header score={ this.state.score } points={ this.state.points } pointStyle={ this.state.pointStyle } />
                 <div 
                     className="button" 
-                    onClick={() => this.buildAndSetDeck(this.props.cards)}>
+                    onClick={ () => this.buildAndSetDeck(this.props.cards) }>
 
                     Make random deck
                 </div>
@@ -157,7 +180,7 @@ class Play extends Component {
                                         style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
                                         <div className="upper pipArea">
                                             <div className="pip">
-                                                <div className="rank">{ showRank(index) }</div>
+                                                <div className="rank">{ getRank(index) }</div>
                                                 <div className="suit"></div>
                                             </div>
                                         </div>
@@ -170,7 +193,7 @@ class Play extends Component {
 
                                         <div className="lower pipArea">
                                             <div className="pip">
-                                                <div className="rank">{ showRank(index) }</div>
+                                                <div className="rank">{ getRank(index) }</div>
                                                 <div className="suit"></div>
                                             </div>
                                         </div>
