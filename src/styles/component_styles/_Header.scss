@@ -5,7 +5,7 @@
     position: absolute;
     top: 0;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 
     .scorecard {
         position: relative;
@@ -45,5 +45,15 @@
                 }
             }
         }
+    }
+
+    .imgBanner {
+        background-color: $bluegreen;
+        height: 100%;
+        width: 50%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
