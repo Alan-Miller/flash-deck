@@ -1,16 +1,22 @@
+Header {
+    z-index: 100;
+}
+
 .Header {
     background-color: $gray;
-    height: $halfCardHeight;
+    height: $headerHeight;
     width: 100vw;
-    position: absolute;
-    top: 0;
+    z-index: 10;
+    // position: absolute;
+    // top: 0;
+    // left: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 
     .scorecard {
         position: relative;
-        width: 200px;
-        height: 100%;
+        width: 25vh;
+        height: 25vh;
         color: $white;
         background-color: $redsuit;
         display: flex;
@@ -47,13 +53,13 @@
         }
     }
 
-    .imgBanner {
-        background-color: $bluegreen;
-        height: 100%;
-        width: 50%;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+    // .imgBanner {
+    //     background-color: $bluegreen;
+    //     height: 100%;
+    //     width: 50%;
+    //     position: relative;
+    //     display: flex;
+    //     align-items: center;
+    //     justify-content: center;
+    // }
 }

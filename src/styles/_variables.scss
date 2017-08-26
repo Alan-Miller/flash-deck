@@ -21,4 +21,5 @@ $halfCardWidth: 125px;
 $cardHeight: 350px;
 $halfCardHeight: 175px;
 
-$barrierWidth: calc(50% - $halfCardWidth);
+$headerHeight: 25vh;
+$barrierWidth: calc(50% - #{$halfCardWidth});

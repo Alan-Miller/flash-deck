@@ -12,7 +12,7 @@ massive({
     ,database: 'flashdeck'
     ,user: 'ashman'
     ,password: ''
-    // ,ssl: true
+    // ,ssl: true`
 })
 .then(function(db) {
     app.set('db', db)
@@ -27,6 +27,6 @@ app.get('/api/user/:id/handle', (req, res) => {
     .then(response => { res.status(200).send(response); })
 });
 
-app.listen(3002, function() {
+app.listen(port, function() {
     console.log(`Listening on port ${port}.`);
 });

@@ -10,7 +10,7 @@ export default class Quiz extends Component {
     }
 
     componentDidMount() {
-        // getHandle().then(handle => { this.setState({ handle }) })
+        getHandle().then(handle => { this.setState({ handle }) })
     }
 
     render() {

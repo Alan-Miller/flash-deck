@@ -6,8 +6,8 @@ import Header from './Header';
 
 import { addCards, setDeckInPlay } from '../redux/reducer';
 import { getHandle } from '../services/service';
-import { buildDeck} from '../utils/buildDeck';
-import { dropCard} from '../utils/dropCard';
+import { buildDeck } from '../utils/buildDeck';
+import { dropCard } from '../utils/dropCard';
 import { getRank } from '../utils/getRank';
 import { flip } from '../utils/flip';
 
@@ -38,7 +38,7 @@ class Play extends Component {
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
         document.addEventListener('keydown', this.handleKeyDown);
-        // getHandle().then(handle => { this.setState({ handle }) });
+        getHandle().then(handle => { this.setState({ handle }) });
 
         //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
         (() => {
@@ -153,86 +153,88 @@ class Play extends Component {
         }
 
         return (
-            <main className="Play" id="dropZone">
+            <section className="Play" id="dropZone">
                 <Header 
                     score={ this.state.score } 
                     points={ this.state.points } 
                     pointStyle={ this.state.pointStyle } 
                     handle={this.state.handle} />
-                <div 
-                    className="button" 
-                    onClick={ () => this.buildAndSetDeck(this.props.cards) }>
+                <main className="main">
+                    <div 
+                        className="button" 
+                        onClick={ () => this.buildAndSetDeck(this.props.cards) }>
 
-                    Make random deck
-                </div>
-                
-                <div className="nav">
-                    <h2>PLAY COMPONENT</h2>
-                    <Link to="/"><h4>Home</h4></Link>
-                </div>
+                        Make random deck
+                    </div>
 
-                <div id="deck">
-                    { 
-                        !this.props.deckInPlay ? null : this.props.deckInPlay.map((card, index) => (
-                            <div
-                                className="card-container" 
-                                id={index}
-                                key={index}
-                                style={Object.assign({}, cardContainerStyles, this.state.firstCardIndex === index && firstCardContainerStyles, {'zIndex': z[index]})}
-                                onClick={(e) => flip(e, index)}>
+                    <div className="nav">
+                        <h2>PLAY COMPONENT</h2>
+                        <Link to="/"><h4>Home</h4></Link>
+                    </div>
 
-                                <card className="card">
-                                    <div 
-                                        className="front face"
-                                        style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
-                                        <div className="upper pipArea">
-                                            <div className="pip">
-                                                <div className="rank">{ getRank(index) }</div>
-                                                <div className="suit"></div>
-                                            </div>
-                                        </div>
+                    <div id="deck">
+                        { 
+                            !this.props.deckInPlay ? null : this.props.deckInPlay.map((card, index) => (
+                                <div
+                                    className="card-container" 
+                                    id={index}
+                                    key={index}
+                                    style={Object.assign({}, cardContainerStyles, this.state.firstCardIndex === index && firstCardContainerStyles, {'zIndex': z[index]})}
+                                    onClick={(e) => flip(e, index)}>
 
-                                        <div className="content">
-                                          
-                                            { card[0] }
-
-                                        </div>
-
-                                        <div className="lower pipArea">
-                                            <div className="pip">
-                                                <div className="rank">{ getRank(index) }</div>
-                                                <div className="suit"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="back face"
-                                        style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
-                                        
-                                        { card[1] }
-
-                                        <div    
-                                            className="right answer" 
-                                            ref="right" 
-                                            onClick={(e) => this.dropCardAndSetDeck(e, 'left')}>
-                                            Right
-                                        </div>
+                                    <card className="card">
                                         <div 
-                                            className="wrong answer" 
-                                            ref="wrong" 
-                                            onClick={(e) => this.dropCardAndSetDeck(e, 'right')}>
+                                            className="front face"
+                                            style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
+                                            <div className="upper pipArea">
+                                                <div className="pip">
+                                                    <div className="rank">{ getRank(index) }</div>
+                                                    <div className="suit"></div>
+                                                </div>
+                                            </div>
 
-                                            Wrong
+                                            <div className="content">
+
+                                                { card[0] }
+
+                                            </div>
+
+                                            <div className="lower pipArea">
+                                                <div className="pip">
+                                                    <div className="rank">{ getRank(index) }</div>
+                                                    <div className="suit"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </card>
-                            </div>
-                        ))
-                    }  
-                </div>
 
-                <div className="clickBarrier"></div>
-            </main> 
+                                        <div className="back face"
+                                            style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
+
+                                            { card[1] }
+
+                                            <div    
+                                                className="right answer" 
+                                                ref="right" 
+                                                onClick={(e) => this.dropCardAndSetDeck(e, 'left')}>
+                                                Right
+                                            </div>
+                                            <div 
+                                                className="wrong answer" 
+                                                ref="wrong" 
+                                                onClick={(e) => this.dropCardAndSetDeck(e, 'right')}>
+
+                                                Wrong
+                                            </div>
+                                        </div>
+                                    </card>
+                                </div>
+                            ))
+                        }  
+                    </div>
+
+                    <div className="clickBarrier"></div>
+                </main> 
+            </section>
         )
     }
 }
