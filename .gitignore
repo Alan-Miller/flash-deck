@@ -23,3 +23,5 @@ yarn-error.log*
 TRASH/
 # SASS 
 src/**/*.css
+
+config

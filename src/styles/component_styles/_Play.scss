@@ -1,241 +1,248 @@
 .Play {
-    width: 100vw; 
-    height: 100vh; 
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    // background-color: #205860;
-    background-color: $darkbluegreen;
-    overflow-x: hidden;
-    overflow-y: hidden;
     position: relative;
-        
-    .nav {
-        position: fixed;
+
+    .main {
+        width: 100vw; 
+        height: calc(100vh - #{$headerHeight}); 
         display: flex;
-        font-size: 2rem;
-        bottom: 0;
-        margin: 70px;
-        background-color: green;
-    }
+        justify-content: flex-start;
+        align-items: center;
+        // background-color: #205860;
+        background-color: $darkbluegreen;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        position: relative;
 
-
-    // Random deck button 
-    .button {
-        background-color: #bbb;
-        // position: absolute;
-        cursor: pointer;
-        margin: 100px;
-        padding: 30px;
-        border: none;
-    }
-
-
-    // Deck
-    #deck {
-        box-sizing: content-box;
-        position: absolute;
-        left: calc(50% - #{$halfCardWidth});
-        margin: 0; 
-        padding: 0;
-        display: flex;
-
-        // Card containers
-        .card-container {
-            position: relative;
-            transform: scale(.88);
-            width: $cardWidth;
-            height: $cardHeight;
-            perspective: 1000; 
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .nav {
+            position: fixed;
+            display: flex;
+            font-size: 2rem;
             bottom: 0;
-            left: 0;
+            margin: 70px;
+        }
 
-            &.drop-left {
-                animation: dropLeft .55s forwards; 
-            }
-            @keyframes dropLeft {
-                0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
-                10% {bottom: 20px;}
-                40% {left: -450px;}
-                100% {bottom: -100vh; left: -700px; transform: rotateZ(-360deg);}
-            }
-            &.drop-right {
-                animation: dropRight .55s forwards; 
-            }
-            @keyframes dropRight {
-                0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
-                10% {bottom: 20px;}
-                40%{left: 450px;}
-                100% {bottom: -100vh; left: 700px; transform: rotateZ(360deg);}
-            }
-            &.flip .card {
-                transform: rotateX(180deg) 
-            }
 
-            // Suit styles
-            &:nth-child(-n+13) {
-                .front {
-                    border: medium solid $blacksuit;
-                    color: $blacksuit;
-                    & .pip .suit {
-                        background-color: $blacksuit;
-                    }
-                }
-                .back {
-                    background-color: $blacksuit;
-                }
-            }   
-            &:nth-child(n+14) {
-                .front {
-                    border: medium solid $redsuit;
-                    color: $redsuit; 
-                    & .pip .suit {
-                        background-color: $redsuit;
-                    }
-                }
-                .back {
-                    background-color: $redsuit;
-                }
-            }   
-            &:nth-child(n+27) {
-                .front {
-                    border: medium solid $blacksuit;
-                    color: $blacksuit; 
-                    & .pip .suit {
-                        background-color: $blacksuit;
-                    }
-                }
-                .back {
-                    background-color: $blacksuit;
-                }
-            }
-            &:nth-child(n+40) {
-                .front {
-                    border: medium solid $redsuit;
-                    color: $redsuit; 
-                    & .pip .suit {
-                        background-color: $redsuit;
-                    }
-                }
-                .back {
-                    background-color: $redsuit;
-                }
-            }
+        // Random deck button 
+        .button {
+            background-color: #bbb;
+            // position: absolute;
+            cursor: pointer;
+            margin: 100px;
+            padding: 30px;
+            border: none;
+        }
 
-            // Cards
-            .card {
+
+        // Deck
+        #deck {
+            box-sizing: content-box;
+            position: absolute;
+            left: calc(50% - #{$halfCardWidth});
+            top: calc(50% - $halfCardHeight);
+            margin: 0; 
+            padding: 0;
+            display: flex;
+            border: solid thick blue;
+
+            // Card containers
+            .card-container {
+                position: relative;
+                transform: scale(.88);
                 width: $cardWidth;
                 height: $cardHeight;
-                transform-style: preserve-3d;
-                transition: transform .15s ease;
-                word-wrap: break-word;
-                word-break: break-word;
-                display: block;
+                perspective: 1000; 
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                bottom: 0;
+                left: 0;
 
-                // Card faces
-                .face {
-                    width: 100%;
-                    height: 100%;
-                    position: absolute;
-                    backface-visibility: hidden;
-                    border-radius: 18px;
-                    box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
-                    padding: 5px 10px;
-                    cursor: pointer;
+                &.drop-left {
+                    animation: dropLeft .55s forwards; 
+                }
+                @keyframes dropLeft {
+                    0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
+                    10% {bottom: 20px;}
+                    40% {left: -450px;}
+                    100% {bottom: -100vh; left: -700px; transform: rotateZ(-360deg);}
+                }
+                &.drop-right {
+                    animation: dropRight .55s forwards; 
+                }
+                @keyframes dropRight {
+                    0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
+                    10% {bottom: 20px;}
+                    40%{left: 450px;}
+                    100% {bottom: -100vh; left: 700px; transform: rotateZ(360deg);}
+                }
+                &.flip .card {
+                    transform: rotateX(180deg) 
+                }
 
-                    &.front {
-                        background-color: whitesmoke; 
-                        font-size: 1.7rem;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-between;
-                        & .content {
+                // Suit styles
+                &:nth-child(-n+13) {
+                    .front {
+                        border: medium solid $blacksuit;
+                        color: $blacksuit;
+                        & .pip .suit {
+                            background-color: $blacksuit;
+                        }
+                    }
+                    .back {
+                        background-color: $blacksuit;
+                    }
+                }   
+                &:nth-child(n+14) {
+                    .front {
+                        border: medium solid $redsuit;
+                        color: $redsuit; 
+                        & .pip .suit {
+                            background-color: $redsuit;
+                        }
+                    }
+                    .back {
+                        background-color: $redsuit;
+                    }
+                }   
+                &:nth-child(n+27) {
+                    .front {
+                        border: medium solid $blacksuit;
+                        color: $blacksuit; 
+                        & .pip .suit {
+                            background-color: $blacksuit;
+                        }
+                    }
+                    .back {
+                        background-color: $blacksuit;
+                    }
+                }
+                &:nth-child(n+40) {
+                    .front {
+                        border: medium solid $redsuit;
+                        color: $redsuit; 
+                        & .pip .suit {
+                            background-color: $redsuit;
+                        }
+                    }
+                    .back {
+                        background-color: $redsuit;
+                    }
+                }
+
+                // Cards
+                .card {
+                    width: $cardWidth;
+                    height: $cardHeight;
+                    transform-style: preserve-3d;
+                    transition: transform .15s ease;
+                    word-wrap: break-word;
+                    word-break: break-word;
+                    display: block;
+
+                    // Card faces
+                    .face {
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        backface-visibility: hidden;
+                        border-radius: 18px;
+                        box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
+                        padding: 5px 10px;
+                        cursor: pointer;
+
+                        &.front {
+                            background-color: whitesmoke; 
+                            font-size: 1.7rem;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+                            & .content {
+                                display: flex;
+                                justify-content: center;
+                            }
+
+                            & .pipArea {
+                                font-size: 2.3rem;
+                                word-break: normal;
+                                display: flex;
+                                flex-direction: flex-start;
+                                &.lower {
+                                    transform: rotate(180deg);
+                                }
+                                & .pip {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                }
+                                & .suit {
+                                    display: block;
+                                    width: 35px;
+                                    height: 35px;
+                                    border-radius: 50%;
+                                    margin-top: 5px;
+                                }
+                            }
+                        }
+                        &.back {
+                            color: whitesmoke;
+                            border: thick solid whitesmoke;
+                            transform: rotateX(180deg);
+                            font-size: 1.5rem;
+                            font-weight: 200;
+                        }
+
+                        // Answer buttons
+                        .answer {
+                            width: 100px;
+                            height: 55px;
+                            color: whitesmoke;
                             display: flex;
                             justify-content: center;
-                        }
-                        
-                        & .pipArea {
-                            font-size: 2.3rem;
-                            word-break: normal;
-                            display: flex;
-                            flex-direction: flex-start;
-                            &.lower {
-                                transform: rotate(180deg);
-                            }
-                            & .pip {
-                                display: flex;
-                                flex-direction: column;
-                                align-items: center;
-                            }
-                            & .suit {
-                                display: block;
-                                width: 35px;
-                                height: 35px;
-                                border-radius: 50%;
-                                margin-top: 5px;
-                            }
-                        }
-                    }
-                    &.back {
-                        color: whitesmoke;
-                        border: thick solid whitesmoke;
-                        transform: rotateX(180deg);
-                        font-size: 1.2rem;
-                        font-weight: 200;
-                    }
+                            align-items: center;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            opacity: 0;
+                            transform: translateX(-50%);
+                            position: absolute;
+                            left: 50%;
+                            transition: opacity .25s ease-in .15s;
+                            border: medium solid $white;
+                            font-size: 1.3rem;
 
-                    // Answer buttons
-                    .answer {
-                        width: 100px;
-                        height: 55px;
-                        color: whitesmoke;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        border-radius: 4px;
-                        cursor: pointer;
-                        opacity: 0;
-                        transform: translateX(-50%);
-                        position: absolute;
-                        left: 50%;
-                        transition: opacity .25s ease-in .15s;
-                        border: medium solid $white;
+                            &.right {
+                                background-color: $white;
+                                color: $gray;
+                                top: -80px;
+                            }
+                            &.wrong {
+                                background-color: $gray;
+                                bottom: -80px;
+                            }
+                        }
 
-                        &.right {
-                            background-color: $white;
-                            color: $gray;
-                            top: -80px;
-                        }
-                        &.wrong {
-                            background-color: $gray;
-                            bottom: -80px;
-                        }
                     }
 
                 }
+                // Answer buttons fade in for first card
+                &.fade-in .card .answer {
+                    opacity: 1;
+                }
+            }
+        } // End of deck element
 
-            }
-            // Answer buttons fade in for first card
-            &.fade-in .card .answer {
-                opacity: 1;
-            }
+
+        // Click barrier
+        .clickBarrier {
+            width: calc(50% - #{$halfCardHeight});
+            height: $cardHeight;
+            opacity: .5;
+            z-index: 100;
+            position: absolute;
+            top: calc(50% - #{$halfCardHeight});
+            left: calc(50% + #{$halfCardHeight});
+            background-color: red;
         }
-    } // End of deck element
 
-
-    // Click barrier
-    .clickBarrier {
-        width: calc(50% - #{$halfCardHeight});
-        height: $cardHeight;
-        opacity: .5;
-        z-index: 100;
-        position: absolute;
-        top: calc(50% - #{$halfCardHeight});
-        left: calc(50% + #{$halfCardHeight});
-    }
-
-} // End of .Play className
+    } // End of .Play className
+}
 
