@@ -7,7 +7,7 @@ module.exports = {
         let user = db.find(usr => +id === +usr.id);
         res.status(200).send(user.cards);
     }
-    // , getHandle: (req, res) => {
+    // , getUsername: (req, res) => {
 
     // }
 }
