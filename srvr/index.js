@@ -35,7 +35,6 @@ app.use(express.static( `${__dirname}/../public` ))
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 //————————————————————————————————————————————>> Name
 app.get('/api/users', (req, res) => {
-    console.log('req', req.query.value)
     app.get('db').getUsers([req.query.value])
     .then(response => { res.status(200).send(response); });
 });
