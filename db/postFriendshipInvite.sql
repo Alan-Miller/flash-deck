@@ -1,8 +1,8 @@
 insert into friendships (inviter_user_id, invitee_user_id)
 select $1, $2
 where not exists (select * from friendships
-         where (inviter_user_id = $1 and invitee_user_id = $2) 
-            or (inviter_user_id = $2 and invitee_user_id = $1));
+         where (inviter_id = $1 and invitee_id = $2) 
+            or (inviter_id = $2 and invitee_id = $1));
 
 -- select display_name from friendships
 -- join users
