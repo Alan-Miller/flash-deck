@@ -6,10 +6,9 @@ import Header from './Header';
 
 import { addCards, setDeckInPlay } from '../redux/reducer';
 import { getDisplayName } from '../services/service';
-import { buildDeck } from '../utils/buildDeck';
-import { dropCard } from '../utils/dropCard';
-import { getRank } from '../utils/getRank';
-import { flip } from '../utils/flip';
+import { tallyPts } from '../utils/playUtils';
+import { buildDeck } from '../utils/deckUtils';
+import { flip, dropCard, getRank } from '../utils/cardUtils';
 
 class Play extends Component {
 
@@ -17,10 +16,6 @@ class Play extends Component {
         super()
 
         this.state = {
-            // ,collections: {
-            //     'All': []
-            // }
-            // ,decks: {}
             firstCardIndex: 0
             ,face: 'front'
             ,score: 0
@@ -28,8 +23,8 @@ class Play extends Component {
             ,pointStyle: ''
             ,displayName: ''
         }
-        this.handleFileSelect= this.handleFileSelect.bind(this)
-        this.handleKeyDown= this.handleKeyDown.bind(this)
+        this.handleFileSelect= this.handleFileSelect.bind(this);
+        this.handleKeyDown= this.handleKeyDown.bind(this);
     }
 
     componentDidMount() {
@@ -43,16 +38,21 @@ class Play extends Component {
         //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
         (() => {
             // Check localStorage for any cards. If none, set empty array
-            let cards = localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) : [];
+            let cards = localStorage.getItem('cards') ? 
+            JSON.parse(localStorage.getItem('cards')) : [];
+            
             this.props.addCards(cards);
-            // Handle async (can't set state till cards come down on props)
+            // Handle async (set state after cards come down on props)
             const promise = new Promise((resolve, reject) => {
                 if (this.props.cards) resolve('Cards are now on props');
                 else reject(new Error('Something bad happened'));
             });
-            // Set state when cards are ready
             promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
         })()
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.handleKeyDown);
     }
 
     handleDragOver(e) {
@@ -61,12 +61,7 @@ class Play extends Component {
 
     tally(sign) {
         const rank = getRank(this.state.firstCardIndex);
-        let points;
-        if (+rank > 1 || rank < 11) points = +rank * sign;
-        if (rank === 'J') { if (sign === 1) points = 1; else points = -25; }
-        if (rank === 'Q') { if (sign === 1) points = 40; else points = -1; }
-        if (rank === 'K') points = 50 * sign;
-        if (rank === 'A') points = [1, 11][Math.floor(Math.random() * 2)] * sign;
+        const points = tallyPts(sign, rank);
         let score = this.state.score + points;
         let pointStyle = sign === 1 ? 'pointsUp' : 'pointsDown';
         this.setState({points, score, pointStyle});
@@ -74,7 +69,6 @@ class Play extends Component {
 
     handleFileSelect(e) {
         e.preventDefault();
-        
         // Drop event saves document
         // FileReader reads file and puts result on reader.result
         var file = e.dataTransfer.files[0];
@@ -128,7 +122,6 @@ class Play extends Component {
     dropCardAndSetDeck(e, direction) {
         const { firstCardIndex } = this.state;
         const firstCard = document.getElementById(firstCardIndex);
-
         dropCard(e, direction, firstCard); // Drop card
         this.setState(Object.assign( {}, {firstCardIndex: firstCardIndex + 1} )) // Set index
         this.props.setDeckInPlay(this.props.deckInPlay.splice(0)); // Set deck
@@ -188,7 +181,9 @@ class Play extends Component {
                                             style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
                                             <div className="upper pipArea">
                                                 <div className="pip">
-                                                    <div className="rank">{ getRank(index) }</div>
+                                                    <div className="rank">
+                                                        { getRank(index) }
+                                                    </div>
                                                     <div className="suit"></div>
                                                 </div>
                                             </div>
@@ -201,7 +196,9 @@ class Play extends Component {
 
                                             <div className="lower pipArea">
                                                 <div className="pip">
-                                                    <div className="rank">{ getRank(index) }</div>
+                                                    <div className="rank">
+                                                        { getRank(index) }
+                                                    </div>
                                                     <div className="suit"></div>
                                                 </div>
                                             </div>

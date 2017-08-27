@@ -1,4 +1,11 @@
-import { shuffle } from '../utils/shuffle';
+export function shuffle(deck) {
+    let copy = [...deck];
+    let shuffled = [];
+    while(copy.length) {
+        shuffled.push(copy.splice(Math.floor(Math.random() * copy.length), 1)[0]);
+    }
+    return shuffled;
+}
 
 export function buildDeck(cards) {
     // Reset position and display of cards and buttons
@@ -11,9 +18,7 @@ export function buildDeck(cards) {
     [].forEach.call(document.getElementsByClassName('answer'), container => {
         container.style.display = 'flex';
     });
-
-    // Make array of all decks passed in
-    // Each deck is random but of uniform length
+    // Make array of all decks. Each is random but uniform length
     if (!cards.length) return;
     let deck = [];
     if (cards.length < 52) {
@@ -25,11 +30,3 @@ export function buildDeck(cards) {
     return deck;
 }
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-    NOTE: Previously used below line to assign cards to all 
-    passed in arguments (with no set parameter in function 
-    declaration). But I think there will only ever be one argument: 
-    an array. So I don't think we need to stitch arguments together.
-
-    const cards = Array.from(arguments).reduce((a, b) => a.concat(b)); 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
