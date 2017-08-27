@@ -17,10 +17,6 @@ class Play extends Component {
         super()
 
         this.state = {
-            // ,collections: {
-            //     'All': []
-            // }
-            // ,decks: {}
             firstCardIndex: 0
             ,face: 'front'
             ,score: 0
@@ -53,6 +49,10 @@ class Play extends Component {
             // Set state when cards are ready
             promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
         })()
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.handleKeyDown);
     }
 
     handleDragOver(e) {
@@ -188,7 +188,9 @@ class Play extends Component {
                                             style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
                                             <div className="upper pipArea">
                                                 <div className="pip">
-                                                    <div className="rank">{ getRank(index) }</div>
+                                                    <div className="rank">
+                                                        { getRank(index) }
+                                                    </div>
                                                     <div className="suit"></div>
                                                 </div>
                                             </div>
@@ -201,7 +203,9 @@ class Play extends Component {
 
                                             <div className="lower pipArea">
                                                 <div className="pip">
-                                                    <div className="rank">{ getRank(index) }</div>
+                                                    <div className="rank">
+                                                        { getRank(index) }
+                                                    </div>
                                                     <div className="suit"></div>
                                                 </div>
                                             </div>
