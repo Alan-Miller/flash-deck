@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+
+import {    getUsers, 
+            getUserFriends, 
+            postFriendshipInvite, 
+            getPendingFriendships } from '../services/friendService';
 
 export default class Share extends Component {
 
@@ -19,40 +23,32 @@ export default class Share extends Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:3021/api/friends/${this.state.userId}`)
-        .then(response => { 
-            const friends = response.data;
-            this.setState({ friends });
-        });
+        getUserFriends(this.state.userId)
+        .then(friends => { this.setState({ friends }) });
 
-        axios.get(`http://localhost:3021/api/pending/${this.state.userId}`)
-        .then(response => { 
-            const pending = response.data;
-            this.setState({ pending });
-        });
+        getPendingFriendships(this.state.userId)
+        .then(pending => { this.setState({ pending }) });
     }
 
     handleInput(e) {
-        this.setState({
-            searchValue: e.target.value
-        });
+        this.setState({ searchValue: e.target.value });
     }
+
     handleSubmit(e) {
         e.preventDefault();
-        axios.get(`http://localhost:3021/api/users?value=${this.state.searchValue}`)
-        .then(response => { 
-            const searchResults = response.data;
-            this.setState({ searchResults });
-        })
+        if (this.state.searchValue.length < 1) return;
+        this.setState({ searchValue: '' });
+
+        getUsers(this.state.searchValue)
+        .then(searchResults => { this.setState({ searchResults }) });
     }
 
     inviteFriend(inviteeId) {
-        axios.post(`http://localhost:3021/api/friends/${this.state.userId}/${inviteeId}`)
-        .then(response => {
-            console.log('Share res', response);
-            const pending = response.data;
+        postFriendshipInvite(this.state.userId, inviteeId)
+        .then(pending => { 
+            console.log('pending', pending);
             this.setState({ pending });
-        })
+        });
     }
 
     render() {
