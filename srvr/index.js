@@ -34,8 +34,9 @@ app.use(express.static( `${__dirname}/../public` ))
     Endpoints
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 //————————————————————————————————————————————>> Name
-app.get('/api/user/:id/username', (req, res) => {
-    app.get('db').getUsername([req.params.id])
+app.get('/api/users', (req, res) => {
+    console.log('req', req.query.value)
+    app.get('db').getUsers([req.query.value])
     .then(response => { res.status(200).send(response); });
 });
 
@@ -45,20 +46,35 @@ app.get('/api/user/:id/display_name', (req, res) => {
 });
 
 //————————————————————————————————————————————>> Friends
-app.get('/api/user/:id/friends', (req, res) => {
-    app.get('db').getUserFriends([req.params.id])
-    .then(response => { res.status(200).send(response); });
+app.get('/api/friends/:user_id', (req, res) => {
+    app.get('db').getUserFriends([req.params.user_id])
+    .then(response => { 
+        res.status(200).send(response); 
+    });
+});
+
+app.get('/api/pending/:user_id', (req, res) => {
+    app.get('db').getPendingFriendships([req.params.user_id])
+    .then(response => { 
+        res.status(200).send(response); 
+    });
 });
 
 app.post('/api/friends/:inviter_id/:invitee_id', (req, res) => {
-    app.get('db').putFriendshipInvite([req.params.inviter_id, req.params.invitee_id])
-    .then(response => { res.status(200).send(response) });
+    app.get('db').postFriendshipInvite([req.params.inviter_id, req.params.invitee_id])
+    .then(response => { 
+        // res.status(200).send(response); 
+        app.get('db').getPendingFriendships([req.params.inviter_id])
+        .then(response => { 
+            res.status(200).send(response); 
+        });
+    });
 });
 
 app.put('/api/friends/:inviter_id/:invitee_id', (req, res) => {
     app.get('db').putFriendshipAccept([req.body.inviter_id, req.body.invitee_id])
     .then(response => { 
-        res.status(200).send(response) 
+        res.status(200).send(response);
     });
 });
 
