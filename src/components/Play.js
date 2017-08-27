@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Header from './Header';
 
 import { addCards, setDeckInPlay } from '../redux/reducer';
-import { getHandle } from '../services/service';
+import { getDisplayName } from '../services/service';
 import { buildDeck } from '../utils/buildDeck';
 import { dropCard } from '../utils/dropCard';
 import { getRank } from '../utils/getRank';
@@ -26,7 +26,7 @@ class Play extends Component {
             ,score: 0
             ,points: 0
             ,pointStyle: ''
-            ,handle: ''
+            ,displayName: ''
         }
         this.handleFileSelect= this.handleFileSelect.bind(this)
         this.handleKeyDown= this.handleKeyDown.bind(this)
@@ -38,7 +38,7 @@ class Play extends Component {
         dropZone.addEventListener('dragover', this.handleDragOver);
         dropZone.addEventListener('drop', this.handleFileSelect);
         document.addEventListener('keydown', this.handleKeyDown);
-        getHandle().then(handle => { this.setState({ handle }) });
+        getDisplayName().then(displayName => { this.setState({ displayName }) });
 
         //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
         (() => {
@@ -158,7 +158,7 @@ class Play extends Component {
                     score={ this.state.score } 
                     points={ this.state.points } 
                     pointStyle={ this.state.pointStyle } 
-                    handle={this.state.handle} />
+                    displayName={ this.state.displayName } />
                 <main className="main">
                     <div 
                         className="button" 
