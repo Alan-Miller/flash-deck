@@ -51,12 +51,12 @@ app.get('/api/user/:id/friends', (req, res) => {
 });
 
 app.post('/api/friends/:inviter_id/:invitee_id', (req, res) => {
-    app.get('db').putFriendshipInvite([req.params.id, req.params.friend_id])
+    app.get('db').putFriendshipInvite([req.params.inviter_id, req.params.invitee_id])
     .then(response => { res.status(200).send(response) });
 });
 
 app.put('/api/friends/:inviter_id/:invitee_id', (req, res) => {
-    app.get('db').putFriendshipAccept([req.body.inviterId, req.body.inviteeId])
+    app.get('db').putFriendshipAccept([req.body.inviter_id, req.body.invitee_id])
     .then(response => { 
         res.status(200).send(response) 
     });
