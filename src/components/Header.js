@@ -1,16 +1,16 @@
 import React from 'react';
 
 export default function Header(props) {
-    return (
-        <section className="Header">
-            <div className="scorecard">
-                { props.displayName && <div>{ `${props.displayName}'s` }</div> }
-                <div>Honor</div>
-                <div className="score">{ props.score }</div>
-                <div className={ 'points ' + props.pointStyle }>{ props.points }</div>
-            </div>
+  return (
+    <section className="Header">
+      <div className="scorecard">
+        {props.displayName && <div>{`${props.displayName}'s`}</div>}
+        <div>Honor</div>
+        <div className="score">{props.score}</div>
+        <div className={'points ' + props.pointStyle}>{props.points}</div>
+      </div>
 
-            {/* <div className="imgBanner">Image banner here</div> */}
-        </section>
-    )
+      {/* <div className="imgBanner">Image banner here</div> */}
+    </section>
+  )
 }

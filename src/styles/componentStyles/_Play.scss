@@ -2,8 +2,8 @@
     position: relative;
 
     .main {
-        @include flexAll(row, flex-start);
         @include size(100vw, calc(100vh - #{$headerHeight}));
+        @include flexAll(row, flex-start);
         position: relative;
         overflow-x: hidden;
         overflow-y: hidden;
@@ -26,7 +26,6 @@
 
         // Deck
         #deck {
-            box-sizing: content-box;
             @include position(
                 absolute,
                 calc(50% - #{$halfCardHeight}),
@@ -35,6 +34,7 @@
             margin: 0; 
             padding: 0;
             display: flex;
+            box-sizing: content-box;
             // border: solid thick blue;
 
             // Card containers
@@ -45,34 +45,13 @@
                 transform: scale(.88);
                 perspective: 1000; 
 
-                &.drop-left {
-                    animation: dropLeft .55s forwards; 
-                }
-                @keyframes dropLeft {
-                    0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
-                    10% {bottom: 20px;}
-                    40% {left: -450px;}
-                    100% {
-                        bottom: -100vh; left: -700px; 
-                        transform: rotateZ(-360deg);
-                    }
-                }
-                &.drop-right {
-                    animation: dropRight .55s forwards; 
-                }
-                @keyframes dropRight {
-                    0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
-                    10% {bottom: 20px;}
-                    40% {left: 450px;}
-                    100% {
-                        bottom: -100vh; left: 700px; 
-                        transform: rotateZ(360deg);
-                    }
-                }
+                &.drop-left { animation: dropLeft .55s forwards; }
+                @include dropKeyframes(dropLeft, '-');
                 
-                &.flip .card {
-                    transform: rotateX(180deg) 
-                }
+                &.drop-right { animation: dropRight .55s forwards; }
+                @include dropKeyframes(dropRight, '+');
+                
+                &.flip .card { transform: rotateX(180deg) }
 
                 // Suit styles
                 &:nth-child(-n+13)  { @include cardColor($blacksuit); }
@@ -130,11 +109,11 @@
                             @include flexAll;
                             @include size(100px, 55px);
                             @include position(absolute, $left: 50%, $x: -50%);
-                            color: whitesmoke;
                             border-radius: 4px;
                             font-size: 1.3rem;
                             opacity: 0;
                             border: medium solid $white;
+                            color: whitesmoke;
                             cursor: pointer;
                             &.right {
                                 background-color: $white;

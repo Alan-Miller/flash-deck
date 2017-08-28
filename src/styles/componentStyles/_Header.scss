@@ -1,0 +1,65 @@
+Header {
+    z-index: 1;
+}
+
+.Header {
+  background-color: $gray;
+  height: $headerHeight;
+  width: 100vw;
+  z-index: 1;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  display: flex;
+  justify-content: center;
+
+  .scorecard {
+    position: relative;
+    width: 25vh;
+    height: 25vh;
+    color: $white;
+    background-color: $redsuit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.7rem;
+    .score {
+        font-size: 3rem;
+        margin-top: 7px;
+    }
+    .points {
+      position: absolute;
+      top: $halfCardHeight;
+      opacity: 0;
+      font-size: 2.5rem;
+      &.pointsUp {
+        animation: pointsUp 1s;
+        @keyframes pointsUp {
+            0% {top: 200px; opacity: 1;}
+            100% {top: 120px; opacity: 0;}
+        }
+      }
+      &.pointsDown {
+        animation: pointsDown 1s;
+        @keyframes pointsDown {
+            0% { top: 120px; opacity: 1; }
+            100% { top: 200px; opacity: 0; }
+            // 10% { left: 100px }
+            // 55% { transform: rotate(50deg); transform-origin: 20% 220%; left: 100px }
+            // 100% { top: 200px; opacity: 0; transform: rotate(50deg); transform-origin: 20% 220%; left: 100px }
+        }
+      }
+    }
+  }
+
+  // .imgBanner {
+  //   background-color: $bluegreen;
+  //   height: 100%;
+  //   width: 50%;
+  //   position: relative;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  // }
+}

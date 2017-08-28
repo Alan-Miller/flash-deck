@@ -6,6 +6,7 @@ main.Home {
 .Home ul {
     @include position(relative, $top: -7vh, $deg: -11deg);
     color: $white;
-    h1 { @include big3D; }
-    li { @include lil3D; }
+    h1 { @extend %big3D; }
+    li { @extend %lil3D; }
+    
 }
