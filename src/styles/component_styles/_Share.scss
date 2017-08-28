@@ -1,8 +1,5 @@
 main.Share  {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    @include flexAll(column);
     height: 100vh;
 
     font: {
@@ -24,9 +21,7 @@ main.Share  {
             padding: 10px;
             outline: none;
             border: none;
-            font: {
-                size: 1.5rem;
-            }
+            font-size: 1.5rem;
         }
     }
     ::-webkit-input-placeholder {
@@ -34,9 +29,8 @@ main.Share  {
     }
 
     .friendInvite {
+        @include size(50px, 30px);
         cursor: pointer;
-        height: 30px;
-        width: 50px;
         padding: 3px;
         margin-left: 7px;
         border-radius: 5px;

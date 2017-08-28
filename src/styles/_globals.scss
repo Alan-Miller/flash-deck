@@ -1,13 +1,14 @@
-// @import url('https://fonts.googleapis.com/css?family=Raleway');
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
-@import './variables';
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
     root
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+* { outline: none; }
+
 html {
     background-color: $darkbluegreen;
-    font: {    background-color: #555; 
+    font: {    
+        background-color: #555; 
         size: 1em;
         family: 'Montserrat', sans-serif;
     }

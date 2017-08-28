@@ -1,11 +1,5 @@
 main.Quiz  {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    @include flexAll(column);
     height: 100vh;
-
-    font: {
-        size: 2rem;
-    }
+    font-size: 2rem;
 }

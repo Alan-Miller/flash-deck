@@ -2,60 +2,48 @@
     position: relative;
 
     .main {
-        width: 100vw; 
-        height: calc(100vh - #{$headerHeight}); 
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        // background-color: #205860;
-        background-color: $darkbluegreen;
+        @include flexAll(row, flex-start);
+        @include size(100vw, calc(100vh - #{$headerHeight}));
+        position: relative;
         overflow-x: hidden;
         overflow-y: hidden;
-        position: relative;
-
+        background-color: $darkbluegreen;
         .nav {
-            position: fixed;
+            @include position(fixed, $bottom: 0);
             display: flex;
-            font-size: 2rem;
-            bottom: 0;
             margin: 70px;
+            font-size: 2rem;
         }
-
 
         // Random deck button 
         .button {
             background-color: #bbb;
-            // position: absolute;
-            cursor: pointer;
             margin: 100px;
             padding: 30px;
             border: none;
+            cursor: pointer;
         }
-
 
         // Deck
         #deck {
             box-sizing: content-box;
-            position: absolute;
-            left: calc(50% - #{$halfCardWidth});
-            top: calc(50% - $halfCardHeight);
+            @include position(
+                absolute,
+                calc(50% - #{$halfCardHeight}),
+                calc(50% - #{$halfCardWidth})
+            );
             margin: 0; 
             padding: 0;
             display: flex;
-            border: solid thick blue;
+            // border: solid thick blue;
 
             // Card containers
             .card-container {
-                position: relative;
+                @include size($cardWidth, $cardHeight);
+                @include flexAll(column);
+                @include position(relative, $bottom: 0, $left: 0);
                 transform: scale(.88);
-                width: $cardWidth;
-                height: $cardHeight;
                 perspective: 1000; 
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                bottom: 0;
-                left: 0;
 
                 &.drop-left {
                     animation: dropLeft .55s forwards; 
@@ -64,7 +52,10 @@
                     0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
                     10% {bottom: 20px;}
                     40% {left: -450px;}
-                    100% {bottom: -100vh; left: -700px; transform: rotateZ(-360deg);}
+                    100% {
+                        bottom: -100vh; left: -700px; 
+                        transform: rotateZ(-360deg);
+                    }
                 }
                 &.drop-right {
                     animation: dropRight .55s forwards; 
@@ -72,77 +63,34 @@
                 @keyframes dropRight {
                     0% {bottom: 0; left: 0; transform: rotateZ(0deg);}
                     10% {bottom: 20px;}
-                    40%{left: 450px;}
-                    100% {bottom: -100vh; left: 700px; transform: rotateZ(360deg);}
+                    40% {left: 450px;}
+                    100% {
+                        bottom: -100vh; left: 700px; 
+                        transform: rotateZ(360deg);
+                    }
                 }
+                
                 &.flip .card {
                     transform: rotateX(180deg) 
                 }
 
                 // Suit styles
-                &:nth-child(-n+13) {
-                    .front {
-                        border: medium solid $blacksuit;
-                        color: $blacksuit;
-                        & .pip .suit {
-                            background-color: $blacksuit;
-                        }
-                    }
-                    .back {
-                        background-color: $blacksuit;
-                    }
-                }   
-                &:nth-child(n+14) {
-                    .front {
-                        border: medium solid $redsuit;
-                        color: $redsuit; 
-                        & .pip .suit {
-                            background-color: $redsuit;
-                        }
-                    }
-                    .back {
-                        background-color: $redsuit;
-                    }
-                }   
-                &:nth-child(n+27) {
-                    .front {
-                        border: medium solid $blacksuit;
-                        color: $blacksuit; 
-                        & .pip .suit {
-                            background-color: $blacksuit;
-                        }
-                    }
-                    .back {
-                        background-color: $blacksuit;
-                    }
-                }
-                &:nth-child(n+40) {
-                    .front {
-                        border: medium solid $redsuit;
-                        color: $redsuit; 
-                        & .pip .suit {
-                            background-color: $redsuit;
-                        }
-                    }
-                    .back {
-                        background-color: $redsuit;
-                    }
-                }
+                &:nth-child(-n+13)  { @include cardColor($blacksuit); }
+                &:nth-child(n+14)   { @include cardColor($redsuit); }   
+                &:nth-child(n+27)   { @include cardColor($blacksuit); }
+                &:nth-child(n+40)   { @include cardColor($redsuit); }
 
                 // Cards
                 .card {
-                    width: $cardWidth;
-                    height: $cardHeight;
+                    @include size($cardWidth, $cardHeight);
+                    @include wordBreak;
+                    display: block;
                     transform-style: preserve-3d;
                     transition: transform .15s ease;
-                    word-wrap: break-word;
-                    word-break: break-word;
-                    display: block;
 
                     // Card faces
                     .face {
-                        width: 100%;
-                        height: 100%;
+                        @include size(100%, 100%);
                         position: absolute;
                         backface-visibility: hidden;
                         border-radius: 18px;
@@ -151,36 +99,22 @@
                         cursor: pointer;
 
                         &.front {
+                            @include flexAll(column, space-between, auto);
                             background-color: whitesmoke; 
                             font-size: 1.7rem;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-between;
-                            & .content {
-                                display: flex;
-                                justify-content: center;
-                            }
-
+                            & .content { @include flexAll; }
                             & .pipArea {
-                                font-size: 2.3rem;
-                                word-break: normal;
-                                display: flex;
-                                flex-direction: flex-start;
-                                &.lower {
-                                    transform: rotate(180deg);
-                                }
-                                & .pip {
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: center;
-                                }
+                                & .pip { @include flexAll(column); }
                                 & .suit {
+                                    @include size(35px, 35px);
                                     display: block;
-                                    width: 35px;
-                                    height: 35px;
                                     border-radius: 50%;
                                     margin-top: 5px;
                                 }
+                                font-size: 2.3rem;
+                                @include wordBreak(normal);
+                                @include flexAll(row, flex-start);
+                                &.lower { transform: rotate(180deg); }
                             }
                         }
                         &.back {
@@ -193,22 +127,15 @@
 
                         // Answer buttons
                         .answer {
-                            width: 100px;
-                            height: 55px;
+                            @include flexAll;
+                            @include size(100px, 55px);
+                            @include position(absolute, $left: 50%, $x: -50%);
                             color: whitesmoke;
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
                             border-radius: 4px;
-                            cursor: pointer;
-                            opacity: 0;
-                            transform: translateX(-50%);
-                            position: absolute;
-                            left: 50%;
-                            transition: opacity .25s ease-in .15s;
-                            border: medium solid $white;
                             font-size: 1.3rem;
-
+                            opacity: 0;
+                            border: medium solid $white;
+                            cursor: pointer;
                             &.right {
                                 background-color: $white;
                                 color: $gray;
@@ -218,6 +145,7 @@
                                 background-color: $gray;
                                 bottom: -80px;
                             }
+                            transition: opacity .25s ease-in .15s;
                         }
 
                     }
@@ -233,14 +161,15 @@
 
         // Click barrier
         .clickBarrier {
-            width: calc(50% - #{$halfCardHeight});
-            height: $cardHeight;
+            @include size(calc(50% - #{$halfCardHeight}), $cardHeight);
+            @include position(
+                absolute,
+                $top: calc(50% - #{$halfCardHeight}),
+                $left: calc(50% + #{$halfCardHeight})
+            );
             opacity: .5;
-            z-index: 100;
-            position: absolute;
-            top: calc(50% - #{$halfCardHeight});
-            left: calc(50% + #{$halfCardHeight});
-            background-color: red;
+            z-index: 51;
+            // background-color: red;
         }
 
     } // End of .Play className

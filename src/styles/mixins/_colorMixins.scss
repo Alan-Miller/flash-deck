@@ -1,0 +1,11 @@
+@mixin cardColor($color) {
+    .front {
+        border: medium solid $color;
+        color: $color;
+    }
+    .suit, .back { background-color: $color; }
+}
+
+@mixin bgColor($color) {
+    background-color: $color;
+}

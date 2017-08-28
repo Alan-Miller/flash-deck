@@ -1,7 +1,13 @@
-// Global Sass files
 @import './reset';
 @import './variables';
 @import './functions';
+
+// Mixins
+@import './mixins/colorMixins';
+@import './mixins/textMixins';
+@import './mixins/positionMixins';
+
+// Globals
 @import './globals';
 
 // Component styles
