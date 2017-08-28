@@ -1,30 +1,11 @@
 main.Home {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flexAll;
     height: 100vh;
 }
 
-
-
 .Home ul {
-    position: relative;
-    top: -7vh;
+    @include position(relative, $top: -7vh, $deg: -11deg);
     color: $white;
-    transform: rotate(-11deg);
-    * {
-        margin-bottom: 11px;
-    }
-    h1 {
-        font: {
-            size: 5rem;
-            weight: 700;
-        }
-    }
-    li {
-        font: {
-            size: 2.7rem;
-            weight: 200;
-        }
-    }
+    h1 { @include big3D; }
+    li { @include lil3D; }
 }
