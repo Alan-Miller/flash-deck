@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import cardStyles from '../styles/style_objects/cardStyleObject';
+import cardStyles from '../styles/moduleStyles/cardStyleObject';
 
 import Header from './Header';
 

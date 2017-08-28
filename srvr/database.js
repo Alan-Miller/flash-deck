@@ -1,9 +1,9 @@
 let id = 1;
 
 module.exports = [
-    {
-        id: 0
-        , cards: []
-        , prefs: {} 
-    }
+  {
+    id: 0
+    , cards: []
+    , prefs: {}
+  }
 ]

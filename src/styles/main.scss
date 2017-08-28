@@ -1,20 +1,16 @@
-@import './reset';
-@import './variables';
-@import './functions';
+// Global styles
+@import './globalStyles/reset';
+@import './globalStyles/globals';
 
-// Mixins
-@import './mixins/colorMixins';
-@import './mixins/textMixins';
-@import './mixins/positionMixins';
-
-// Globals
-@import './globals';
+// Module styles
+@import './modularStyles/cardMixins';
+@import './modularStyles/textMixins';
 
 // Component styles
-@import './component_styles/App';
-@import './component_styles/Header';
-@import './component_styles/Home';
-@import './component_styles/Play';
-@import './component_styles/Quiz';
-@import './component_styles/Settings';
-@import './component_styles/Share';
+@import './componentStyles/App';
+@import './componentStyles/Header';
+@import './componentStyles/Home';
+@import './componentStyles/Play';
+@import './componentStyles/Quiz';
+@import './componentStyles/Settings';
+@import './componentStyles/Share';

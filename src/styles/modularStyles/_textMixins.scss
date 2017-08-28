@@ -1,4 +1,4 @@
-@mixin big3D {
+%big3D {
     font: {
         size: 5rem;
         weight: 700;
@@ -20,7 +20,7 @@
     13px 13px 0px $redsuit;
 }
 
-@mixin lil3D {
+%lil3D {
     font: {
         size: 2.7rem;
         weight: 200;
