@@ -7,7 +7,7 @@ export default class Home extends Component {
     return (
       <main className="Home">
         <ul className="Home_ul">
-          <Link to=""><h1>Flash Deck</h1></Link>
+          <h1>Flash Deck</h1>
           <Link to="/play"><li>Play</li></Link>
           <Link to="/quiz"><li>Quiz</li></Link>
           <Link to="/share"><li>Share</li></Link>

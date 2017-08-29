@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-import cardStyles from '../styles/moduleStyles/cardStyleObject';
-
-import Header from './Header';
-
 import { addCards, setDeckInPlay } from '../redux/reducer';
+
 import { getDisplayName } from '../services/service';
+import cardStyles from '../styles/modularStyles/cardStyleObject';
+
 import { tallyPts } from '../utils/playUtils';
 import { buildDeck } from '../utils/deckUtils';
 import { flip, dropCard, getRank } from '../utils/cardUtils';
+
+import Header from './Header';
 
 class Play extends Component {
 
