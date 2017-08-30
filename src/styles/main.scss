@@ -3,8 +3,10 @@
 @import './globalStyles/globals';
 
 // Modular styles
-@import './modularStyles/cardMixins';
-@import './modularStyles/textMixins';
+@import './modularStyles/buttonStyles';
+@import './modularStyles/cardStyles';
+@import './modularStyles/formStyles';
+@import './modularStyles/textStyles';
 
 // Component styles
 @import './componentStyles/App';
@@ -12,5 +14,6 @@
 @import './componentStyles/Home';
 @import './componentStyles/Play';
 @import './componentStyles/Quiz';
-@import './componentStyles/Settings';
 @import './componentStyles/Share';
+@import './componentStyles/Manage';
+@import './componentStyles/Settings';

@@ -1,4 +1,4 @@
-const app = require('./index.js');
+var app = require('./index.js');
 console.log('app', app)
 // const db = app.get('db');
 // console.log('db', db);
@@ -14,10 +14,10 @@ module.exports = {
     //     let user = db.find(usr => +id === +usr.id);
     //     res.status(20    0).send(user.cards);
     // }
-    getUsername: (req, res) => {
-        app.get('db').getUsername([req.params.id])
-        .then(response => { res.status(200).send(response); });
-    }
+    // getUsername: (req, res) => {
+    //     app.get('db').getUsername([req.params.id])
+    //     .then(response => { res.status(200).send(response); });
+    // }
     // ,inviteFriend: (req, res) => {
 
     // }

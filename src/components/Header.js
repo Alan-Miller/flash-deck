@@ -9,8 +9,6 @@ export default function Header(props) {
         <div className="score">{props.score}</div>
         <div className={'points ' + props.pointStyle}>{props.points}</div>
       </div>
-
-      {/* <div className="imgBanner">Image banner here</div> */}
     </section>
   )
 }

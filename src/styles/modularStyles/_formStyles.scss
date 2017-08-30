@@ -1,0 +1,14 @@
+input {
+    padding: 10px;
+    margin: 10px 0;
+    outline: none;
+    border: none;
+    font-size: 1.5rem;
+}
+::-webkit-input-placeholder {
+  color: $bluegreen;
+}
+
+.newCardForm {
+  @include flexAll(column);
+}

@@ -3,7 +3,8 @@
         border: medium solid $color;
         color: $color;
     }
-    .suit, .back { background-color: $color; }
+    // .suit, .back { background-color: $color; }
+    .back { background-color: $color; }
 }
 
 @mixin dropKeyframes($animationName, $sign: null) {
@@ -20,4 +21,10 @@
             transform: rotateZ(-360deg);
         }
     }
+}
+
+%suitBgImg {
+    background-size: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
 }

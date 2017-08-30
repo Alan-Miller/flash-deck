@@ -5,7 +5,7 @@ const   express = require('express')
         ,massive = require('massive')
         ,bodyParser = require('body-parser')
         ,cors = require('cors')
-        // ,controller = require('./controller')
+        // ,controller = require('./controTller')
         ,{ port } = require('../config')
         ,app = module.exports = express();
 
@@ -76,6 +76,43 @@ app.put('/api/friends/:inviter_id/:invitee_id', (req, res) => {
         res.status(200).send(response);
     });
 });
+
+
+//————————————————————————————————————————————>> Cards
+app.get('/api/cards/:id', (req, res) => {
+    app.get('db').getAllCards([req.params.id])
+    .then(response => {
+        res.status(200).send(response);
+    })
+})
+
+app.post('/api/cards/:id', (req, res) => {
+    app.get('db').postSaveCard([req.params.id, req.body.front, req.body.back])
+    .then(response => {
+        res.status(200).send(response);
+    })
+});
+
+app.put('/api/cards/:cardId/stop_showing', (req, res) => {
+    app.get('db').putStopShowing([req.params.cardId, req.body.userId])
+    .then(response => {
+        res.status(200).send(response);
+    })
+})
+
+app.put('/api/cards/:cardId/show_less', (req, res) => {
+    app.get('db').putShowLess([req.params.cardId, req.body.userId])
+    .then(response => {
+        res.status(200).send(response);
+    })
+})
+
+app.delete('/api/cards/:cardId/:userId', (req, res) => {
+    app.get('db').deleteCard([req.params.cardId, req.params.userId])
+    .then(response => {
+        res.status(200).send(response);
+    })
+})
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
