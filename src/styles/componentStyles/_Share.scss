@@ -16,17 +16,17 @@ main.Share  {
         font-size: 1.2rem;
     }
 
-    .findFriend {
-        input {
-            padding: 10px;
-            outline: none;
-            border: none;
-            font-size: 1.5rem;
-        }
-    }
-    ::-webkit-input-placeholder {
-        color: $bluegreen;
-    }
+    // .findFriend {
+    //     input {
+    //         padding: 10px;
+    //         outline: none;
+    //         border: none;
+    //         font-size: 1.5rem;
+    //     }
+    // }
+    // ::-webkit-input-placeholder {
+    //     color: $bluegreen;
+    // }
 
     .friendInvite {
         @include size(50px, 30px);

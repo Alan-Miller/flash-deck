@@ -1,0 +1,42 @@
+@mixin big3D($shadowColor) {
+    font: {
+        size: 5rem;
+        weight: 700;
+    }
+    margin-bottom: 17px;
+    text-shadow: 
+    1px 1px 0px $shadowColor,
+    2px 2px 0px $shadowColor,
+    3px 3px 0px $shadowColor,
+    4px 4px 0px $shadowColor,
+    5px 5px 0px $shadowColor,
+    6px 6px 0px $shadowColor,
+    7px 7px 0px $shadowColor,
+    8px 8px 0px $shadowColor,
+    9px 9px 0px $shadowColor,
+    10px 10px 0px $shadowColor,
+    11px 11px 0px $shadowColor,
+    12px 12px 0px $shadowColor,
+    13px 13px 0px $shadowColor;
+}
+
+@mixin lil3D($shadowColor) {
+    font: {
+        size: 2.7rem;
+        weight: 200;
+    }
+    margin-bottom: 11px;
+    text-shadow: 
+    1px 1px 0px $shadowColor,
+    2px 2px 0px $shadowColor,
+    3px 3px 0px $shadowColor,
+    4px 4px 0px $shadowColor,
+    5px 5px 0px $shadowColor,
+    6px 6px 0px $shadowColor,
+    7px 7px 0px $shadowColor;
+}
+
+@mixin wordBreak($val: break-word) {
+    word-wrap: $val;
+    word-break: $val;
+}

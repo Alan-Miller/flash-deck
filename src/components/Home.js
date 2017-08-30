@@ -12,6 +12,7 @@ export default class Home extends Component {
           <Link to="/quiz"><li>Quiz</li></Link>
           <Link to="/share"><li>Share</li></Link>
           <Link to="/match"><li>Match</li></Link>
+          <Link to="/manage"><li>Manage</li></Link>
           <Link to="/settings"><li>Settings</li></Link>
         </ul>
       </main>
