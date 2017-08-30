@@ -40,7 +40,7 @@ export default class Share extends Component {
     if (this.state.searchValue.length < 1) return;
     this.setState({ searchValue: '' });
 
-    getUsers(this.state.searchValue)
+    getUsers(this.state.userId, this.state.searchValue)
       .then(searchResults => { this.setState({ searchResults }) });
   }
 

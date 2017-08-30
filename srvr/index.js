@@ -5,7 +5,7 @@ const   express = require('express')
         ,massive = require('massive')
         ,bodyParser = require('body-parser')
         ,cors = require('cors')
-        // ,controller = require('./controTller')
+        // ,controller = require('./controller')
         ,{ port } = require('../config')
         ,app = module.exports = express();
 
@@ -34,8 +34,8 @@ app.use(express.static( `${__dirname}/../public` ))
     Endpoints
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 //————————————————————————————————————————————>> Name
-app.get('/api/users', (req, res) => {
-    app.get('db').getUsers([req.query.value])
+app.get('/api/users/:userId', (req, res) => {
+    app.get('db').getUsers([req.params.userId, req.query.value])
     .then(response => { res.status(200).send(response); });
 });
 

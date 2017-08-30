@@ -1,3 +1,6 @@
 select * from users
-where username ilike '%' || $1 || '%'
-or display_name ilike '%' || $1 || '%';
+where id != $1
+and (
+  username ilike '%' || $2 || '%'
+  or display_name ilike '%' || $2 || '%'
+);

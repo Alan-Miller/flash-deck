@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export function getUsers(searchValue) {
-  return axios.get(`http://localhost:3021/api/users?value=${searchValue}`)
+export function getUsers(userId, searchValue) {
+  return axios.get(`http://localhost:3021/api/users/${userId}?value=${searchValue}`)
     .then(response => response.data);
 }
 
