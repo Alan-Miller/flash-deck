@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { addCards, setDeckInPlay } from '../redux/reducer';
 
 import { getDisplayName } from '../services/service';
+import { getAllCards } from '../services/cardService';
 import cardStyles from '../styles/modularStyles/cardStyleObject';
 
 import { tallyPts } from '../utils/playUtils';
@@ -18,7 +19,9 @@ class Play extends Component {
     super()
 
     this.state = {
-      firstCardIndex: 0
+      cards: []
+      ,userId: 2
+      ,firstCardIndex: 0
       ,face: 'front'
       ,score: 0
       ,points: 0
@@ -37,14 +40,22 @@ class Play extends Component {
     document.addEventListener('keydown', this.handleKeyDown);
     getDisplayName().then(displayName => { this.setState({ displayName }) });
 
+    getAllCards(this.state.userId)
+      .then(cards => { 
+        console.log(cards); 
+        this.setState({cards});
+      }
+    );
+
     //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
     (() => {
       /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
         Check localStorage for any cards. If none, set empty array
         Handle async (set state after cards come down on props)
       /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-      let cards = localStorage.getItem('cards') ? 
-      JSON.parse(localStorage.getItem('cards')) 
+      let cards = 
+      // this.state.cards.length ? this.state.cards
+      localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) 
       : [];
       
       this.props.addCards(cards);
