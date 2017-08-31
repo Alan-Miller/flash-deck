@@ -19,10 +19,10 @@
       transform: scale(.88);
       perspective: 1000; 
 
-      &.drop-left { animation: dropLeft .55s forwards; }
+      &.drop-left { animation: dropLeft .8s forwards; }
       @include dropKeyframes(dropLeft, '-');
       
-      &.drop-right { animation: dropRight .55s forwards; }
+      &.drop-right { animation: dropRight .8s forwards; }
       @include dropKeyframes(dropRight, '+');
       
       &.flip .card { transform: rotateX(180deg) }
@@ -54,40 +54,6 @@
           .suit { 
               @extend %suitBgImg;
               background-image: url('../imgs/hearts.png'); 
-          }
-      }
-
-      // Cards
-      .card {
-          @include size($cardWidth, $cardHeight);
-          @include wordBreak;
-          display: block;
-          transform-style: preserve-3d;
-          transition: transform .15s ease;
-
-          // Card faces
-          .face {
-              @include size(100%, 100%);
-              position: absolute;
-              backface-visibility: hidden;
-              border-radius: 18px;
-              box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
-              padding: 5px 10px;
-              cursor: pointer;
-
-              &.front {
-                  @include flexAll(column, space-between, auto);
-                  background-color: whitesmoke; 
-                  font-size: 1.7rem;
-                  & .content { @include flexAll; }
-              }
-              &.back {
-                  color: whitesmoke;
-                  border: thick solid whitesmoke;
-                  transform: rotateX(180deg);
-                  font-size: 1.5rem;
-                  font-weight: 200;
-              }
           }
       }
   }
