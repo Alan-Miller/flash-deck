@@ -9,7 +9,7 @@ import cardStyles from '../styles/modularStyles/cardStyleObject';
 
 import { buildDeck } from '../utils/deckUtils';
 import { flip, dropCard } from '../utils/cardUtils';
-import { getRank, tallyPts } from '../utils/playUtils';
+import { getRank, tallyPoints } from '../utils/playUtils';
 
 import Card from './Card';
 import Header from './Header';
@@ -170,6 +170,5 @@ let outputActions = {
   ,setDeckInPlay
 }
 
-export default connect(mapStateToProps, outputActions)(Quiz);
 
 

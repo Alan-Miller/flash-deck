@@ -3,16 +3,14 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setCards, setDeckInPlay } from '../redux/reducer';
 
-import { getDisplayName } from '../services/service';
 import { getAllCards } from '../services/cardService';
-import cardStyles from '../styles/modularStyles/cardStyleObject';
 
 import { buildDeck } from '../utils/deckUtils';
 import { flip, dropCard } from '../utils/cardUtils';
-import { getRank, tallyPts } from '../utils/playUtils';
+import { tallyPoints } from '../utils/playUtils';
 
 import Header from './Header';
-import Card from './Card';
+import Deck from './Deck';
 
 class Play extends Component {
 
@@ -29,16 +27,14 @@ class Play extends Component {
     }
     this.handleKeyDown= this.handleKeyDown.bind(this);
     this.dropCardAndSetDeck = this.dropCardAndSetDeck.bind(this);
-    this.tally = this.tally.bind(this);
+    this.updateScore = this.updateScore.bind(this);
   }
 
   componentDidMount() {
-    getDisplayName().then(displayName => { this.setState({ displayName }) });
+    // getDisplayName().then(displayName => { this.setState({ displayName }) });
     
-    //~~~~~~~~~~~~~~~~~~~~~~~ EVENT LISTENERS
     document.addEventListener('keydown', this.handleKeyDown);
 
-    //~~~~~~~~~~~~~~~~~~~~~~~ GET CARDS AND BUILD DECK
     getAllCards(this.props.userId)
       .then(cards => { 
         this.props.setCards(cards);
@@ -56,11 +52,9 @@ class Play extends Component {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  tally(sign) {
-    const rank = getRank(this.state.firstCardIndex);
-    const points = tallyPts(sign, rank);
-    let score = this.state.score + points;
-    let pointStyle = sign === 1 ? 'pointsUp' : 'pointsDown';
+  updateScore(sign) {
+    const { points, pointStyle } = tallyPoints(this.state.firstCardIndex, sign);
+    const score = this.state.score + points;
     this.setState({points, score, pointStyle});
   }
 
@@ -81,8 +75,8 @@ class Play extends Component {
     }
     if (face === 'back') {
       if (e.which === 37)                   { flip(e, firstIndex); }
-      if (e.which === 38 || e.which === 39) { direction = 'left'; this.tally(1); }
-      if (e.which === 40)                   { direction = 'right'; this.tally(-1); }
+      if (e.which === 38 || e.which === 39) { direction = 'left'; this.updateScore(1); }
+      if (e.which === 40)                   { direction = 'right'; this.updateScore(-1); }
       this.setState({ face: 'front' })
     } 
     direction && this.dropCardAndSetDeck(e, direction);
@@ -104,9 +98,6 @@ class Play extends Component {
   }
 
   render() {
-    const { cardContainerStyles, firstCardContainerStyles, firstFaceStyles } = cardStyles;
-    let z = Array.from(Array(53).keys()).reverse();
-    z.pop();
 
     return (
       <section className="Play">
@@ -114,7 +105,6 @@ class Play extends Component {
           score={this.state.score} 
           points={this.state.points} 
           pointStyle={this.state.pointStyle} 
-          displayName={this.state.displayName} 
         />
         <main className="main">
           <div 
@@ -128,31 +118,9 @@ class Play extends Component {
             <Link to="/"><h4>Home</h4></Link>
           </div>
 
-          <div id="deck">
-            { 
-              !this.props.deckInPlay ? null : this.props.deckInPlay.map((card, index) => (
-                <div
-                  className="card-container" 
-                  id={index}
-                  key={index}
-                  style={Object.assign({}, cardContainerStyles, this.state.firstCardIndex === index && firstCardContainerStyles, {'zIndex': z[index]})}
-                  onClick={(e) => flip(e, index)}
-                >
-
-                  <Card 
-                    card={card}
-                    index={index}
-                    getRank={getRank}
-                    firstFaceStyles={firstFaceStyles}
-                    dropCardAndSetDeck={this.dropCardAndSetDeck}
-                    firstCardIndex={this.state.firstCardIndex} 
-                    tally={this.tally}
-                  />
-
-                </div>
-              ))
-            } 
-          </div>
+          {!this.props.deckInPlay ? null : 
+            <Deck deckInPlay={this.props.deckInPlay} firstCardIndex={this.state.firstCardIndex} />
+          }
 
           <div className="clickBarrier"></div>
         </main> 

@@ -106,19 +106,6 @@
                             background-color: whitesmoke; 
                             font-size: 1.7rem;
                             & .content { @include flexAll; }
-                            & .pipArea {
-                                & .pip { @include flexAll(column); }
-                                & .suit {
-                                    @include size(35px, 35px);
-                                    display: block;
-                                    border-radius: 50%;
-                                    margin-top: 5px;
-                                }
-                                font-size: 2.3rem;
-                                @include wordBreak(normal);
-                                @include flexAll(row, flex-start);
-                                &.lower { transform: rotate(180deg); }
-                            }
                         }
                         &.back {
                             color: whitesmoke;
@@ -127,36 +114,7 @@
                             font-size: 1.5rem;
                             font-weight: 200;
                         }
-
-                        // Answer buttons
-                        .answer {
-                            @include flexAll;
-                            @include size(100px, 55px);
-                            @include position(absolute, $left: 50%, $x: -50%);
-                            border-radius: 4px;
-                            font-size: 1.3rem;
-                            opacity: 0;
-                            border: medium solid $white;
-                            color: whitesmoke;
-                            cursor: pointer;
-                            &.right {
-                                background-color: $white;
-                                color: $gray;
-                                top: -80px;
-                            }
-                            &.wrong {
-                                background-color: $gray;
-                                bottom: -80px;
-                            }
-                            transition: opacity .25s ease-in .15s;
-                        }
-
                     }
-
-                }
-                // Answer buttons fade in for first card
-                &.fade-in .card .answer {
-                    opacity: 1;
                 }
             }
         } // End of deck element
