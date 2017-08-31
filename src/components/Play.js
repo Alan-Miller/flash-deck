@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { addCards, setDeckInPlay } from '../redux/reducer';
 
 import { getDisplayName } from '../services/service';
-import { getAllCards } from '../services/cardService';
+import { getAllCards, saveCards } from '../services/cardService';
 import cardStyles from '../styles/modularStyles/cardStyleObject';
 
 import { tallyPts } from '../utils/playUtils';
@@ -40,23 +40,24 @@ class Play extends Component {
     document.addEventListener('keydown', this.handleKeyDown);
     getDisplayName().then(displayName => { this.setState({ displayName }) });
 
+    
+    //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
     getAllCards(this.state.userId)
       .then(cards => { 
-        console.log(cards); 
+        console.log('cards in db', cards); 
         this.setState({cards});
       }
     );
 
-    //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
     (() => {
       /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
         Check localStorage for any cards. If none, set empty array
         Handle async (set state after cards come down on props)
       /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
       let cards = 
-      // this.state.cards.length ? this.state.cards
-      localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) 
-      : [];
+      // this.state.cards.length ? this.state.cards :
+      localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) :
+      [];
       
       this.props.addCards(cards);
       const promise = new Promise((resolve, reject) => {
@@ -90,7 +91,7 @@ class Play extends Component {
       Drop event saves document
       FileReader reads file and puts result on reader.result
       Once FileReader finishes, reader.result is mapped
-      newCards array: each item (card) is array with two items (front and back)
+      newCards array: each item (card) is array with three items (front and back and id)
       Add newCards to current cards
       Save cards to localStorage
       Put cards on Redux state with action creator
@@ -101,8 +102,12 @@ class Play extends Component {
     
     reader.onload = () => {
       let newCards= reader.result.split('\r').map((card, index) => {
-        return card.split(/,(.+)/).filter(item => item);
-      }) 
+        return card.split(/,(.+)/).filter(side => side);
+      }).filter(card => card.length === 2);
+
+      saveCards(this.state.userId, newCards)
+      .then(cards => { this.setState({cards}) });
+      
       let cards = this.props.cards.concat(newCards);
       localStorage.setItem('cards', JSON.stringify(cards));
       this.props.addCards(cards)
@@ -136,6 +141,9 @@ class Play extends Component {
     this.setState({firstCardIndex: 0, score: 0})
     const deck = buildDeck(cards);
     this.props.setDeckInPlay(deck);
+    setTimeout(() => {
+      console.log('cards in Redux', this.props.cards);
+    }, 400);
   }
 
   dropCardAndSetDeck(e, direction) {
