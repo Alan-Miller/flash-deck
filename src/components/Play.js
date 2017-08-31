@@ -19,8 +19,7 @@ class Play extends Component {
     super()
 
     this.state = {
-      userId: 2
-      ,firstCardIndex: 0
+      firstCardIndex: 0
       ,face: 'front'
       ,score: 0
       ,points: 0
@@ -39,21 +38,9 @@ class Play extends Component {
     document.addEventListener('keydown', this.handleKeyDown);
     getDisplayName().then(displayName => { this.setState({ displayName }) });
 
-    
     //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
-    getAllCards(this.state.userId)
+    getAllCards(this.props.userId)
       .then(cards => { 
-        console.log('cards in db', cards); 
-
-        /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-          Check localStorage for any cards. If so, add to db cards
-          Handle async (set state after cards come down on props)
-          localStorage currently disabled
-        /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-        // let localCards = localStorage.getItem('cards') ? 
-        // JSON.parse(localStorage.getItem('cards')) 
-        // : [];
-
         this.props.setCards(cards);
         const promise = new Promise((resolve, reject) => {
           if (this.props.cards) resolve('Cards are now on props');
@@ -90,7 +77,6 @@ class Play extends Component {
       Once FileReader finishes, reader.result is mapped
       newCards array: each item (card) is array with three items (front and back and id)
       Add newCards to current cards
-      Save cards to localStorage — DISABLED
       Put cards on Redux state with action creator
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     var file = e.dataTransfer.files[0];
@@ -102,11 +88,10 @@ class Play extends Component {
         return card.split(/,(.+)/).filter(side => side);
       }).filter(card => card.length === 2);
 
-      saveCards(this.state.userId, newCards)
+      saveCards(this.props.userId, newCards)
       .then(cards => { this.setState({cards}) });
       
       let cards = this.props.cards.concat(newCards);
-      // localStorage.setItem('cards', JSON.stringify(cards));
       this.props.setCards(cards)
     }
   }
@@ -138,9 +123,6 @@ class Play extends Component {
     this.setState({firstCardIndex: 0, score: 0})
     const deck = buildDeck(cards);
     this.props.setDeckInPlay(deck);
-    setTimeout(() => {
-      console.log('cards in Redux', this.props.cards);
-    }, 400);
   }
 
   dropCardAndSetDeck(e, direction) {
@@ -155,7 +137,6 @@ class Play extends Component {
     const { cardContainerStyles, firstCardContainerStyles, firstFaceStyles } = cardStyles;
     let z = Array.from(Array(53).keys()).reverse();
     z.pop();
-
 
     return (
       <section className="Play" id="dropZone">
@@ -205,7 +186,7 @@ class Play extends Component {
 
                       <div className="content">
 
-                        { card[0] }
+                        { card.front }
 
                       </div>
 
@@ -224,7 +205,7 @@ class Play extends Component {
                       style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}
                     >
 
-                      { card[1] }
+                      { card.back }
 
                       <div  
                         className="right answer" 
@@ -264,9 +245,9 @@ class Play extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  if (!state) return {};
-  return state;
+function mapStateToProps({ userId, cards, deckInPlay }) {
+  // if (!state) return {};
+  return { userId, cards, deckInPlay };
 }
 
 let outputActions = {

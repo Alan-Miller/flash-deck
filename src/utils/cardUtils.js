@@ -22,4 +22,3 @@ export function dropCard(e, direction, firstCardContainer) {
     firstCardContainer.classList.remove('drop-left', 'drop-right');
   }, 400);
 }
-
