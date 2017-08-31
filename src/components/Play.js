@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addCards, setDeckInPlay } from '../redux/reducer';
+import { setCards, setDeckInPlay } from '../redux/reducer';
 
 import { getDisplayName } from '../services/service';
 import { getAllCards, saveCards } from '../services/cardService';
 import cardStyles from '../styles/modularStyles/cardStyleObject';
 
-import { tallyPts } from '../utils/playUtils';
 import { buildDeck } from '../utils/deckUtils';
-import { flip, dropCard, getRank } from '../utils/cardUtils';
+import { flip, dropCard } from '../utils/cardUtils';
+import { getRank, tallyPts } from '../utils/playUtils';
 
 import Header from './Header';
 
@@ -19,8 +19,7 @@ class Play extends Component {
     super()
 
     this.state = {
-      cards: []
-      ,userId: 2
+      userId: 2
       ,firstCardIndex: 0
       ,face: 'front'
       ,score: 0
@@ -45,27 +44,25 @@ class Play extends Component {
     getAllCards(this.state.userId)
       .then(cards => { 
         console.log('cards in db', cards); 
-        this.setState({cards});
+
+        /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+          Check localStorage for any cards. If so, add to db cards
+          Handle async (set state after cards come down on props)
+          localStorage currently disabled
+        /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+        // let localCards = localStorage.getItem('cards') ? 
+        // JSON.parse(localStorage.getItem('cards')) 
+        // : [];
+
+        this.props.setCards(cards);
+        const promise = new Promise((resolve, reject) => {
+          if (this.props.cards) resolve('Cards are now on props');
+          else reject(new Error('Something bad happened'));
+        });
+        promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
       }
     );
 
-    (() => {
-      /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-        Check localStorage for any cards. If none, set empty array
-        Handle async (set state after cards come down on props)
-      /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-      let cards = 
-      // this.state.cards.length ? this.state.cards :
-      localStorage.getItem('cards') ? JSON.parse(localStorage.getItem('cards')) :
-      [];
-      
-      this.props.addCards(cards);
-      const promise = new Promise((resolve, reject) => {
-        if (this.props.cards) resolve('Cards are now on props');
-        else reject(new Error('Something bad happened'));
-      });
-      promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
-    })()
   }
 
   componentWillUnmount() {
@@ -93,7 +90,7 @@ class Play extends Component {
       Once FileReader finishes, reader.result is mapped
       newCards array: each item (card) is array with three items (front and back and id)
       Add newCards to current cards
-      Save cards to localStorage
+      Save cards to localStorage — DISABLED
       Put cards on Redux state with action creator
     /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     var file = e.dataTransfer.files[0];
@@ -109,8 +106,8 @@ class Play extends Component {
       .then(cards => { this.setState({cards}) });
       
       let cards = this.props.cards.concat(newCards);
-      localStorage.setItem('cards', JSON.stringify(cards));
-      this.props.addCards(cards)
+      // localStorage.setItem('cards', JSON.stringify(cards));
+      this.props.setCards(cards)
     }
   }
 
@@ -273,7 +270,7 @@ function mapStateToProps(state) {
 }
 
 let outputActions = {
-  addCards
+  setCards
   ,setDeckInPlay
 }
 

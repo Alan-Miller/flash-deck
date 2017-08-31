@@ -8,8 +8,8 @@ declare
 begin
 	for i in 1..array_len
     loop
-        insert into cards (user_id, front, back)
-        values (usr_id, arry[i][1], arry[i][2]);
+      insert into cards (user_id, front, back)
+      values (usr_id, arry[i][1], arry[i][2]);
     end loop;
 end
 $save_cards$;

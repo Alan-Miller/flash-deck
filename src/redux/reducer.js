@@ -1,11 +1,11 @@
 // Action types
-const ADD_CARDS = 'ADD_CARDS';
+const SET_CARDS = 'SET_CARDS';
 const SET_DECK_IN_PLAY = 'SET_DECK_IN_PLAY';
 
 // Action creators
-export function addCards(cards) {
+export function setCards(cards) {
   return {
-    type: ADD_CARDS
+    type: SET_CARDS
     ,cards
   }
 }
@@ -26,7 +26,7 @@ const initialState = {
 // Reducers
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case ADD_CARDS:
+    case SET_CARDS:
       return Object.assign({}, state, { cards: [...state.cards, ...action.cards] });
     case SET_DECK_IN_PLAY:
       return Object.assign({}, state, { deckInPlay: action.deck })
