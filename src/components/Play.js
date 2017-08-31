@@ -92,6 +92,7 @@ class Play extends Component {
       .then(cards => { this.setState({cards}) });
       
       let cards = this.props.cards.concat(newCards);
+
       this.props.setCards(cards)
     }
   }

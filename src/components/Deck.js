@@ -1,85 +1,120 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-export default function Deck(props) {
-  return (
-    <div id="deck">
-      { 
-        !props.deckInPlay ? null : props.deckInPlay.map((card, index) => (
-          <div
-            className="card-container" 
-            id={index}
-            key={index}
-            style={Object.assign({}, cardContainerStyles, this.state.firstCardIndex === index && firstCardContainerStyles, {'zIndex': z[index]})}
-            onClick={(e) => flip(e, index)}
-          >
+import { connect } from 'react-redux';
+import { setCards, setDeckInPlay } from '../redux/reducer';
 
-            <card className="card">
-              <div 
-                className="front face"
-                style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
-                <div className="upper pipArea">
-                  <div className="pip">
-                    <div className="rank">
+import { getDisplayName } from '../services/service';
+import { getAllCards } from '../services/cardService';
+import cardStyles from '../styles/modularStyles/cardStyleObject';
 
-                      { getRank(index) }
+// import { buildDeck } from '../utils/deckUtils';
+import { flip, dropCard } from '../utils/cardUtils';
+import { getRank } from '../utils/playUtils';
 
-                    </div>
-                    <div className="suit"></div>
-                  </div>
-                </div>
+class Deck extends Component {
+  constructor() {
+    super()
 
-                <div className="content">
+    this.state = {};
+  }
 
-                  { card.front }
+  render() {
+    const { cardContainerStyles, firstCardContainerStyles, firstFaceStyles } = cardStyles;
+    let z = Array.from(Array(53).keys()).reverse();
+    z.pop();
 
-                </div>
+    return (
+      <div id="deck">
+        { 
+          !this.props.deckInPlay ? null : this.props.deckInPlay.map((card, index) => (
+            <div
+              className="card-container" 
+              id={index}
+              key={index}
+              style={Object.assign({}, cardContainerStyles, this.state.firstCardIndex === index && firstCardContainerStyles, {'zIndex': z[index]})}
+              onClick={(e) => flip(e, index)}
+            >
 
-                <div className="lower pipArea">
-                  <div className="pip">
-                    <div className="rank">
-                      { getRank(index) }
-                    </div>
-                    <div className="suit"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div 
-                className="back face"
-                style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}
-              >
-
-                { card.back }
-
-                <div  
-                  className="right answer" 
-                  ref="right" 
-                  onClick={(e) => {
-                    this.dropCardAndSetDeck(e, 'left'); 
-                    this.tally(1);
-                  }}
-                >
-
-                  Right
-
-                </div>
+              <card className="card">
                 <div 
-                  className="wrong answer" 
-                  ref="wrong" 
-                  onClick={(e) => {
-                    this.dropCardAndSetDeck(e, 'right');
-                    this.tally(-1);
-                  }}
+                  className="front face"
+                  style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
+                  <div className="upper pipArea">
+                    <div className="pip">
+                      <div className="rank">
+
+                        { getRank(index) }
+
+                      </div>
+                      <div className="suit"></div>
+                    </div>
+                  </div>
+
+                  <div className="content">
+
+                    { card.front }
+
+                  </div>
+
+                  <div className="lower pipArea">
+                    <div className="pip">
+                      <div className="rank">
+                        { getRank(index) }
+                      </div>
+                      <div className="suit"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div 
+                  className="back face"
+                  style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}
                 >
 
-                  Wrong
+                  { card.back }
 
+                  <div  
+                    className="right answer" 
+                    ref="right" 
+                    onClick={(e) => {
+                      this.dropCardAndSetDeck(e, 'left'); 
+                      this.tally(1);
+                    }}
+                  >
+
+                    Right
+
+                  </div>
+                  <div 
+                    className="wrong answer" 
+                    ref="wrong" 
+                    onClick={(e) => {
+                      this.dropCardAndSetDeck(e, 'right');
+                      this.tally(-1);
+                    }}
+                  >
+
+                    Wrong
+
+                  </div>
                 </div>
-              </div>
-            </card>
-          </div>
-        ))
-      } 
-    </div>
-  )
+              </card>
+            </div>
+          ))
+        } 
+      </div>
+    )
+  }
 }
+
+function mapStateToProps({ userId, cards, deckInPlay }) {
+  // if (!state) return {};
+  return { userId, cards, deckInPlay };
+}
+
+let outputActions = {
+  setCards
+  ,setDeckInPlay
+}
+
+export default connect(mapStateToProps, outputActions)(Deck);
