@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Home from './Home';
-import Play from './Play';
-import Quiz from './Quiz';
-import Share from './Share';
-import Manage from './Manage';
-import Settings from './Settings';
+import Home from './components/Home';
+import Play from './components/Play';
+import Quiz from './components/Quiz';
+import Share from './components/Share';
+import Manage from './components/Manage';
+import Settings from './components/Settings';
 
 export default class App extends Component {
   constructor() {

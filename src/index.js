@@ -7,7 +7,7 @@ import store from './redux/store';
 import './styles/main.css';
 // import registerServiceWorker from './registerServiceWorker';
 
-import App from './components/App';
+import App from './App';
 
 
 ReactDOM.render(

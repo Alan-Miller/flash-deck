@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { setCards } from '../redux/reducer';
 
-import { getAllCards, saveCard, switchBool, deleteCard } from '../services/cardService';
+import { fileReaderUtil } from '../utils/fileReaderUtil';
+
+import { 
+  getAllCards, 
+  saveCard, 
+  saveCards, 
+  switchBool, 
+  deleteCard } from '../services/cardService';
 
 class Manage extends Component {
 
@@ -15,11 +24,17 @@ class Manage extends Component {
       ,cards: []
     }
     this.handleInput = this.handleInput.bind(this);
+    this.handleFileSelect= this.handleFileSelect.bind(this);
   }
 
   componentDidMount() {
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', this.handleDragOver);
+    dropZone.addEventListener('drop', this.handleFileSelect);
+    
     getAllCards(this.state.userId)
-      .then(cards => { this.setState({cards}) });
+      .then(cards => { this.setState({cards}) }
+    );
   }
 
   handleInput(e, stateVal) {
@@ -41,10 +56,31 @@ class Manage extends Component {
       .then(cards => { this.setState({cards}) });
   }
 
+  handleDragOver(e) {
+    e.preventDefault();
+  }
+  
+  handleFileSelect(e) {
+    const makeNewCards = fileReaderUtil(e);
+    setTimeout(() => {
+      const newCards = makeNewCards();
+      saveCards(this.props.userId, newCards)
+      .then(cards => { console.log(cards) });
+      let cards = this.props.cards.concat(newCards);
+      this.props.setCards(cards);
+
+      setTimeout(() => {
+        getAllCards(this.state.userId)
+          .then(cards => { this.setState({cards}) }
+        );
+      }, 200);
+    }, 200);
+  }
+
   render() {
 
     return (
-      <div className="Manage">
+      <section className="Manage" id="dropZone">
         <Link to="/"><h1>HOME</h1></Link>
         <form className="newCardForm">
           <h1>Make new card</h1>
@@ -105,9 +141,18 @@ class Manage extends Component {
 
           </div>
         </ul>
-      </div>
+      </section>
     )
   }
 }
 
-export default Manage;
+function mapStateToProps({ userId, cards, deckInPlay }) {
+  // if (!state) return {};
+  return { userId, cards, deckInPlay };
+}
+
+let outputActions = {
+  setCards
+}
+
+export default connect(mapStateToProps, outputActions)(Manage);

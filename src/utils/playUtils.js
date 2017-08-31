@@ -5,3 +5,8 @@ export function tallyPts(sign, rank) {
   if (rank === 'K') return 50 * sign;
   if (rank === 'A') return [1, 11][Math.floor(Math.random() * 2)] * sign;
 }
+
+export const getRank = index => {
+  index = index % 13;
+  return ['A','2','3','4','5','6','7','8','9','10','J','Q','K'][index];
+}

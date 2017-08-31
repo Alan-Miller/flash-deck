@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addCards, setDeckInPlay } from '../redux/reducer';
+import { setCards, setDeckInPlay } from '../redux/reducer';
 
 import { getDisplayName } from '../services/service';
+import { getAllCards } from '../services/cardService';
 import cardStyles from '../styles/modularStyles/cardStyleObject';
 
-import { tallyPts } from '../utils/playUtils';
 import { buildDeck } from '../utils/deckUtils';
-import { flip, dropCard, getRank } from '../utils/cardUtils';
+import { flip, dropCard } from '../utils/cardUtils';
+import { getRank, tallyPts } from '../utils/playUtils';
 
 import Header from './Header';
+import Card from './Card';
 
 class Play extends Component {
 
@@ -25,43 +27,33 @@ class Play extends Component {
       ,pointStyle: ''
       ,displayName: ''
     }
-    this.handleFileSelect= this.handleFileSelect.bind(this);
     this.handleKeyDown= this.handleKeyDown.bind(this);
+    this.dropCardAndSetDeck = this.dropCardAndSetDeck.bind(this);
+    this.tally = this.tally.bind(this);
   }
 
   componentDidMount() {
-    //~~~~~~~~~~~~~~~~~~~~~~~ EVENT LISTENERS
-    const dropZone = document.getElementById('dropZone');
-    dropZone.addEventListener('dragover', this.handleDragOver);
-    dropZone.addEventListener('drop', this.handleFileSelect);
-    document.addEventListener('keydown', this.handleKeyDown);
     getDisplayName().then(displayName => { this.setState({ displayName }) });
+    
+    //~~~~~~~~~~~~~~~~~~~~~~~ EVENT LISTENERS
+    document.addEventListener('keydown', this.handleKeyDown);
 
-    //~~~~~~~~~~~~~~~~~~~~~~~ SET CARDS AND BUILD DECK
-    (() => {
-      /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-        Check localStorage for any cards. If none, set empty array
-        Handle async (set state after cards come down on props)
-      /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-      let cards = localStorage.getItem('cards') ? 
-      JSON.parse(localStorage.getItem('cards')) 
-      : [];
-      
-      this.props.addCards(cards);
-      const promise = new Promise((resolve, reject) => {
-        if (this.props.cards) resolve('Cards are now on props');
-        else reject(new Error('Something bad happened'));
-      });
-      promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
-    })()
+    //~~~~~~~~~~~~~~~~~~~~~~~ GET CARDS AND BUILD DECK
+    getAllCards(this.props.userId)
+      .then(cards => { 
+        this.props.setCards(cards);
+        const promise = new Promise((resolve, reject) => {
+          if (this.props.cards) resolve('Cards are now on props');
+          else reject(new Error('Something bad happened'));
+        });
+        promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
+      }
+    );
+
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
-  }
-
-  handleDragOver(e) {
-    e.preventDefault();
   }
 
   tally(sign) {
@@ -72,31 +64,6 @@ class Play extends Component {
     this.setState({points, score, pointStyle});
   }
 
-  handleFileSelect(e) {
-    e.preventDefault();
-
-    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-      Drop event saves document
-      FileReader reads file and puts result on reader.result
-      Once FileReader finishes, reader.result is mapped
-      newCards array: each item (card) is array with two items (front and back)
-      Add newCards to current cards
-      Save cards to localStorage
-      Put cards on Redux state with action creator
-    /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-    var file = e.dataTransfer.files[0];
-    var reader = new FileReader();
-    reader.readAsText(file);
-    
-    reader.onload = () => {
-      let newCards= reader.result.split('\r').map((card, index) => {
-        return card.split(/,(.+)/).filter(item => item);
-      }) 
-      let cards = this.props.cards.concat(newCards);
-      localStorage.setItem('cards', JSON.stringify(cards));
-      this.props.addCards(cards)
-    }
-  }
 
   handleKeyDown(e) {
     const firstIndex = this.state.firstCardIndex;
@@ -122,8 +89,9 @@ class Play extends Component {
   }
 
   buildAndSetDeck(cards) {
-    this.setState({firstCardIndex: 0, score: 0})
-    const deck = buildDeck(cards);
+    this.setState({firstCardIndex: 0, score: 0});
+    const playMode = true;
+    const deck = buildDeck(cards, playMode);
     this.props.setDeckInPlay(deck);
   }
 
@@ -140,9 +108,8 @@ class Play extends Component {
     let z = Array.from(Array(53).keys()).reverse();
     z.pop();
 
-
     return (
-      <section className="Play" id="dropZone">
+      <section className="Play">
         <Header 
           score={this.state.score} 
           points={this.state.points} 
@@ -172,70 +139,16 @@ class Play extends Component {
                   onClick={(e) => flip(e, index)}
                 >
 
-                  <card className="card">
-                    <div 
-                      className="front face"
-                      style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}>
-                      <div className="upper pipArea">
-                        <div className="pip">
-                          <div className="rank">
+                  <Card 
+                    card={card}
+                    index={index}
+                    getRank={getRank}
+                    firstFaceStyles={firstFaceStyles}
+                    dropCardAndSetDeck={this.dropCardAndSetDeck}
+                    firstCardIndex={this.state.firstCardIndex} 
+                    tally={this.tally}
+                  />
 
-                            { getRank(index) }
-
-                          </div>
-                          <div className="suit"></div>
-                        </div>
-                      </div>
-
-                      <div className="content">
-
-                        { card[0] }
-
-                      </div>
-
-                      <div className="lower pipArea">
-                        <div className="pip">
-                          <div className="rank">
-                            { getRank(index) }
-                          </div>
-                          <div className="suit"></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div 
-                      className="back face"
-                      style={Object.assign({}, this.state.firstCardIndex === index && firstFaceStyles)}
-                    >
-
-                      { card[1] }
-
-                      <div  
-                        className="right answer" 
-                        ref="right" 
-                        onClick={(e) => {
-                          this.dropCardAndSetDeck(e, 'left'); 
-                          this.tally(1);
-                        }}
-                      >
-
-                        Right
-
-                      </div>
-                      <div 
-                        className="wrong answer" 
-                        ref="wrong" 
-                        onClick={(e) => {
-                          this.dropCardAndSetDeck(e, 'right');
-                          this.tally(-1);
-                        }}
-                      >
-
-                        Wrong
-
-                      </div>
-                    </div>
-                  </card>
                 </div>
               ))
             } 
@@ -248,13 +161,13 @@ class Play extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  if (!state) return {};
-  return state;
+function mapStateToProps({ userId, cards, deckInPlay }) {
+  // if (!state) return {};
+  return { userId, cards, deckInPlay };
 }
 
 let outputActions = {
-  addCards
+  setCards
   ,setDeckInPlay
 }
 

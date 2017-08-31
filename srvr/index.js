@@ -86,28 +86,35 @@ app.get('/api/cards/:id', (req, res) => {
     })
 })
 
-app.post('/api/cards/:id', (req, res) => {
+app.post('/api/card/:id', (req, res) => {
     app.get('db').postSaveCard([req.params.id, req.body.front, req.body.back])
     .then(response => {
         res.status(200).send(response);
     })
 });
 
-app.put('/api/cards/:cardId/stop_showing', (req, res) => {
+app.post('/api/cards/:id', (req, res) => {
+    app.get('db').postSaveCards([req.params.id, req.body.cards])
+    .then(response => {
+        res.status(200).send(response);
+    })
+});
+
+app.put('/api/card/:cardId/stop_showing', (req, res) => {
     app.get('db').putStopShowing([req.params.cardId, req.body.userId])
     .then(response => {
         res.status(200).send(response);
     })
 })
 
-app.put('/api/cards/:cardId/show_less', (req, res) => {
+app.put('/api/card/:cardId/show_less', (req, res) => {
     app.get('db').putShowLess([req.params.cardId, req.body.userId])
     .then(response => {
         res.status(200).send(response);
     })
 })
 
-app.delete('/api/cards/:cardId/:userId', (req, res) => {
+app.delete('/api/card/:cardId/:userId', (req, res) => {
     app.get('db').deleteCard([req.params.cardId, req.params.userId])
     .then(response => {
         res.status(200).send(response);
