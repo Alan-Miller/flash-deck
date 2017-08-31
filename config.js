@@ -11,4 +11,5 @@ module.exports = {
   collections
   quiz
   match game (match front to back)
+  change Manage timeouts to something else
 */

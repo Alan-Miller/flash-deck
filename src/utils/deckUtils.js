@@ -7,12 +7,11 @@ export function shuffle(deck) {
   return shuffled;
 }
 
-export function buildDeck(cards) {
+export function buildDeck(cards, playMode = false) {
   /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
     Reset position and display of cards and buttons
     Make array of all decks. Each is random but uniform length
   /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
   const cardContainers = document.getElementsByClassName('card-container');
   [].forEach.call(cardContainers, (container, index) => {
     container.style.display = 'flex';
@@ -24,9 +23,14 @@ export function buildDeck(cards) {
   });
 
   if (!cards.length) return;
-  let deck = [];
-  if (cards.length < 52) while (deck.length < 52) deck = deck.concat(shuffle(cards));
-  else deck = cards;
-  return shuffle(deck).slice(0, 52);
+
+  if (playMode) {
+    let deck = [];
+    if (cards.length < 52) while (deck.length < 52) deck = deck.concat(shuffle(cards));
+    else deck = cards;
+    return shuffle(deck).slice(0, 52);
+  }
+
+  else if (!playMode) return shuffle(cards);
 }
 
