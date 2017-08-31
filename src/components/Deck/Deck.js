@@ -1,14 +1,14 @@
 import React from 'react';
-import Card from './Card/Card';
+import Card from '../Card/Card';
 
-import { flip } from '../utils/cardUtils';
-import { getRank } from '../utils/playUtils';
-import cardStyles from '../styles/modularStyles/cardStyleObject';
+import { flip } from '../../utils/cardUtils';
+import { getRank } from '../../utils/playUtils';
+import cardStyles from '../Card/cardStyleObject';
 
 const { firstCardContainerStyles, firstFaceStyles, cardContainerStyles } = cardStyles;
 
 export default function Deck(props) {
-  const { deckInPlay, firstCardIndex } = props;
+  const { deckInPlay, firstCardIndex, topFunction, bottomFunction } = props;
   let z = Array.from(Array(53).keys()).reverse();
   z.pop();
 
@@ -22,16 +22,14 @@ export default function Deck(props) {
             key={index}
             style={Object.assign({}, cardContainerStyles, firstCardIndex === index && firstCardContainerStyles, {'zIndex': z[index]})}
             onClick={(e) => flip(e, index)}>
+            
             <Card 
               card={card}
               rank={getRank(index)}
-              topFunction={(e) => { 
-                this.dropCardAndSetDeck(e, 'left'); 
-                this.updateScore(1); }}
-              bottomFunction={(e) => {
-                this.dropCardAndSetDeck(e, 'right'); 
-                this.updateScore(-1); }}
-              cardStyle={Object.assign({}, firstCardIndex === index && firstFaceStyles)}/>
+              topFunction={topFunction}
+              bottomFunction={bottomFunction}
+              cardStyle={Object.assign({}, firstCardIndex === index && firstFaceStyles)}
+            />
           </div>
         ))
       } 

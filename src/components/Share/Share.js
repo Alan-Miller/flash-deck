@@ -5,7 +5,7 @@ import {
           getUsers,
           getUserFriends,
           postFriendshipInvite,
-          getPendingFriendships  } from '../services/friendService';
+          getPendingFriendships  } from '../../services/friendService';
 
 export default class Share extends Component {
 

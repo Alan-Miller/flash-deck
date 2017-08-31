@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setCards, setDeckInPlay } from '../redux/reducer';
+import { setCards, setDeckInPlay } from '../../redux/reducer';
 
-import { getAllCards } from '../services/cardService';
+import { getAllCards } from '../../services/cardService';
 
-import { buildDeck } from '../utils/deckUtils';
-import { flip, dropCard } from '../utils/cardUtils';
-import { tallyPoints } from '../utils/playUtils';
+import { buildDeck } from '../../utils/deckUtils';
+import { flip, dropCard } from '../../utils/cardUtils';
+import { tallyPoints } from '../../utils/playUtils';
 
-import Header from './Header';
-import Deck from './Deck';
+import Header from '../Header/Header';
+import Deck from '../Deck/Deck';
 
 class Play extends Component {
 
@@ -119,7 +119,18 @@ class Play extends Component {
           </div>
 
           {!this.props.deckInPlay ? null : 
-            <Deck deckInPlay={this.props.deckInPlay} firstCardIndex={this.state.firstCardIndex} />
+            <Deck 
+              deckInPlay={this.props.deckInPlay} 
+              firstCardIndex={this.state.firstCardIndex} 
+              topFunction={(e) => { 
+                this.dropCardAndSetDeck(e, 'left'); 
+                this.updateScore(1); }
+              }
+              bottomFunction={(e) => {
+                this.dropCardAndSetDeck(e, 'right'); 
+                this.updateScore(-1); }
+              }
+            />
           }
 
           <div className="clickBarrier"></div>
