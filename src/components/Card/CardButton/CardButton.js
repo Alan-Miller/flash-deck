@@ -5,7 +5,7 @@ export default function(props) {
     <div  
       className={props.className}
       onClick={props.onClick}>
-      {props.children}
+      { props.children } 
     </div>
   )
 }

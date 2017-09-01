@@ -18,7 +18,7 @@
         40% {left: #{$sign}450px;}
         100% {
             bottom: -100vh; left: #{$sign}700px; 
-            transform: rotateZ(-360deg);
+            transform: rotateZ(#{$sign}360deg);
         }
     }
 }

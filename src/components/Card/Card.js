@@ -36,7 +36,7 @@ export default function Card(props) {
 
         <CardButton 
           className="right answer" 
-          onClick={topFunction}>
+          onClick={buttonFunction1}>
           Right
         </CardButton>
 

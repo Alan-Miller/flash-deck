@@ -122,11 +122,13 @@ class Play extends Component {
             <Deck 
               deckInPlay={this.props.deckInPlay} 
               firstCardIndex={this.state.firstCardIndex} 
-              topFunction={(e) => { 
+              text1="Right"
+              buttonFn1={(e) => { 
                 this.dropCardAndSetDeck(e, 'left'); 
                 this.updateScore(1); }
               }
-              bottomFunction={(e) => {
+              text2="Wrong"
+              buttonFn2={(e) => {
                 this.dropCardAndSetDeck(e, 'right'); 
                 this.updateScore(-1); }
               }
