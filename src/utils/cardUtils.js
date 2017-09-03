@@ -1,27 +1,31 @@
-export function flip(e, id) {
-  e.stopPropagation();
-  const card = document.getElementById(id);
-  card.classList.toggle('flip');
-  card.classList.add('fade-in');
-}
+const $redsuit = `#C24444`;
+const $blacksuit = `#205050`;
 
-export function dropCard(e, direction, firstCardContainer) {
-  e.stopPropagation();
-  /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-      Buttons disappear on drop
-      Drop styles added
-      Reset button and card styles after drop animation
-  /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  const buttons = firstCardContainer.children[0].children[1].children;
-  [].forEach.call(buttons, button => button.style.display = 'none');
 
-  firstCardContainer.classList.add(`drop-${direction}`);
+// export function flip(e, id) {
+//   e.stopPropagation();
+//   const card = document.getElementById(id);
+//   card.classList.toggle('flip');
+//   card.classList.add('fade-in');
+// }
 
-  setTimeout(() => {
-    firstCardContainer.style.display = 'none';
-    firstCardContainer.classList.remove('drop-left', 'drop-right');
-  }, 700);
-}
+// export function dropCard(e, direction, firstCardContainer) {
+//   e.stopPropagation();
+//   /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+//       Buttons disappear on drop
+//       Drop styles added
+//       Reset button and card styles after drop animation
+//   /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+//   const buttons = firstCardContainer.children[0].children[1].children;
+//   [].forEach.call(buttons, button => button.style.display = 'none');
+
+//   firstCardContainer.classList.add(`drop-${direction}`);
+
+//   setTimeout(() => {
+//     firstCardContainer.style.display = 'none';
+//     firstCardContainer.classList.remove('drop-left', 'drop-right');
+//   }, 700);
+// }
 
 
 // const cardContainers = document.getElementsByClassName('card-container');
@@ -33,9 +37,11 @@ export function dropCard(e, direction, firstCardContainer) {
 // });
 
 
-export function positionCardContainer(index, currentCardIndex, numCards) {
+export function styleCardContainer(index, currentCardIndex, numCards) {
   // Position and rotation of cards on left
-  let random = Math.ceil(11 / (index + 1));
+  // let random = Math.ceil(11 / (index + 1));
+  let random = index % 13;
+  random = index % 3 ? random * .4 : random * 1.9; // every third is different
   // let random = Math.ceil(Math.random() * 11); // rotate up to 11 deg
   random = random % 2 ? random * -1 : random; // odd numbers rotate other way
   const leftStyles = {
@@ -72,6 +78,8 @@ export function positionCardContainer(index, currentCardIndex, numCards) {
 }
 
 
+
+
 export function flipCard(index, currentCardIndex, reveal) {
   if (index < currentCardIndex || (index === currentCardIndex && reveal)) {
     return {transform: `rotateY(180deg)`};
@@ -79,7 +87,47 @@ export function flipCard(index, currentCardIndex, reveal) {
   else return {transform: `rotateY(360deg)`};
 }
 
-export function cardShadow(index, currentCardIndex) {
-  if (index !== currentCardIndex) return {boxShadow: `4px 4px 4px 0px rgba(22, 22, 22, .4)`}
-  return {boxShadow: `17px 17px 17px 0px rgba(22, 22, 22, .5)`}
+
+
+
+
+export function cardFace(index, currentCardIndex, face) {
+  let shadow, style;
+  if (index === currentCardIndex) shadow = {boxShadow: `17px 17px 17px 0px rgba(22, 22, 22, .5)`}
+  else shadow = {boxShadow: `4px 4px 4px 0px rgba(22, 22, 22, .4)`}
+
+  if (face === 'back') {
+    if (index < 13) style = {backgroundColor: $blacksuit};
+    else if (index < 26) style = {backgroundColor: $redsuit};
+    else if (index < 39) style = {backgroundColor: $blacksuit};
+    else style = {backgroundColor: $redsuit};
+  }
+
+  if (face === 'front') {
+    if (index < 13) style = {
+      border: `medium solid ${$blacksuit}`,
+      color: $blacksuit
+    };
+    else if (index < 26) style = {
+      border: `medium solid ${$redsuit}`,
+      color: $redsuit
+    };
+    else if (index < 39) style = {
+      border: `medium solid ${$blacksuit}`,
+      color: $blacksuit
+    };
+    else if (index < 52) style = {
+      border: `medium solid ${$redsuit}`,
+      color: $redsuit
+    };
+  }
+
+  return Object.assign({}, shadow, style);
 }
+
+// export function theSuitStyle(index) {
+//   if (index < 13) return {backgroundImage: `url('./imgs/clubs.png')`};
+//   if (index < 26) return {backgroundImage: `url('./imgs/diamonds.png')`};
+//   if (index < 39) return {backgroundImage: `url('./imgs/spades.png')`};
+//   if (index < 52) return {backgroundImage: `url('./imgs/hearts.png')`};
+// }

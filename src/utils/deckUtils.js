@@ -12,15 +12,15 @@ export function buildDeck(cards, playMode = false) {
     Reset position and display of cards and buttons
     Make array of all decks. Each is random but uniform length
   /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-  const cardContainers = document.getElementsByClassName('card-container');
-  [].forEach.call(cardContainers, (container, index) => {
-    container.style.display = 'flex';
-    container.classList.remove('flip');
-    container.classList.remove('fade-in');
-  });
-  [].forEach.call(document.getElementsByClassName('answer'), container => {
-    container.style.display = 'flex';
-  });
+  // const cardContainers = document.getElementsByClassName('card-container');
+  // [].forEach.call(cardContainers, (container, index) => {
+  //   container.style.display = 'flex';
+  //   container.classList.remove('flip');
+  //   container.classList.remove('fade-in');
+  // });
+  // [].forEach.call(document.getElementsByClassName('answer'), container => {
+  //   container.style.display = 'flex';
+  // });
 
   if (!cards.length) return;
 

@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { setCards, setDeck } from '../../redux/reducer';
-
+import { connect } from 'react-redux';
 import { getAllCards } from '../../services/cardService';
-
 import { buildDeck } from '../../utils/deckUtils';
-import { flip, dropCard } from '../../utils/cardUtils';
-import { tallyPoints } from '../../utils/playUtils';
+import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
+import Pip from '../Card/Pip/Pip';
+import { getRank } from '../../utils/playUtils';
 
-import Header from '../Header/Header';
-import Deck from '../Deck/Deck';
+// import clubs from '../../imgs/clubs.png';
 
 class Play extends Component {
 
@@ -18,136 +15,126 @@ class Play extends Component {
     super()
 
     this.state = {
-      route: 'Play'
-      ,face: 'front'
-      ,score: 0
-      ,points: 0
-      ,pointStyle: ''
-      ,firstCardIndex: 0
+      currentCardIndex: -1
+      ,reveal: false
     }
+    this.advance = this.advance.bind(this);
+    this.reverse = this.reverse.bind(this);
     this.handleKeyDown= this.handleKeyDown.bind(this);
-    this.dropCardAndSetDeck = this.dropCardAndSetDeck.bind(this);
-    this.updateScore = this.updateScore.bind(this);
   }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
-
+    
+    const playMode = true;
     getAllCards(this.props.userId)
-      .then(cards => { 
-        this.props.setCards(cards);
-        const promise = new Promise((resolve, reject) => {
-          if (this.props.cards) resolve('Cards are now on props');
-          else reject(new Error('Something bad happened'));
-        });
-        promise.then(fulfilled => {this.buildAndSetDeck(this.props.cards);});
-      }
-    );
-
+    .then(cards => {
+      this.props.setDeck(buildDeck(cards, playMode));
+    });
   }
-
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  updateScore(sign) {
-    const { points, pointStyle } = tallyPoints(this.state.firstCardIndex, sign);
-    const score = this.state.score + points;
-    this.setState({points, score, pointStyle});
+  advance() {
+    const { deck } = this.props;
+    const { currentCardIndex } = this.state;
+    let nextIndex = this.state.currentCardIndex + 1;
+    
+    if (currentCardIndex >= deck.length) this.setState({currentCardIndex: -1, reveal: false});
+    
+    if (this.state.reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
+    else this.setState({reveal: true});
   }
 
+  reverse() {
+    const { deck } = this.props;
+    const { currentCardIndex } = this.state;
+    const nextIndex = this.state.currentCardIndex - 1;
+
+    if (currentCardIndex <= -1) {
+      this.setState({currentCardIndex: deck.length});
+      console.log(currentCardIndex)
+    }
+    else {
+      if (!this.state.reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
+      else this.setState({reveal: false});
+    }
+  }
 
   handleKeyDown(e) {
-    const firstIndex = this.state.firstCardIndex;
-    const card = document.getElementById(firstIndex)
-    if (!card || firstIndex > 51) return;
-
-    this.setState({ pointStyle: '' })
-
-    let { face } = this.state;
-    let direction = '';
-
-    if (face === 'front') {
-      if ( e.which >= 38 && e.which <= 40 ) { flip(e, firstIndex); }
-      this.setState({ face: 'back' })
-    }
-    if (face === 'back') {
-      if (e.which === 37)                   { flip(e, firstIndex); }
-      if (e.which === 38 || e.which === 39) { direction = 'left'; this.updateScore(1); }
-      if (e.which === 40)                   { direction = 'right'; this.updateScore(-1); }
-      this.setState({ face: 'front' })
-    } 
-    direction && this.dropCardAndSetDeck(e, direction);
+    if (e.which === 37) this.reverse();
+    if (e.which === 39) this.advance();
   }
 
-  buildAndSetDeck(cards) {
-    this.setState({firstCardIndex: 0, score: 0});
-    const playMode = true;
-    const deck = buildDeck(cards, playMode);
-    this.props.setDeck(deck);
-  }
-
-  dropCardAndSetDeck(e, direction) {
-    const { firstCardIndex } = this.state;
-    const firstCard = document.getElementById(firstCardIndex);
-    dropCard(e, direction, firstCard); // Drop card
-    this.setState(Object.assign( {}, {firstCardIndex: firstCardIndex + 1} )) // Set index
-    this.props.setDeck(this.props.currentDeck.splice(0)); // Set deck
-  }
+  // theSuitStyle(index) {
+  //   if (index < 13) return {backgroundImage: `url('../../imgs/clubs.png')`};
+  //   if (index < 26) return {backgroundImage: `url('../../imgs/diamonds.png')`};
+  //   if (index < 39) return {backgroundImage: `url('../../imgs/spades.png')`};
+  //   if (index < 52) return {backgroundImage: `url('../../imgs/hearts.png')`};
+  // }
 
   render() {
-
-    return (
+    const { currentCardIndex } = this.state;
+    const { deck } = this.props;
+    
+    return(
       <section className="Play">
-        <Header headerText="Honor"
-          score={this.state.score} 
-          points={this.state.points} 
-          pointStyle={this.state.pointStyle} 
-        />
-        <main className="main">
-          <div 
-            className="button" 
-            onClick={() => this.buildAndSetDeck(this.props.cards)}>
-            Make random deck
+        <main>
+          {deck.length}
+          <div className="table">
+            
+            <div className="deck">
+              <div className="cards-go-here" onClick={this.reverse}></div>
+              <div className="cards-go-here" onClick={this.advance}></div>
+
+              { deck && deck.map((card, i) => (
+                <div className="card-container" key={i}
+                  style={styleCardContainer(i, currentCardIndex, deck.length)}>
+                  
+                  <div className="card"
+                    style={flipCard(i, currentCardIndex, this.state.reveal)}
+                    onClick={
+                      i < currentCardIndex ? this.reverse :
+                      i > currentCardIndex ? this.advance :
+                      null
+                    }>
+                    <div className="front face" style={cardFace(i, currentCardIndex, 'front')}>
+                      <Pip className="upper pipArea">
+                        { getRank(i) }
+                      </Pip>
+                      <div className="content">
+                        { card.front }
+                      </div>
+                      <Pip className="lower pipArea">
+                        { getRank(i) }
+                      </Pip>
+                    </div>
+
+                    <div className="back face" style={cardFace(i, currentCardIndex, 'back')}>
+                      <div className="content">
+                        { card.back }
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              ))}
+            </div>
           </div>
-
-          <div className="nav">
-            <h2>PLAY COMPONENT</h2>
-            <Link to="/"><h4>Home</h4></Link>
-          </div>
-
-          {!this.props.currentDeck ? null : 
-            <Deck 
-              currentDeck={this.props.currentDeck} 
-              firstCardIndex={this.state.firstCardIndex} 
-              text1="Right"
-              buttonFn1={(e) => { 
-                this.dropCardAndSetDeck(e, 'left'); 
-                this.updateScore(1); }
-              }
-              text2="Wrong"
-              buttonFn2={(e) => {
-                this.dropCardAndSetDeck(e, 'right'); 
-                this.updateScore(-1); }
-              }
-            />
-          }
-
-          <div className="clickBarrier"></div>
-        </main> 
+        </main>
       </section>
     )
   }
 }
 
-function mapStateToProps({ userId, cards, currentDeck }) {
-  // if (!state) return {};
-  return { userId, cards, currentDeck };
+let outputActions = {
+  setCards, setDeck
 }
 
-let outputActions = {
-  setCards
-  ,setDeck
+function mapStateToProps(state) {
+  if (!state) return {};
+  return state;
 }
 
 export default connect(mapStateToProps, outputActions)(Play);

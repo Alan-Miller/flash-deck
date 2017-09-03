@@ -3,7 +3,7 @@ import { setCards } from '../../redux/reducer';
 import { connect } from 'react-redux';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
-import { positionCardContainer, flipCard, cardShadow } from '../../utils/cardUtils';
+import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
 
 class Quiz extends Component {
 
@@ -26,6 +26,9 @@ class Quiz extends Component {
     .then(cards => {
       this.props.setCards(shuffle(cards));
     });
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   advance() {
@@ -74,7 +77,7 @@ class Quiz extends Component {
 
               { cards && cards.map((card, i) => (
                 <div className="card-container" key={i}
-                  style={positionCardContainer(i, currentCardIndex, cards.length)}>
+                  style={styleCardContainer(i, currentCardIndex, cards.length)}>
                   
                   <div className="card"
                     style={flipCard(i, currentCardIndex, this.state.reveal)}
@@ -83,13 +86,13 @@ class Quiz extends Component {
                       i > currentCardIndex ? this.advance :
                       null
                     }>
-                    <div className="front face" style={cardShadow(i, currentCardIndex)}>
+                    <div className="front face" style={cardFace(i, currentCardIndex, 'front')}>
                       <div className="content">
                         { card.front }
                       </div>
                     </div>
 
-                    <div className="back face" style={cardShadow(i, currentCardIndex)}>
+                    <div className="back face" style={cardFace(i, currentCardIndex, 'back')}>
                       <div className="content">
                         { card.back }
                       </div>

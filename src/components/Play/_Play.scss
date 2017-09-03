@@ -1,43 +1,123 @@
 .Play {
-    position: relative;
-
-    .main {
-        @include size(100vw, calc(100vh - #{$headerHeight}));
-        @include flexAll(row, flex-start);
+    @include size (100%, 100vh);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: .02px;
+    padding: .02px;
+    
+    .table {
+        @include size(950px, 550px);
+        margin: .02px;
+        padding: .02px;
+        border: medium solid $redsuit;
         position: relative;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        background-color: $darkbluegreen;
-        .nav {
-            @include position(fixed, $bottom: 0);
-            display: flex;
-            margin: 70px;
-            font-size: 2rem;
-        }
-
-        // Random deck button 
-        .button {
-            background-color: #bbb;
-            margin: 100px;
-            padding: 30px;
-            border: none;
+        
+        .cards-go-here {
+            @include size($cardWidth, $cardHeight);
+            border-radius: 18px;
+            border: thin dashed $white;
             cursor: pointer;
+            z-index: 1;
+            transform: scale(.8);
         }
-
-
-        // Click barrier
-        .clickBarrier {
-            @include size(calc(50% - #{$halfCardHeight}), $cardHeight);
-            @include position(
-                absolute,
-                $top: calc(50% - #{$halfCardHeight}),
-                $left: calc(50% + #{$halfCardHeight})
-            );
-            opacity: .5;
-            z-index: 51;
-            // background-color: red;
-        }
-
-    } // End of .Play className
+    }
 }
+
+.qButton {
+    @include size(200px, 70px);
+    @include position(absolute);
+    background-color: green;
+    cursor: pointer;
+    @include flexAll;
+    color: $white;
+    z-index: 10;
+}
+.qButton2 {
+    @extend .qButton;
+    @include position(absolute, $left: 400px);
+}
+
+.deck {
+    @include size(100%, $cardHeight);
+    @include flexAll;
+}
+
+
+
+.card {
+    @include size($cardWidth, $cardHeight);
+    @include wordBreak;
+    display: block;
+    transform-style: preserve-3d;
+    transition: .5s ease;
+    border-radius: 18px;
+    
+    .face {
+        @include size(100%, 100%);
+        position: absolute;
+        backface-visibility: hidden;
+        border-radius: 18px;
+        box-shadow: 2px 2px 2px 0px rgba(22, 22, 22, .2);
+        padding: 5px 10px;
+        cursor: pointer;
+        @include prefix('user-select', none);
+        -webkit-touch-callout: none; // Safari's user-select property
+
+        &.front {
+            @include flexAll(column, space-between, auto);
+            background-color: whitesmoke; 
+            font-size: 1.7rem;
+            & .content { @include flexAll; }
+            // background-color: $white;
+        }
+
+        &.back {
+            border: thick solid whitesmoke;
+            font-size: 1.5rem;
+            font-weight: 200;
+            color: $white;
+            // background-color: $white;
+        }
+    }
+}
+
+.Play {
+    .front {
+        background-color: $white;
+    }
+    .back {
+        transform: rotateY(-180deg);
+        background-color: $white;
+    }
+    .card-container {
+        transition: .7s ease;
+        position: absolute;
+        @extend %translateCenter;
+
+    }
+    .deck {
+        @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+        z-index: 2;
+        @include flexAll($justify: space-between);
+    }
+    .card {
+        @include cardColor($blacksuit);
+    }
+
+    .suit {
+        background-size: 30px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+}
+
+
+
+.card-container {
+    @include size($cardWidth, $cardHeight);
+    perspective: 1000;
+    
+}
+
 

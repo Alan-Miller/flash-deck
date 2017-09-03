@@ -106,17 +106,17 @@
 }
 
 
-.Play {
-    .back {
-        transform: rotateX(180deg);
-        color: whitesmoke;
-    }
-    .deck {
-        @include size($cardWidth, $cardHeight);
-        display: flex;
-        // box-sizing: content-box;
-    }
-}
+// .Play {
+//     .back {
+//         transform: rotateX(180deg);
+//         color: whitesmoke;
+//     }
+//     .deck {
+//         @include size($cardWidth, $cardHeight);
+//         display: flex;
+//         // box-sizing: content-box;
+//     }
+// }
 
 
 .card-container {

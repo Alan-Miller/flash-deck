@@ -7,7 +7,7 @@ export default function PipArea(props) {
         <div className="rank">
           { props.children }
         </div>
-        <div className="suit"></div>
+        <div className="suit" style={props.suitStyle}></div>
       </div>
     </div>
   )
