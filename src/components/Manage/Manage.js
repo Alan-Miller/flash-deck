@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setCards } from '../redux/reducer';
+import { setCards } from '../../redux/reducer';
 
-import { fileReaderUtil } from '../utils/fileReaderUtil';
+import { fileReaderUtil } from '../../utils/fileReaderUtil';
 
 import { 
   getAllCards, 
   saveCard, 
   saveCards, 
   switchBool, 
-  deleteCard } from '../services/cardService';
+  deleteCard } from '../../services/cardService';
 
 class Manage extends Component {
 

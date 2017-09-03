@@ -1,7 +1,7 @@
 // Action types
 const GET_USER_ID = 'GET_USER_ID';
 const SET_CARDS = 'SET_CARDS';
-const SET_DECK_IN_PLAY = 'SET_DECK_IN_PLAY';
+const SET_DECK = 'SET_DECK';
 
 // Action creators
 export function getUserId() {
@@ -15,9 +15,9 @@ export function setCards(cards) {
     ,cards
   }
 }
-export function setDeckInPlay(deck) {
+export function setDeck(deck) {
   return {
-    type: SET_DECK_IN_PLAY
+    type: SET_DECK
     ,deck
   }
 }
@@ -26,7 +26,7 @@ export function setDeckInPlay(deck) {
 const initialState = {
   userId: 2
   ,cards: []
-  ,deckInPlay: []
+  ,currentDeck: []
 }
 
 // Reducers
@@ -36,8 +36,8 @@ export default function reducer(state = initialState, action) {
       return state.userId;
     case SET_CARDS:
       return Object.assign({}, state, { cards: [...state.cards, ...action.cards] });
-    case SET_DECK_IN_PLAY:
-      return Object.assign({}, state, { deckInPlay: action.deck });
+    case SET_DECK:
+      return Object.assign({}, state, { currentDeck: action.deck });
     default:
       return state;
   }

@@ -1,0 +1,99 @@
+* {
+    transition: transform .8s ease;
+}
+
+.Quiz {
+    @include size (100%, 100vh);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: .02px;
+    padding: .02px;
+    // position: relative;
+    .Quiz__table {
+        @include size(70vw, 70vh);
+        @include flexAll($justify: space-between);
+        margin: .02px;
+        padding: .02px;
+        border: medium solid $redsuit;
+        position: relative;
+        
+        .Quiz__cards-go-here {
+            @include size(250px, 350px);
+            border-radius: 8px;
+            border: thin dashed $white;
+        }
+        .Quiz__deck {
+            position: absolute;
+            border: thin dotted blue;
+            @include size(100%, 350px);
+            @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+            @include flexAll;
+            transition: transform .8s ease;
+        }
+        .Quiz__card-container {
+            @include size(250px, 350px);
+            @extend %translateCenter;
+            position: absolute;
+            perspective: 1000;
+            transition: transform .8s ease;
+        }
+        .Quiz__card {
+            @include size(250px, 350px);
+            background-color: $white;
+            border: thin solid $redsuit;
+            transform-style: preserve-3d;
+            transition: transform .2s ease;
+            display: block;
+
+            .face {
+                @include size(100%, 100%);
+                backface-visibility: hidden;
+                box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
+
+                &.back {
+                    transform: rotateX(180deg);
+                }
+            }
+        }
+    }
+
+    .main {
+        // @include size(100vw, calc(100vh - #{$headerHeight}));
+        // @include flexAll(row, flex-start);
+        // position: relative;
+        // overflow-x: hidden;
+        // overflow-y: hidden;
+        // background-color: $darkbluegreen;
+        .nav {
+            // @include position(fixed, $bottom: 0);
+            // display: flex;
+            // margin: 70px;
+            // font-size: 2rem;
+        }
+
+        // Random deck button 
+        .button {
+            // background-color: #bbb;
+            // margin: 100px;
+            // padding: 30px;
+            // border: none;
+            // cursor: pointer;
+        }
+
+    } // End of .Quiz className
+}
+
+.qButton {
+    @include size(200px, 70px);
+    @include position(absolute);
+    background-color: green;
+    cursor: pointer;
+    @include flexAll;
+    color: $white;
+    z-index: 10;
+}
+.qButton2 {
+    @extend .qButton;
+    @include position(absolute, $left: 400px);
+}

@@ -4,16 +4,21 @@
 
 // Modular styles
 @import './modularStyles/buttonStyles';
-@import './modularStyles/cardStyles';
 @import './modularStyles/formStyles';
 @import './modularStyles/textStyles';
+@import '../components/Card/CardExtras';
 
 // Component styles
-@import './componentStyles/App';
-@import './componentStyles/Header';
-@import './componentStyles/Home';
-@import './componentStyles/Play';
-@import './componentStyles/Quiz';
-@import './componentStyles/Share';
-@import './componentStyles/Manage';
-@import './componentStyles/Settings';
+@import '../App';
+
+@import '../components/Card/Card';
+@import '../components/Header/Header';
+@import '../components/Home/Home';
+@import '../components/Play/Play';
+@import '../components/Quiz/Quiz';
+@import '../components/Share/Share';
+@import '../components/Manage/Manage';
+@import '../components/Settings/Settings';
+@import '../components/Card/CardButton/CardButton';
+@import '../components/Card/Pip/Pip';
+@import '../components/Deck/Deck';

@@ -10,7 +10,7 @@ export default {
     ,transform: 'scale(1)'
   }
   
-  ,firstFaceStyles: {
+  ,firstCardStyles: {
     boxShadow: '32px 32px 22px 0px rgba(22, 22, 22, .3)'
     ,borderRadius: '18px'
   }
