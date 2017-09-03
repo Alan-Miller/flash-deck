@@ -5,7 +5,8 @@ import { getAllCards } from '../../services/cardService';
 import { buildDeck } from '../../utils/deckUtils';
 import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
 import Pip from '../Card/Pip/Pip';
-import { getRank } from '../../utils/playUtils';
+import CardButton from '../Card/CardButton/CardButton';
+import { getRank, tallyPoints } from '../../utils/playUtils';
 
 // import clubs from '../../imgs/clubs.png';
 
@@ -17,9 +18,11 @@ class Play extends Component {
     this.state = {
       currentCardIndex: -1
       ,reveal: false
+      ,score: 0
     }
     this.advance = this.advance.bind(this);
     this.reverse = this.reverse.bind(this);
+    this.updateScore = this.updateScore.bind(this);
     this.handleKeyDown= this.handleKeyDown.bind(this);
   }
 
@@ -67,6 +70,12 @@ class Play extends Component {
     if (e.which === 39) this.advance();
   }
 
+  updateScore(correct) {
+    const points = tallyPoints(this.state.currentCardIndex, correct);
+    this.setState({points});
+    this.setState({score: this.state.score + points})
+  }
+
   // theSuitStyle(index) {
   //   if (index < 13) return {backgroundImage: `url('../../imgs/clubs.png')`};
   //   if (index < 26) return {backgroundImage: `url('../../imgs/diamonds.png')`};
@@ -75,18 +84,35 @@ class Play extends Component {
   // }
 
   render() {
-    const { currentCardIndex } = this.state;
+    const { currentCardIndex, points, score } = this.state;
     const { deck } = this.props;
     
     return(
       <section className="Play">
         <main>
-          {deck.length}
+          # Cards: {deck.length}
+          <br/>
+          Points: {points}
+          <br/>
+          Score: {score}
           <div className="table">
             
             <div className="deck">
               <div className="cards-go-here" onClick={this.reverse}></div>
               <div className="cards-go-here" onClick={this.advance}></div>
+              
+              <div className="buttons">
+                <CardButton className="right button" 
+                  buttonStyle={currentCardIndex !== -1 && {opacity: '1'}}
+                  onClick={() => this.updateScore(true)}>
+                  Right
+                </CardButton>
+                <CardButton className="wrong button" 
+                  buttonStyle={currentCardIndex !== -1 && {opacity: '1'}}
+                  onClick={() => this.updateScore(false)}>
+                  Wrong
+                </CardButton>
+              </div>
 
               { deck && deck.map((card, i) => (
                 <div className="card-container" key={i}

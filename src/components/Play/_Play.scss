@@ -1,4 +1,17 @@
 .Play {
+    .buttons {
+        position: absolute;
+        top: -70px;
+        left: 50%;
+        transform: translateX(-50%);
+        @include flexAll;
+    }
+
+    .button {
+        opacity: 0;
+        transition: .15s;
+    }
+
     @include size (100%, 100vh);
     display: flex;
     justify-content: center;
@@ -22,20 +35,6 @@
             transform: scale(.8);
         }
     }
-}
-
-.qButton {
-    @include size(200px, 70px);
-    @include position(absolute);
-    background-color: green;
-    cursor: pointer;
-    @include flexAll;
-    color: $white;
-    z-index: 10;
-}
-.qButton2 {
-    @extend .qButton;
-    @include position(absolute, $left: 400px);
 }
 
 .deck {
