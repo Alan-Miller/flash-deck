@@ -23,6 +23,21 @@
     }
 }
 
+@mixin moveKeyframes($animationName, $sign: null) {
+    @keyframes #{$animationName} {
+        0%  {
+            left: 0;
+            position: absolute;
+            transform: rotateZ(0deg);
+        }
+        100% {
+            left: -400px;
+            position: absolute;
+            transform: rotateZ(-70deg);
+        }
+    }
+}
+
 %suitBgImg {
     background-size: 30px;
     background-repeat: no-repeat;

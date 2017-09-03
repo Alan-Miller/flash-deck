@@ -6,31 +6,29 @@ import { setCards, setDeck } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 
 import { buildDeck } from '../../utils/deckUtils';
-import { flip, dropCard } from '../../utils/cardUtils';
-import { tallyPoints } from '../../utils/playUtils';
+
+import { flip, dropCard, moveCard } from '../../utils/cardUtils';
 
 import Header from '../Header/Header';
 import Deck from '../Deck/Deck';
 
-class Play extends Component {
+class Quiz extends Component {
 
   constructor() {
     super()
 
     this.state = {
-      route: 'Play'
+      route: 'Quiz'
       ,face: 'front'
-      ,score: 0
-      ,points: 0
-      ,pointStyle: ''
       ,firstCardIndex: 0
     }
     this.handleKeyDown= this.handleKeyDown.bind(this);
     this.dropCardAndSetDeck = this.dropCardAndSetDeck.bind(this);
-    this.updateScore = this.updateScore.bind(this);
+    this.moveCardAndSetDeck = this.moveCardAndSetDeck.bind(this);
   }
 
   componentDidMount() {
+    
     document.addEventListener('keydown', this.handleKeyDown);
 
     getAllCards(this.props.userId)
@@ -50,17 +48,10 @@ class Play extends Component {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  updateScore(sign) {
-    const { points, pointStyle } = tallyPoints(this.state.firstCardIndex, sign);
-    const score = this.state.score + points;
-    this.setState({points, score, pointStyle});
-  }
-
-
   handleKeyDown(e) {
-    const firstIndex = this.state.firstCardIndex;
-    const card = document.getElementById(firstIndex)
-    if (!card || firstIndex > 51) return;
+    const { route, firstCardIndex } = this.state;
+    const card = document.getElementById(firstCardIndex)
+    if (!card || firstCardIndex > 51) return;
 
     this.setState({ pointStyle: '' })
 
@@ -68,22 +59,22 @@ class Play extends Component {
     let direction = '';
 
     if (face === 'front') {
-      if ( e.which >= 38 && e.which <= 40 ) { flip(e, firstIndex); }
+      if ( e.which >= 38 && e.which <= 40 ) { flip(e, firstCardIndex); }
       this.setState({ face: 'back' })
     }
     if (face === 'back') {
-      if (e.which === 37)                   { flip(e, firstIndex); }
-      if (e.which === 38 || e.which === 39) { direction = 'left'; this.updateScore(1); }
-      if (e.which === 40)                   { direction = 'right'; this.updateScore(-1); }
+      if (e.which === 37)                   { flip(e, firstCardIndex); }
+      if (e.which === 38 || e.which === 39) { direction = 'left'; }
+      if (e.which === 40)                   { direction = 'right'; }
       this.setState({ face: 'front' })
     } 
-    direction && this.dropCardAndSetDeck(e, direction);
+    // if (direction && route === 'Play') this.dropCardAndSetDeck(e, direction);
+    if (direction && route === 'Quiz') this.moveCardAndSetDeck(e, direction);
   }
 
   buildAndSetDeck(cards) {
-    this.setState({firstCardIndex: 0, score: 0});
-    const playMode = true;
-    const deck = buildDeck(cards, playMode);
+    this.setState({firstCardIndex: 0});
+    const deck = buildDeck(cards);
     this.props.setDeck(deck);
   }
 
@@ -95,15 +86,23 @@ class Play extends Component {
     this.props.setDeck(this.props.currentDeck.splice(0)); // Set deck
   }
 
+  moveCardAndSetDeck(e, direction) {
+    const { firstCardIndex } = this.state;
+    const firstCard = document.getElementById(firstCardIndex);
+    let numToAdd = direction === 'right' ? 1 : direction === 'left' ? -1 : null;
+    numToAdd = numToAdd < 0 ? 0 : numToAdd;
+    
+    moveCard(e, direction, firstCard); // Move card
+
+    this.setState(Object.assign( {}, {firstCardIndex: firstCardIndex + numToAdd} )) // Set index
+    // this.props.setDeck(this.props.currentDeck.splice(0)); // Set deck
+  }
+
   render() {
 
     return (
-      <section className="Play">
-        <Header headerText="Honor"
-          score={this.state.score} 
-          points={this.state.points} 
-          pointStyle={this.state.pointStyle} 
-        />
+      <section className="Quiz">
+        <Header headerText={this.state.firstCardIndex} />
         <main className="main">
           <div 
             className="button" 
@@ -120,16 +119,10 @@ class Play extends Component {
             <Deck 
               currentDeck={this.props.currentDeck} 
               firstCardIndex={this.state.firstCardIndex} 
-              text1="Right"
-              buttonFn1={(e) => { 
-                this.dropCardAndSetDeck(e, 'left'); 
-                this.updateScore(1); }
-              }
-              text2="Wrong"
-              buttonFn2={(e) => {
-                this.dropCardAndSetDeck(e, 'right'); 
-                this.updateScore(-1); }
-              }
+              text1="Show less"
+              buttonFn1={ (e) => {this.dropCardAndSetDeck(e, 'left');} }
+              text2="Stop showing"
+              buttonFn2={ (e) => {this.dropCardAndSetDeck(e, 'right');} }
             />
           }
 
@@ -150,4 +143,4 @@ let outputActions = {
   ,setDeck
 }
 
-export default connect(mapStateToProps, outputActions)(Play);
+export default connect(mapStateToProps, outputActions)(Quiz);

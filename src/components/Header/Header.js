@@ -5,7 +5,7 @@ export default function Header(props) {
     <section className="Header">
       <div className="scorecard">
         {/* {props.displayName && <div>{`${props.displayName}'s`}</div>} */}
-        <div>Honor</div>
+        <div>{props.headerText}</div>
         <div className="score">{props.score}</div>
         <div className={'points ' + props.pointStyle}>{props.points}</div>
       </div>

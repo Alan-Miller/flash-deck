@@ -1,180 +1,99 @@
+* {
+    transition: transform .8s ease;
+}
+
 .Quiz {
-    position: relative;
+    @include size (100%, 100vh);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: .02px;
+    padding: .02px;
+    // position: relative;
+    .Quiz__table {
+        @include size(70vw, 70vh);
+        @include flexAll($justify: space-between);
+        margin: .02px;
+        padding: .02px;
+        border: medium solid $redsuit;
+        position: relative;
+        
+        .Quiz__cards-go-here {
+            @include size(250px, 350px);
+            border-radius: 8px;
+            border: thin dashed $white;
+        }
+        .Quiz__deck {
+            position: absolute;
+            border: thin dotted blue;
+            @include size(100%, 350px);
+            @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+            @include flexAll;
+            transition: transform .8s ease;
+        }
+        .Quiz__card-container {
+            @include size(250px, 350px);
+            @extend %translateCenter;
+            position: absolute;
+            perspective: 1000;
+            transition: transform .8s ease;
+        }
+        .Quiz__card {
+            @include size(250px, 350px);
+            background-color: $white;
+            border: thin solid $redsuit;
+            transform-style: preserve-3d;
+            transition: transform .2s ease;
+            display: block;
+
+            .face {
+                @include size(100%, 100%);
+                backface-visibility: hidden;
+                box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
+
+                &.back {
+                    transform: rotateX(180deg);
+                }
+            }
+        }
+    }
 
     .main {
-        @include size(100vw, calc(100vh - #{$headerHeight}));
-        @include flexAll(row, flex-start);
-        position: relative;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        background-color: $darkbluegreen;
+        // @include size(100vw, calc(100vh - #{$headerHeight}));
+        // @include flexAll(row, flex-start);
+        // position: relative;
+        // overflow-x: hidden;
+        // overflow-y: hidden;
+        // background-color: $darkbluegreen;
         .nav {
-            @include position(fixed, $bottom: 0);
-            display: flex;
-            margin: 70px;
-            font-size: 2rem;
+            // @include position(fixed, $bottom: 0);
+            // display: flex;
+            // margin: 70px;
+            // font-size: 2rem;
         }
 
         // Random deck button 
         .button {
-            background-color: #bbb;
-            margin: 100px;
-            padding: 30px;
-            border: none;
-            cursor: pointer;
+            // background-color: #bbb;
+            // margin: 100px;
+            // padding: 30px;
+            // border: none;
+            // cursor: pointer;
         }
 
-        // Deck
-        #deck {
-            @include position(
-                absolute,
-                calc(50% - #{$halfCardHeight}),
-                calc(50% - #{$halfCardWidth})
-            );
-            margin: 0; 
-            padding: 0;
-            display: flex;
-            box-sizing: content-box;
-            // border: solid thick blue;
-
-            // Card containers
-            .card-container {
-                @include flexAll(column);
-                @include position(relative, $bottom: 0, $left: 0);
-                @include size($cardWidth, $cardHeight);
-                transform: scale(.88);
-                perspective: 1000; 
-
-                &.drop-left { animation: dropLeft .55s forwards; }
-                @include dropKeyframes(dropLeft, '-');
-                
-                &.drop-right { animation: dropRight .55s forwards; }
-                @include dropKeyframes(dropRight, '+');
-                
-                &.flip .card { transform: rotateX(180deg) }
-
-                // Suit styles
-                &:nth-child(-n+13)  { 
-                    @include cardColor($blacksuit); 
-                    .suit { 
-                        @extend %suitBgImg;
-                        background-image: url('../imgs/clubs.png'); 
-                    }
-                }
-                &:nth-child(n+14)   { 
-                    @include cardColor($redsuit);
-                    .suit { 
-                        @extend %suitBgImg;
-                        background-image: url('../imgs/diamonds.png'); 
-                    }
-                }
-                &:nth-child(n+27)   { 
-                    @include cardColor($blacksuit); 
-                    .suit { 
-                        @extend %suitBgImg;
-                        background-image: url('../imgs/spades.png'); 
-                    }
-                }
-                &:nth-child(n+40)   { 
-                    @include cardColor($redsuit); 
-                    .suit { 
-                        @extend %suitBgImg;
-                        background-image: url('../imgs/hearts.png'); 
-                    }
-                }
-
-                // Cards
-                .card {
-                    @include size($cardWidth, $cardHeight);
-                    @include wordBreak;
-                    display: block;
-                    transform-style: preserve-3d;
-                    transition: transform .15s ease;
-
-                    // Card faces
-                    .face {
-                        @include size(100%, 100%);
-                        position: absolute;
-                        backface-visibility: hidden;
-                        border-radius: 18px;
-                        box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
-                        padding: 5px 10px;
-                        cursor: pointer;
-
-                        &.front {
-                            @include flexAll(column, space-between, auto);
-                            background-color: whitesmoke; 
-                            font-size: 1.7rem;
-                            & .content { @include flexAll; }
-                            & .pipArea {
-                                & .pip { @include flexAll(column); }
-                                & .suit {
-                                    @include size(35px, 35px);
-                                    display: block;
-                                    border-radius: 50%;
-                                    margin-top: 5px;
-                                }
-                                font-size: 2.3rem;
-                                @include wordBreak(normal);
-                                @include flexAll(row, flex-start);
-                                &.lower { transform: rotate(180deg); }
-                            }
-                        }
-                        &.back {
-                            color: whitesmoke;
-                            border: thick solid whitesmoke;
-                            transform: rotateX(180deg);
-                            font-size: 1.5rem;
-                            font-weight: 200;
-                        }
-
-                        // Answer buttons
-                        .answer {
-                            @include flexAll;
-                            @include size(100px, 55px);
-                            @include position(absolute, $left: 50%, $x: -50%);
-                            border-radius: 4px;
-                            font-size: 1.3rem;
-                            opacity: 0;
-                            border: medium solid $white;
-                            color: whitesmoke;
-                            cursor: pointer;
-                            &.right {
-                                background-color: $white;
-                                color: $gray;
-                                top: -80px;
-                            }
-                            &.wrong {
-                                background-color: $gray;
-                                bottom: -80px;
-                            }
-                            transition: opacity .25s ease-in .15s;
-                        }
-
-                    }
-
-                }
-                // Answer buttons fade in for first card
-                &.fade-in .card .answer {
-                    opacity: 1;
-                }
-            }
-        } // End of deck element
-
-
-        // Click barrier
-        .clickBarrier {
-            @include size(calc(50% - #{$halfCardHeight}), $cardHeight);
-            @include position(
-                absolute,
-                $top: calc(50% - #{$halfCardHeight}),
-                $left: calc(50% + #{$halfCardHeight})
-            );
-            opacity: .5;
-            z-index: 51;
-            // background-color: red;
-        }
-
-    } // End of .Play className
+    } // End of .Quiz className
 }
 
+.qButton {
+    @include size(200px, 70px);
+    @include position(absolute);
+    background-color: green;
+    cursor: pointer;
+    @include flexAll;
+    color: $white;
+    z-index: 10;
+}
+.qButton2 {
+    @extend .qButton;
+    @include position(absolute, $left: 400px);
+}

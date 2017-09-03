@@ -5,6 +5,7 @@
       calc(50% - #{$halfCardHeight}),
       calc(50% - #{$halfCardWidth})
   );
+  @include size($cardWidth, $cardHeight);
   margin: 0; 
   padding: 0;
   display: flex;
@@ -24,6 +25,12 @@
       
       &.drop-right { animation: dropRight .8s forwards; }
       @include dropKeyframes(dropRight, '+');
+
+      &.move-left { animation: moveLeft .4s forwards; }
+      @include moveKeyframes(moveLeft, '-');
+
+      &.move-right { animation: moveRight .4s forwards; }
+      @include moveKeyframes(moveRight, '+');
       
       &.flip .card { transform: rotateX(180deg) }
 

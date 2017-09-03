@@ -74,8 +74,8 @@ a {
 
 @mixin position(
     $position: null, 
-    $top: null, 
     $left: null, 
+    $top: null, 
     $bottom: null, 
     $right: null,
     $x: 0,
@@ -88,4 +88,8 @@ a {
     bottom: $bottom;
     right: $right;
     transform: translate($x, $y) rotate($deg);
+}
+
+%translateCenter {
+    transform: translate(-50%, -50%);
 }

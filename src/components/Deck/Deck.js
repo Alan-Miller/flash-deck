@@ -9,14 +9,14 @@ import cardStyles from '../Card/cardStyleObject';
 const { cardContainerStyles, firstCardContainerStyles, firstCardStyles } = cardStyles;
 
 export default function Deck(props) {
-  const { deckInPlay, firstCardIndex, text1, buttonFn1, text2, buttonFn2 } = props;
+  const { currentDeck, firstCardIndex, text1, buttonFn1, text2, buttonFn2 } = props;
   let z = Array.from(Array(53).keys()).reverse();
   z.pop();
 
   return (
     <section id="deck">
       { 
-        deckInPlay.map((card, index) => (
+        currentDeck.map((card, index) => (
           <div className="card-container" 
             id={index}
             key={index}
