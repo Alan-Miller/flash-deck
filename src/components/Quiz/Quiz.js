@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { setCards } from '../../redux/reducer';
 import { connect } from 'react-redux';
 import { getAllCards } from '../../services/cardService';
-import { positionCard } from '../../utils/cardUtils';
+import { positionCardContainer, flipCard } from '../../utils/cardUtils';
 
 class Quiz extends Component {
 
@@ -11,6 +11,7 @@ class Quiz extends Component {
 
     this.state = {
       currentCardIndex: 0
+      ,reveal: false
     }
     this.add = this.add.bind(this);
     this.sub = this.sub.bind(this);
@@ -27,16 +28,19 @@ class Quiz extends Component {
   add() {
     let nextIndex = this.state.currentCardIndex + 1;
     nextIndex = nextIndex > 7 ? -1 : nextIndex;
-    this.setState({currentCardIndex: nextIndex})
+    if (this.state.reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
+    else this.setState({reveal: true});
   }
 
   sub() {
     const nextIndex = this.state.currentCardIndex - 1;
-    this.setState({currentCardIndex: nextIndex})
+    // if (this.state.reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
+    // else this.setState({reveal: true});
+    this.setState({currentCardIndex: nextIndex, reveal: true})
   }
 
   render() {
-    
+    const { currentCardIndex } = this.state;
     
     return(
       <section className="Quiz">
@@ -50,9 +54,10 @@ class Quiz extends Component {
             <div className="Quiz__deck">
               { this.props.cards && this.props.cards.map((card, i) => (
                 <div className="Quiz__card-container" key={i}
-                  style={positionCard(i, this.state.currentCardIndex)}>
+                  style={positionCardContainer(i, currentCardIndex, this.props.cards.length)}>
                   
-                  <div className="Quiz__card">
+                  <div className="card"
+                    style={flipCard(i, currentCardIndex, this.state.reveal)}>
                     <div className="front face">
                       <div className="content">
                         { card.front }

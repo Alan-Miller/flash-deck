@@ -47,46 +47,53 @@ export function moveCard(e, direction, firstCardContainer) {
 // });
 
 
-export function positionCard(index, currentCardIndex) {
+export function positionCardContainer(index, currentCardIndex, numCards) {
+  // Position and rotation of cards on left
+  let random = Math.ceil(11 / (index + 1));
   // let random = Math.ceil(Math.random() * 11); // rotate up to 11 deg
-  // random = random % 2 ? random * -1 : random; // odd numbers become negative
+  random = random % 2 ? random * -1 : random; // odd numbers rotate other way
   const leftStyles = {
-    left: `0`, 
-    // right: `auto`, 
-    transform: `translateX(0) rotate(0deg) scale(.88)`};
+    left: `250px`, 
+    zIndex: index,
+    transform: `translateX(-100%) rotateZ(${random}deg) scale(.88)`,
+    transition: `.2s`
+  }
   if (index < currentCardIndex) return leftStyles;
 
+  // Position and rotation of current card (middle)
   const currentCardStyles = {
     left: `50%`, 
-    // right: `auto`, 
-    transform: `translateX(-50%) rotate(0deg) scale(1)`
+    zIndex: numCards + 1,
+    transform: `translateX(-50%) rotateZ(0deg) scale(1)`,
+    transition: `.5s`
   }
   if (index === currentCardIndex) return currentCardStyles;
 
+  // Position and rotation of cards on right
+  // let z = Array.from(Array(53).keys()).reverse(); z.pop();
   let rightStyles = {
-    left: `80%`,
-    // right: `0`, 
-    transform: `translateX(0) rotate(0deg) scale(.88)`
+    left: `auto`,
+    zIndex: numCards - index,
+    right: `0`, 
+    transform: `translateX(0) rotateZ(0deg) scale(.88)`,
+    transition: `.5s`
   };
-  // if (index > currentCardIndex && index <= currentCardIndex + 5) {
-  //   Object.assign(rightStyles, {
-  //     right: `-${index - currentCardIndex}px`, 
-  //     left: `auto`,
-  //     top: `${index - currentCardIndex}px`
-  //   });
-  // }
+  if (index > currentCardIndex && index <= currentCardIndex + 5) {
+    Object.assign(rightStyles, {
+      right: `-${index - currentCardIndex}px`, 
+      top: `${index - currentCardIndex}px`
+    });
+  }
   if (index > currentCardIndex) return rightStyles;
-  
-  
-  
-  
 }
 
-// @include position(absolute, $right: 0%, $top: 50%, $x: 0%, $y: -50%);
-// Object.assign({}, leftCardStyles, {transform: `translate() rotate(${rotateRandom()}deg)`})
 
-// const leftCardStyles = {
-//   position: `absolute`
-//   ,left: `0`
-//   ,top: `50%`
-// }
+export function flipCard(index, currentCardIndex, reveal) {
+  // if (index < currentCardIndex) return {transform: `rotateY(180deg)`};
+  // if (index === currentCardIndex) return {transform: `rotateY(180deg)`};
+  // if (index > currentCardIndex) return {transform: `rotateY(360deg)`};
+  if (index < currentCardIndex || (index === currentCardIndex && reveal)) {
+    return {transform: `rotateY(180deg)`};
+  }
+  else return {transform: `rotateY(360deg)`};
+}
