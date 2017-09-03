@@ -23,20 +23,6 @@ export function dropCard(e, direction, firstCardContainer) {
   }, 700);
 }
 
-export function moveCard(e, direction, firstCardContainer) {
-  console.log(direction, firstCardContainer);
-  e.stopPropagation();
-  const buttons = firstCardContainer.children[0].children[1].children;
-
-  if (direction === 'right') {
-    [].forEach.call(buttons, button => button.style.display = 'flex');
-    firstCardContainer.classList.remove(`move-left`);
-  }
-  else if (direction === 'left') {
-    [].forEach.call(buttons, button => button.style.display = 'none');
-    firstCardContainer.classList.add(`move-left`);
-  }
-}
 
 // const cardContainers = document.getElementsByClassName('card-container');
 // [].forEach.call(cardContainers, (container, index) => {
@@ -54,7 +40,7 @@ export function positionCardContainer(index, currentCardIndex, numCards) {
   random = random % 2 ? random * -1 : random; // odd numbers rotate other way
   const leftStyles = {
     left: `250px`, 
-    zIndex: index,
+    zIndex: index + 100,
     transform: `translateX(-100%) rotateZ(${random}deg) scale(.88)`,
     transition: `.2s`
   }
@@ -63,37 +49,37 @@ export function positionCardContainer(index, currentCardIndex, numCards) {
   // Position and rotation of current card (middle)
   const currentCardStyles = {
     left: `50%`, 
-    zIndex: numCards + 1,
+    zIndex: numCards + 101,
     transform: `translateX(-50%) rotateZ(0deg) scale(1)`,
     transition: `.5s`
   }
   if (index === currentCardIndex) return currentCardStyles;
 
   // Position and rotation of cards on right
-  // let z = Array.from(Array(53).keys()).reverse(); z.pop();
   let rightStyles = {
     left: `auto`,
-    zIndex: numCards - index,
+    zIndex: (numCards - index) + 100,
     right: `0`, 
     transform: `translateX(0) rotateZ(0deg) scale(.88)`,
     transition: `.5s`
   };
-  if (index > currentCardIndex && index <= currentCardIndex + 5) {
-    Object.assign(rightStyles, {
-      right: `-${index - currentCardIndex}px`, 
-      top: `${index - currentCardIndex}px`
-    });
-  }
-  if (index > currentCardIndex) return rightStyles;
+  // Shift cards to look like a stack, but only show 4 at a time
+  if (index > currentCardIndex) Object.assign(rightStyles, {
+    top: `${(index - 1 - currentCardIndex) * 4}px`
+  });
+  if (index > currentCardIndex + 4) Object.assign(rightStyles, {display: 'none'})
+  return rightStyles;
 }
 
 
 export function flipCard(index, currentCardIndex, reveal) {
-  // if (index < currentCardIndex) return {transform: `rotateY(180deg)`};
-  // if (index === currentCardIndex) return {transform: `rotateY(180deg)`};
-  // if (index > currentCardIndex) return {transform: `rotateY(360deg)`};
   if (index < currentCardIndex || (index === currentCardIndex && reveal)) {
     return {transform: `rotateY(180deg)`};
   }
   else return {transform: `rotateY(360deg)`};
+}
+
+export function cardShadow(index, currentCardIndex) {
+  if (index !== currentCardIndex) return {boxShadow: `4px 4px 4px 0px rgba(22, 22, 22, .4)`}
+  return {boxShadow: `17px 17px 17px 0px rgba(22, 22, 22, .5)`}
 }

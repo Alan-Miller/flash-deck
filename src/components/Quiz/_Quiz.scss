@@ -6,34 +6,21 @@
     margin: .02px;
     padding: .02px;
     
-    .Quiz__table {
-        @include size(70vw, 70vh);
-        @include flexAll($justify: space-between);
+    .table {
+        @include size(950px, 550px);
         margin: .02px;
         padding: .02px;
         border: medium solid $redsuit;
         position: relative;
         
-        .Quiz__cards-go-here {
-            @include size(250px, 350px);
-            border-radius: 8px;
+        .cards-go-here {
+            @include size($cardWidth, $cardHeight);
+            border-radius: 18px;
             border: thin dashed $white;
+            cursor: pointer;
+            z-index: 1;
+            transform: scale(.8);
         }
-        .Quiz__deck {
-            position: absolute;
-            border: thin dotted blue;
-            @include size(100%, 350px);
-            @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
-            @include flexAll;
-        }
-        .Quiz__card-container {
-            @include size(250px, 350px);
-            @extend %translateCenter;
-            position: absolute;
-            perspective: 1000;
-            transition: transform .7s ease;
-        }
-        
     }
 }
 
@@ -51,24 +38,19 @@
     @include position(absolute, $left: 400px);
 }
 
-
-.Quiz {
-    .front {
-        background-color: $white;
-    }
-    .back {
-        transform: rotateY(-180deg);
-        background-color: $white;
-    }
+.deck {
+    @include size(100%, $cardHeight);
+    @include flexAll;
 }
 
 
+
 .card {
-    @include size(250px, 350px);
+    @include size($cardWidth, $cardHeight);
     @include wordBreak;
     display: block;
     transform-style: preserve-3d;
-    transition: transform .5s ease;
+    transition: .5s ease;
     border-radius: 18px;
     
     .face {
@@ -76,9 +58,11 @@
         position: absolute;
         backface-visibility: hidden;
         border-radius: 18px;
-        box-shadow: 7px 7px 7px 0px rgba(22, 22, 22, .8);
+        box-shadow: 2px 2px 2px 0px rgba(22, 22, 22, .2);
         padding: 5px 10px;
         cursor: pointer;
+        @include prefix('user-select', none);
+        -webkit-touch-callout: none; // Safari's user-select property
 
         &.front {
             @include flexAll(column, space-between, auto);
@@ -89,15 +73,37 @@
         }
 
         &.back {
-            // transform: rotateY(-180deg);
             border: thick solid whitesmoke;
             font-size: 1.5rem;
             font-weight: 200;
+            color: $white;
             // background-color: $white;
         }
     }
 }
 
+.Quiz {
+    .front {
+        background-color: $white;
+    }
+    .back {
+        transform: rotateY(-180deg);
+        background-color: $white;
+    }
+    .card-container {
+        transition: .7s ease;
+        position: absolute;
+        @extend %translateCenter;
+    }
+    .deck {
+        @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+        z-index: 2;
+        @include flexAll($justify: space-between);
+    }
+    .card {
+        @include cardColor($blacksuit);
+    }
+}
 
 
 .Play {
@@ -105,4 +111,17 @@
         transform: rotateX(180deg);
         color: whitesmoke;
     }
+    .deck {
+        @include size($cardWidth, $cardHeight);
+        display: flex;
+        // box-sizing: content-box;
+    }
 }
+
+
+.card-container {
+    @include size($cardWidth, $cardHeight);
+    perspective: 1000;
+    
+}
+

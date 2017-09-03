@@ -33,7 +33,7 @@ class Manage extends Component {
     dropZone.addEventListener('drop', this.handleFileSelect);
     
     getAllCards(this.state.userId)
-      .then(cards => { this.setState({cards}) }
+      .then(cards => { this.props.setCards(cards); }
     );
   }
 
@@ -43,17 +43,20 @@ class Manage extends Component {
 
   makeCard(front, back) {
     saveCard(this.state.userId, front, back)
-      .then(cards => { this.setState({cards, front: '', back: ''}) });
+      .then(cards => { 
+        this.setState({front: '', back: ''}); 
+        this.props.setCards(cards);
+      });
   }
 
   toggleBool(cardId, colName) {
     switchBool(cardId, colName, this.state.userId)
-      .then(cards => { this.setState({cards}) })
+      .then(cards => { this.props.setCards(cards); })
   }
 
   delete(userId, cardId) {
     deleteCard(userId, cardId)
-      .then(cards => { this.setState({cards}) });
+      .then(cards => { this.props.setCards(cards); });
   }
 
   handleDragOver(e) {
@@ -71,7 +74,7 @@ class Manage extends Component {
 
       setTimeout(() => {
         getAllCards(this.state.userId)
-          .then(cards => { this.setState({cards}) }
+          .then(cards => { this.props.setCards(cards) }
         );
       }, 200);
     }, 200);
@@ -82,6 +85,7 @@ class Manage extends Component {
     return (
       <section className="Manage" id="dropZone">
         <Link to="/"><h1>HOME</h1></Link>
+        
         <form className="newCardForm">
           <h1>Make new card</h1>
           <input
@@ -112,8 +116,8 @@ class Manage extends Component {
               <div className="bool">Show less</div>
             </div>
             
-            { this.state.cards.map((card, i) => (
-              <li key={i} className="card">
+            { this.props.cards && this.props.cards.map((card, i) => (
+              <li key={i} className="cardContent">
                 <div className="cardFaces">
                   <div className="front">{card.front}</div>
                   <div className="back">{card.back}</div>

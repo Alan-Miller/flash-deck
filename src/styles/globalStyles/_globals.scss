@@ -72,6 +72,14 @@ a {
     align-items: $align;
 }
 
+@mixin prefix($property, $value) {
+    #{'-webkit-' + $property}: $value;
+     #{'-khtml-' + $property}: $value;
+       #{'-moz-' + $property}: $value;
+        #{'-ms-' + $property}: $value;
+            #{'' + $property}: $value;
+}
+
 @mixin position(
     $position: null, 
     $left: null, 
