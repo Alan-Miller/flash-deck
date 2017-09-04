@@ -41,18 +41,17 @@ class Play extends Component {
 
   advance() {
     const { deck } = this.props;
-    const { currentCardIndex } = this.state;
+    const { currentCardIndex, reveal } = this.state;
     let nextIndex = this.state.currentCardIndex + 1;
     
     if (currentCardIndex >= deck.length) this.setState({currentCardIndex: -1, reveal: false});
-    
-    if (this.state.reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
+    if (reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
     else this.setState({reveal: true});
   }
 
   reverse() {
     const { deck } = this.props;
-    const { currentCardIndex } = this.state;
+    const { currentCardIndex, reveal } = this.state;
     const nextIndex = this.state.currentCardIndex - 1;
 
     if (currentCardIndex <= -1) {
@@ -60,7 +59,7 @@ class Play extends Component {
       console.log(currentCardIndex)
     }
     else {
-      if (!this.state.reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
+      if (!reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
       else this.setState({reveal: false});
     }
   }
@@ -84,7 +83,7 @@ class Play extends Component {
   // }
 
   render() {
-    const { currentCardIndex, points, score } = this.state;
+    const { currentCardIndex, points, score, reveal } = this.state;
     const { deck } = this.props;
     
     return(
@@ -99,27 +98,36 @@ class Play extends Component {
             
             <div className="deck">
               <div className="cards-go-here" onClick={this.reverse}></div>
+
+              <div className="center-of-table">
+                <div className="upper bar">
+                  <CardButton className="right-answer button" 
+                    buttonStyle={currentCardIndex !== -1 && {opacity: '1'}}
+                    disabled={!reveal && 'disabled'}
+                    onClick={() => this.updateScore(true)}>
+                    Right
+                  </CardButton>
+                </div>
+                <div className="lower bar">
+                  <CardButton className="wrong-answer button" 
+                    buttonStyle={currentCardIndex !== -1 && {opacity: '1'}}
+                    disabled={!reveal && 'disabled'}
+                    onClick={() => this.updateScore(false)}>
+                    Wrong
+                  </CardButton>
+                </div>
+              </div>
+              
               <div className="cards-go-here" onClick={this.advance}></div>
               
-              <div className="buttons">
-                <CardButton className="right button" 
-                  buttonStyle={currentCardIndex !== -1 && {opacity: '1'}}
-                  onClick={() => this.updateScore(true)}>
-                  Right
-                </CardButton>
-                <CardButton className="wrong button" 
-                  buttonStyle={currentCardIndex !== -1 && {opacity: '1'}}
-                  onClick={() => this.updateScore(false)}>
-                  Wrong
-                </CardButton>
-              </div>
+             
 
               { deck && deck.map((card, i) => (
                 <div className="card-container" key={i}
                   style={styleCardContainer(i, currentCardIndex, deck.length)}>
                   
                   <div className="card"
-                    style={flipCard(i, currentCardIndex, this.state.reveal)}
+                    style={flipCard(i, currentCardIndex, reveal)}
                     onClick={
                       i < currentCardIndex ? this.reverse :
                       i > currentCardIndex ? this.advance :

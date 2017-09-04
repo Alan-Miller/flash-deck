@@ -1,17 +1,4 @@
 .Play {
-    .buttons {
-        position: absolute;
-        top: -70px;
-        left: 50%;
-        transform: translateX(-50%);
-        @include flexAll;
-    }
-
-    .button {
-        opacity: 0;
-        transition: .15s;
-    }
-
     @include size (100%, 100vh);
     display: flex;
     justify-content: center;
@@ -20,7 +7,7 @@
     padding: .02px;
     
     .table {
-        @include size(950px, 550px);
+        @include size(800px, 550px);
         margin: .02px;
         padding: .02px;
         border: medium solid $redsuit;
@@ -29,10 +16,47 @@
         .cards-go-here {
             @include size($cardWidth, $cardHeight);
             border-radius: 18px;
-            border: thin dashed $white;
+            border: medium dashed $white;
             cursor: pointer;
             z-index: 1;
-            transform: scale(.8);
+            transform: scale(.7);
+        }
+        .center-of-table {
+            @include size($cardWidth, $cardHeight);
+            border: medium solid $blacksuit;
+            border-radius: 0 18px 0 18px;
+            background-color: $blacksuit;
+            cursor: pointer;
+            z-index: 1;
+            margin: 0;
+
+            .bar {
+                width: $cardWidth;
+                @include flexAll;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+
+                &.upper {
+                    bottom: $cardHeight;
+                    @include flexAll($justify: flex-start);
+                    .button { border-radius: 0 27px 0 0; }
+                }
+                &.lower {
+                    top: $cardHeight;
+                    @include flexAll($justify: flex-end);
+                    .button { border-radius: 0 0 0 27px; }
+                }
+
+                .button {
+                    opacity: 0;
+                    transition: .2s;
+                    margin: 0;
+                    border: medium solid $blacksuit;
+                    font-size: 1rem;
+                    padding: 0 10px;
+                }
+            }
         }
     }
 }
