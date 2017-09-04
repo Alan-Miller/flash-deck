@@ -4,11 +4,9 @@ import { connect } from 'react-redux';
 import { getAllCards } from '../../services/cardService';
 import { buildDeck } from '../../utils/deckUtils';
 import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
-import Pip from '../Card/Pip/Pip';
-import CardButton from '../Card/CardButton/CardButton';
+import Pip from '../Pip/Pip';
+import CardButton from '../CardButton/CardButton';
 import { getRank, tallyPoints } from '../../utils/playUtils';
-
-// import clubs from '../../imgs/clubs.png';
 
 class Play extends Component {
 
@@ -17,7 +15,7 @@ class Play extends Component {
 
     this.state = {
       currentCardIndex: -1
-      ,reveal: false
+      ,reveal: true
       ,score: 0
     }
     this.advance = this.advance.bind(this);
@@ -44,7 +42,8 @@ class Play extends Component {
     const { currentCardIndex, reveal } = this.state;
     let nextIndex = this.state.currentCardIndex + 1;
     
-    if (currentCardIndex >= deck.length) this.setState({currentCardIndex: -1, reveal: false});
+    if (currentCardIndex >= deck.length) return;
+    // if (currentCardIndex >= deck.length) this.setState({currentCardIndex: -1, reveal: false});
     if (reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
     else this.setState({reveal: true});
   }
@@ -65,22 +64,24 @@ class Play extends Component {
   }
 
   handleKeyDown(e) {
-    if (e.which === 37) this.reverse();
-    if (e.which === 39) this.advance();
+    // if (e.which === 37) this.reverse();
+    if (e.which === 38 || e.which === 39) {
+      this.updateScore(true);
+      this.advance();
+    }
+    if (e.which === 40) {
+      this.updateScore(false);
+      this.advance();
+    }
   }
 
   updateScore(correct) {
-    const points = tallyPoints(this.state.currentCardIndex, correct);
-    this.setState({points});
-    this.setState({score: this.state.score + points})
+    const { currentCardIndex, score, reveal } = this.state;
+    if (currentCardIndex === -1 || !reveal) return;
+    
+    const points = tallyPoints(currentCardIndex, correct);
+    this.setState({points, score: score + points})
   }
-
-  // theSuitStyle(index) {
-  //   if (index < 13) return {backgroundImage: `url('../../imgs/clubs.png')`};
-  //   if (index < 26) return {backgroundImage: `url('../../imgs/diamonds.png')`};
-  //   if (index < 39) return {backgroundImage: `url('../../imgs/spades.png')`};
-  //   if (index < 52) return {backgroundImage: `url('../../imgs/hearts.png')`};
-  // }
 
   render() {
     const { currentCardIndex, points, score, reveal } = this.state;
@@ -96,29 +97,35 @@ class Play extends Component {
           Score: {score}
           <div className="table">
             
-            <div className="deck">
-              <div className="cards-go-here" onClick={this.reverse}></div>
+            <div className="card-space">
+              <div className="place-cards-here" onClick={this.reverse}></div>
 
               <div className="center-of-table">
                 <div className="upper bar">
-                  <CardButton className="right-answer button" 
-                    buttonStyle={currentCardIndex !== -1 && {opacity: '1'}}
+                  <CardButton 
+                    className="right-answer button" 
                     disabled={!reveal && 'disabled'}
-                    onClick={() => this.updateScore(true)}>
+                    onClick={() => {
+                      this.updateScore(true);
+                      this.advance();
+                    }}>
                     Right
                   </CardButton>
                 </div>
                 <div className="lower bar">
-                  <CardButton className="wrong-answer button" 
-                    buttonStyle={currentCardIndex !== -1 && {opacity: '1'}}
+                  <CardButton 
+                    className="wrong-answer button" 
                     disabled={!reveal && 'disabled'}
-                    onClick={() => this.updateScore(false)}>
+                    onClick={() => {
+                      this.updateScore(false);
+                      this.advance();
+                    }}>
                     Wrong
                   </CardButton>
                 </div>
               </div>
               
-              <div className="cards-go-here" onClick={this.advance}></div>
+              <div className="place-cards-here" onClick={this.advance}></div>
               
              
 
@@ -130,7 +137,7 @@ class Play extends Component {
                     style={flipCard(i, currentCardIndex, reveal)}
                     onClick={
                       i < currentCardIndex ? this.reverse :
-                      i > currentCardIndex ? this.advance :
+                      i >= currentCardIndex ? this.advance :
                       null
                     }>
                     <div className="front face" style={cardFace(i, currentCardIndex, 'front')}>

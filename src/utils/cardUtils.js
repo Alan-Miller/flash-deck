@@ -39,7 +39,6 @@ const $blacksuit = `#205050`;
 
 export function styleCardContainer(index, currentCardIndex, numCards) {
   // Position and rotation of cards on left
-  // let random = Math.ceil(11 / (index + 1));
   let random = index % 13;
   random = index % 3 ? random * -1.2 : random * 3.7; // every third is different
   // let random = Math.ceil(Math.random() * 11); // rotate up to 11 deg
@@ -47,7 +46,7 @@ export function styleCardContainer(index, currentCardIndex, numCards) {
   const leftStyles = {
     left: `250px`, 
     zIndex: index + 100,
-    transform: `translateX(-100%) rotateZ(${random}deg) scale(.75)`,
+    transform: `translate(-100%, ${random/2}px) rotateZ(${random}deg) scale(.75)`,
     transition: `.2s`
   }
   if (index < currentCardIndex) return leftStyles;
@@ -56,7 +55,7 @@ export function styleCardContainer(index, currentCardIndex, numCards) {
   const currentCardStyles = {
     left: `50%`, 
     zIndex: numCards + 101,
-    transform: `translateX(-50%) rotateZ(0deg) scale(1)`,
+    transform: `translate(-50%, 0) rotateZ(0deg) scale(1)`,
     transition: `.5s`
   }
   if (index === currentCardIndex) return currentCardStyles;
@@ -66,7 +65,7 @@ export function styleCardContainer(index, currentCardIndex, numCards) {
     left: `auto`,
     zIndex: (numCards - index) + 100,
     right: `0`, 
-    transform: `translateX(0) rotateZ(0deg) scale(.75)`,
+    transform: `translate(0, 0) rotateZ(0deg) scale(.75)`,
     transition: `.5s`
   };
   // Shift cards to look like a stack, but only show 4 at a time

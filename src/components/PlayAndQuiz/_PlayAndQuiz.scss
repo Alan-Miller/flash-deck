@@ -1,4 +1,4 @@
-.Play {
+.Play, .Quiz {
     @include size (100%, 100vh);
     display: flex;
     justify-content: center;
@@ -12,8 +12,15 @@
         padding: .02px;
         border: medium solid $redsuit;
         position: relative;
+
+        .card-space {
+            @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+            z-index: 2;
+            @include flexAll($justify: space-between);
+            @include size(100%, $cardHeight);
+        }
         
-        .cards-go-here {
+        .place-cards-here {
             @include size($cardWidth, $cardHeight);
             border-radius: 18px;
             border: medium dashed $white;
@@ -21,6 +28,7 @@
             z-index: 1;
             transform: scale(.7);
         }
+
         .center-of-table {
             @include size($cardWidth, $cardHeight);
             border: medium solid $blacksuit;
@@ -49,98 +57,60 @@
                 }
 
                 .button {
-                    opacity: 0;
+                    // opacity: 0;
                     transition: .2s;
                     margin: 0;
                     border: medium solid $blacksuit;
                     font-size: 1rem;
                     padding: 0 10px;
                 }
-            }
-        }
-    }
-}
+            } // end of .bar
+        } // end of .center-of-table
+    } // end of .table
 
-.deck {
-    @include size(100%, $cardHeight);
-    @include flexAll;
-}
-
-
-
-.card {
-    @include size($cardWidth, $cardHeight);
-    @include wordBreak;
-    display: block;
-    transform-style: preserve-3d;
-    transition: .5s ease;
-    border-radius: 18px;
-    
-    .face {
-        @include size(100%, 100%);
-        position: absolute;
-        backface-visibility: hidden;
-        border-radius: 18px;
-        box-shadow: 2px 2px 2px 0px rgba(22, 22, 22, .2);
-        padding: 5px 10px;
-        cursor: pointer;
-        @include prefix('user-select', none);
-        -webkit-touch-callout: none; // Safari's user-select property
-
-        &.front {
-            @include flexAll(column, space-between, auto);
-            background-color: whitesmoke; 
-            font-size: 1.7rem;
-            & .content { @include flexAll; }
-            // background-color: $white;
-        }
-
-        &.back {
-            border: thick solid whitesmoke;
-            font-size: 1.5rem;
-            font-weight: 200;
-            color: $white;
-            // background-color: $white;
-        }
-    }
-}
-
-.Play {
-    .front {
-        background-color: $white;
-    }
-    .back {
-        transform: rotateY(-180deg);
-        background-color: $white;
-    }
     .card-container {
+        @include size($cardWidth, $cardHeight);
         transition: .7s ease;
         position: absolute;
         @extend %translateCenter;
+        perspective: 1000;
+    }
 
-    }
-    .deck {
-        @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
-        z-index: 2;
-        @include flexAll($justify: space-between);
-    }
     .card {
+        @include size($cardWidth, $cardHeight);
+        @include wordBreak;
         @include cardColor($blacksuit);
-    }
+        display: block;
+        transform-style: preserve-3d;
+        transition: .5s ease;
+        border-radius: 18px;
 
-    .suit {
-        background-size: 30px;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-}
+        .face {
+            @include size(100%, 100%);
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 18px;
+            box-shadow: 2px 2px 2px 0px rgba(22, 22, 22, .2);
+            padding: 5px 10px;
+            cursor: pointer;
+            @include prefix('user-select', none);
+            -webkit-touch-callout: none; // Safari's user-select property
 
+            &.front {
+                @include flexAll(column, space-between, auto);
+                font-size: 1.7rem;
+                background-color: $white;
+                & .content { @include flexAll; }
+            }
 
-
-.card-container {
-    @include size($cardWidth, $cardHeight);
-    perspective: 1000;
-    
-}
-
-
+            &.back {
+                border: medium solid whitesmoke;
+                font-size: 1.5rem;
+                font-weight: 200;
+                color: $white;
+                background-color: $white;
+                transform: rotateY(-180deg);
+            }
+        } // end of .face
+    } // end of .card
+} // end of .Play, .Quiz

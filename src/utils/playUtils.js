@@ -10,7 +10,7 @@ export function tallyPoints(currentIndex, correct) {
   // rank
   const rank = getRank(currentIndex);
   // points
-  let points;
+  let points = 0;
   if (+rank > 1 || rank < 11) points = +rank * multiplier;
   if (rank === 'J') { if (correct) points = 1; else points = -25; }
   if (rank === 'Q') { if (correct) points = 40; else points = -1; }
@@ -18,6 +18,5 @@ export function tallyPoints(currentIndex, correct) {
   if (rank === 'A') points = [1, 11][Math.floor(Math.random() * 2)] * multiplier;
   // points animation style
   // const pointStyle = correct ? 'pointsUp' : 'pointsDown';
-  console.log(points);
   return points;
 }
