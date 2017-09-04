@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Home from './components/Home/Home';
-import Play from './components/Play/Play';
-import Quiz from './components/Quiz/Quiz';
+import Play from './components/PlayAndQuiz/Play';
+import Quiz from './components/PlayAndQuiz/Quiz';
 import Share from './components/Share/Share';
 import Manage from './components/Manage/Manage';
 import Settings from './components/Settings/Settings';

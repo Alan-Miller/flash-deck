@@ -1,0 +1,17 @@
+.pipArea {
+    font-size: 2.3rem;
+    @include wordBreak(normal);
+    @include flexAll(row, flex-start);
+
+    &.lower { transform: rotate(180deg); }
+    & .pip { @include flexAll(column); }
+    & .suit {
+        @include size(35px, 35px);
+        display: block;
+        border-radius: 50%;
+        margin-top: 5px;
+        background-size: 30px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+}

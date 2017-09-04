@@ -5,24 +5,14 @@
   @include position(absolute, $left: 50%, $x: -50%);
   border-radius: 4px;
   font-size: 1.3rem;
-  opacity: 0;
+  // opacity: 0;
   border: medium solid $white;
   color: whitesmoke;
   cursor: pointer;
-  &.right {
-      background-color: $white;
-      color: $gray;
-      top: -80px;
-  }
-  &.wrong {
-      background-color: $gray;
-      bottom: -80px;
-  }
   transition: opacity .25s ease-in .15s;
-
 }
 
-// Buttons fade in for first card
-.card-container.fade-in .card .answer {
-  opacity: 1;
-} 
+// // Buttons fade in for first card
+// .card-container.fade-in .card .answer {
+//   opacity: 1;
+// } 

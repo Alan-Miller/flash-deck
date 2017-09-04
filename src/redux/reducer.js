@@ -26,7 +26,7 @@ export function setDeck(deck) {
 const initialState = {
   userId: 2
   ,cards: []
-  ,currentDeck: []
+  ,deck: []
 }
 
 // Reducers
@@ -35,9 +35,9 @@ export default function reducer(state = initialState, action) {
     case GET_USER_ID:
       return state.userId;
     case SET_CARDS:
-      return Object.assign({}, state, { cards: [...state.cards, ...action.cards] });
+      return Object.assign({}, state, { cards: action.cards });
     case SET_DECK:
-      return Object.assign({}, state, { currentDeck: action.deck });
+      return Object.assign({}, state, { deck: action.deck });
     default:
       return state;
   }
