@@ -24,8 +24,12 @@ $halfCardWidth: 125px;
 $cardHeight: 350px;
 $halfCardHeight: 175px;
 
-$headerHeight: 25vh;
+$headerHeight: 100px;
 $barrierWidth: calc(50% - #{$halfCardWidth});
+
+.altText {
+    color: #707070;
+}
 
 
 //————————————————————————————————————————————>> root
@@ -33,9 +37,9 @@ $barrierWidth: calc(50% - #{$halfCardWidth});
 * { outline: none; }
 
 html {
-    background-color: $darkbluegreen;
+    background-color: $gray;
     font: {    
-        background-color: #555; 
+        color: #555; 
         size: 1em;
         family: 'Montserrat', sans-serif;
     }
@@ -65,7 +69,7 @@ a {
     height: $height;
 }
 
-@mixin flexAll($direction: row, $justify: center, $align: center) {
+@mixin flexBox($direction: row, $justify: center, $align: center) {
     display: flex;
     flex-direction: $direction;
     justify-content: $justify;

@@ -10,5 +10,5 @@ input {
 }
 
 .newCardForm {
-  @include flexAll(column);
+  @include flexBox(column);
 }

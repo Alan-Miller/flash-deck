@@ -3,12 +3,12 @@ Header {
 }
 
 .Header {
-  @include flexAll;
+  @include flexBox;
   @include size(100vw, $headerHeight);
   background-color: $gray;
 
   .scorecard {
-    @include flexAll(column);
+    @include flexBox(column);
     @include size(25vh, 25vh);
     position: relative;
     color: $white;

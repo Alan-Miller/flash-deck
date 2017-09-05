@@ -1,6 +1,6 @@
 // .Play {
 //     .card-container {
-//         @include flexAll(column);
+//         @include flexBox(column);
 //         @include position(relative, $bottom: 0, $left: 0);
 //         @include size($cardWidth, $cardHeight);
 //         transform: scale(.88);

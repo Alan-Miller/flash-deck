@@ -1,6 +1,6 @@
 // Answer buttons
 .card .answer {
-  @include flexAll;
+  @include flexBox;
   @include size(100px, 55px);
   @include position(absolute, $left: 50%, $x: -50%);
   border-radius: 4px;
