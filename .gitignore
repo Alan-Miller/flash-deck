@@ -25,4 +25,5 @@ TRASH/
 src/**/*.css
 
 config
-dev-notes
+dev-notes.md
+db-notes.md

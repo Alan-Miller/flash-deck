@@ -106,39 +106,44 @@ class Manage extends Component {
           </div>
         </form>
 
-        <ul className="collections">
-          <h1>Card collections</h1>
-          <div className="collection">
+        <ul className="Manage__cards">
+          <h1>Cards</h1>
+          <div className="Manage__card">
             
-            <div className="columnNames">
-              <h2 className="collectionName">All cards</h2>
-              <div className="bool">Stop showing</div>
-              <div className="bool">Show less</div>
+            <div className="columnTitles">
+              <h2 className="cardTitle">Card front</h2>
+              <h2 className="cardTitle">Card back</h2>
+              <div className="boolTitle">Stop showing</div>
+              <div className="boolTitle">Show less</div>
+              <div className="deleteTitle">Delete</div>
             </div>
             
             { this.props.cards && this.props.cards.map((card, i) => (
-              <li key={i} className="cardContent">
-                <div className="cardFaces">
-                  <div className="front">{card.front}</div>
-                  <div className="back">{card.back}</div>
+              <li key={i} className="cardInfo">
+                <div className="front cardContent">{card.front}</div>
+
+                <div className="back cardContent">{card.back}</div>
+
+                <div className="stopShowing bool">
+                  <input id="stopShowing"
+                    type="checkbox" 
+                    checked={card.stop_showing} 
+                    onChange={() => this.toggleBool(card.id, 'stop_showing')} />
+                  <label for="stopShowing"><span></span></label>
                 </div>
-                <div 
-                  className="stopShowing bool" 
-                  onClick={() => this.toggleBool(card.id, 'stop_showing')}
-                >
-                  {card.stop_showing ? '√' : '-'}
+
+                <div className="showLess bool">
+                  <input id="showLess"
+                    type="checkbox"
+                    checked={card.show_less} 
+                    onChange={() => this.toggleBool(card.id, 'show_less')} />
+                  <label for="showLess"><span></span></label>
                 </div>
-                <div 
-                  className="showLess bool" 
-                  onClick={() => this.toggleBool(card.id, 'show_less')}
-                >
-                  {card.show_less ? '√' : '-'}
-                </div>
+
                 <div 
                   className="delete" 
-                  onClick={() => this.delete(card.id, this.state.userId)}
-                >
-                  DELETE
+                  onClick={() => this.delete(card.id, this.state.userId)}>
+                  X
                 </div>
               </li>
             )) }

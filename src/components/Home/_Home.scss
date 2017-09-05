@@ -1,5 +1,6 @@
 main.Home {
-    @include flexAll;
+    @include flexBox;
+    background-color: $darkbluegreen;
     height: 100vh;
 }
 

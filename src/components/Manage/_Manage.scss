@@ -1,30 +1,85 @@
+$radioSize: 1.4rem;
+
 .Manage {
-  @include flexAll(column);
+  @include flexBox(column);
+  background-color: $darkbluegreen;
+  padding: 20px;
 }
 
-.collections {
-  width: 800px;
+.Manage__cards {
+  width: 80vw;
 
-  .collection {
+  .Manage__card {
     border: thin solid $redsuit;
 
-    .columnNames {
+    .columnTitles {
       display: grid;
-      grid-template-columns: 1fr 1fr 70px 70px 70px;
+      grid-template-columns: 39fr 39fr 7fr 7fr 8fr;
       grid-row: 1fr;
       background-color: $redsuit;
+      .cardTitle, .boolTitle, .deleteTitle { @include flexBox; }
     }
-    .cardContent {
-      @extend .columnNames;
+    .cardInfo {
+      @extend .columnTitles;
       background-color: $white;
       border-bottom: thin solid $redsuit;
+      & > * { padding: 10px; }
     }
-    .columnNames h2, .cardFaces {
-      grid-column: 1 / span 2;
-      margin: 2px;
+    .cardContent {
+      border-right: thin solid $redsuit;
     }
     .bool, .delete {
-      border-left: thin solid $redsuit;
+      @include flexBox;
+    }
+
+    input[type=checkbox] {
+      @include size(2rem, 2rem);
+      margin: 0;
+      padding: 0;
+      border: thick solid red;
+      opacity: 0;
+      filter: alpha(opacity=0);
+      width: 2em;
+      font-size: $radioSize;
+      z-index: 5;
+      background: yellow;
+      cursor: pointer;
+
+      & + label > span {
+        @extend %inputOuterCircle;
+        border: 2px solid $bluegreen;
+      }
+      &:checked + label > span {
+        @extend %inputOuterCircle;
+        border: 2px solid $redsuit;
+      }
+      & + label > span:before {
+        @extend %inputInnerDot;
+        opacity: 0;
+      }
+      &:checked + label > span:before {
+        @extend %inputInnerDot;
+        opacity: 1;
+      }
+    }
+    %inputOuterCircle {
+      display: inline-block;
+      width: $radioSize;
+      height: $radioSize;
+      border-radius: 50%;
+      vertical-align: bottom;
+      transition: .4s;
+      position: relative;
+      margin-left: calc(-#{$radioSize * 2});
+    }
+    %inputInnerDot {
+      content: '';
+      display: block;
+      width: calc(#{$radioSize/2});
+      height: calc(#{$radioSize/2});
+      border-radius: 50%;
+      background-color: $redsuit;
+      @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
     }
   }
 }

@@ -1,6 +1,6 @@
 .button {
   cursor: pointer;
-  @include flexAll;
+  @include flexBox;
   @include size($height: 50px);
   padding: 8px;
   border-radius: 5px;

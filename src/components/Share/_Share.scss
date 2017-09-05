@@ -1,5 +1,5 @@
 main.Share  {
-    @include flexAll(column);
+    @include flexBox(column);
     height: 100vh;
 
     font: {

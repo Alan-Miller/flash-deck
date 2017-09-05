@@ -3,7 +3,7 @@
 
   .main {
       @include size(100vw, calc(100vh - #{$headerHeight}));
-      @include flexAll(row, flex-start);
+      @include flexBox(row, flex-start);
       position: relative;
       overflow-x: hidden;
       overflow-y: hidden;

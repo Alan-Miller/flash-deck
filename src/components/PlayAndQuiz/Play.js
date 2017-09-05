@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { setCards, setDeck } from '../../redux/reducer';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { setCards, setDeck } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { buildDeck } from '../../utils/deckUtils';
-import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
-import Pip from '../Pip/Pip';
-import CardButton from '../CardButton/CardButton';
 import { getRank, tallyPoints } from '../../utils/playUtils';
+import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
+import CardButton from '../CardButton/CardButton';
+import Pip from '../Pip/Pip';
 
 class Play extends Component {
 
@@ -89,12 +90,17 @@ class Play extends Component {
     
     return(
       <section className="Play">
-        <main>
-          # Cards: {deck.length}
-          <br/>
-          Points: {points}
-          <br/>
-          Score: {score}
+
+        <div className="header">
+          <ul className="info">
+            <li># Cards in deck: {deck.length}</li>
+            <li>Points: {points}</li>
+            <li>Score: {score}</li>
+          </ul>
+        </div>
+
+        <main className="main">
+          
           <div className="table">
             
             <div className="card-space">
@@ -164,6 +170,14 @@ class Play extends Component {
             </div>
           </div>
         </main>
+
+        <div className="footer">
+          <ul className="nav">
+            <Link to="/"><li>Home</li></Link>
+            <Link to="/"><li><span className="altText">Settings</span></li></Link>
+          </ul>
+        </div>
+
       </section>
     )
   }

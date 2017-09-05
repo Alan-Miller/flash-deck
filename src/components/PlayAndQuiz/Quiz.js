@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { setCards } from '../../redux/reducer';
 import { connect } from 'react-redux';
+import { setCards } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
 import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
 import CardButton from '../CardButton/CardButton';
+import { Link } from 'react-router-dom';
 
 class Quiz extends Component {
 
@@ -64,12 +65,19 @@ class Quiz extends Component {
   }
 
   render() {
-    const { currentCardIndex, reveal } = this.state;
-    const { cards } = this.props;
+    const { currentCardIndex, points, score, reveal } = this.state;
+    const { cards, deck } = this.props;
     
     return(
       <section className="Quiz">
-        <main>
+
+        <div className="header">
+          <ul className="info">
+            <li># Cards: {cards.length}</li>
+          </ul>
+        </div>
+
+        <main className="main">
           <div className="table">
             
             <div className="card-space">
@@ -125,6 +133,14 @@ class Quiz extends Component {
             </div>
           </div>
         </main>
+
+        <div className="footer">
+          <ul className="nav">
+            <Link to="/"><li>Home</li></Link>
+            <Link to="/"><li><span className="altText">Settings</span></li></Link>
+          </ul>
+        </div>
+
       </section>
     )
   }
