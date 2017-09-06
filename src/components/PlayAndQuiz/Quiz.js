@@ -136,7 +136,7 @@ class Quiz extends Component {
 
         <div className="footer">
           <ul className="nav">
-            <Link to="/"><li>Home</li></Link>
+            <Link to="/home"><li>Home</li></Link>
             <Link to="/"><li><span className="altText">Settings</span></li></Link>
           </ul>
         </div>

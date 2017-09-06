@@ -101,7 +101,7 @@ class Manage extends Component {
       <section className="Manage" id="dropZone">
         <div className="header" style={{height: editItem ? '400px': null}}>
 
-          <Link to="/"><h1 className="goHome">HOME</h1></Link>
+          <Link to="/home"><h1 className="goHome">HOME</h1></Link>
 
           <ul className="editItems" style={{display: !editItem ? 'flex' : 'none'}}>
             <li onClick={() => this.setState({editItem: 'newCard'})}>Make new card</li>

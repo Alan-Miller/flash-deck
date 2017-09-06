@@ -55,7 +55,7 @@ export default class Share extends Component {
   render() {
     return (
       <main className="Share">
-        <Link to="/"><h4>Home</h4></Link>
+        <Link to="/home"><h4>Home</h4></Link>
         
         <form className="findFriend" onSubmit={this.handleSubmit}>
           <h2>Invite new friend by username</h2>
