@@ -4,32 +4,118 @@ $radioSize: 1.4rem;
   @include flexBox(column);
   background-color: $darkbluegreen;
   padding: 20px;
+  padding: 0;
+}
+
+.Manage .header {
+  background-color: $gray;
+  color: $white;
+  @include flexBox(row, $justify: space-between);
+  @include size(100%, 80px);
+  @include position(fixed, 0, 0);
+  z-index: 2;
+  padding: 0 24px;
+  transition: .2s;
+  & * { 
+    cursor: pointer; 
+    transition: .2s;
+  }
+  &.extended {
+    height: 300px;
+  }
+
+  .goHome {
+    font-size: 1.7rem;
+  }
+  .editItems {
+    font-size: 1.5rem;
+    display: flex;
+    z-index: 4;
+    & > li { padding: 0 0 0 40px; }
+  }
+  .x {
+    font-size: 1.7rem;
+    font-weight: 200;
+    padding: 20px;
+  }
+  .editBox {
+    @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+    @include size(null, 380px);
+    @include flexBox;
+    padding: 0 50px;
+    border: thin solid $redsuit;
+    border-radius: 7px;
+    display: none;
+    h1 {
+      font-size: 1.3rem;
+      padding: 10px;
+    }
+
+    .makeCard.button {
+      background-color: $redsuit;
+      margin: 10px;
+      padding: 10px;
+      &:hover {
+        background: $white;
+        color: $redsuit;
+      }
+    }
+  }
 }
 
 .Manage__cards {
   width: 80vw;
+  margin-top: 130px;
 
   .Manage__card {
-    border: thin solid $redsuit;
+    border: medium solid $blacksuit;
 
     .columnTitles {
       display: grid;
       grid-template-columns: 39fr 39fr 7fr 7fr 8fr;
       grid-row: 1fr;
-      background-color: $redsuit;
-      .cardTitle, .boolTitle, .deleteTitle { @include flexBox; }
+      background-color: $blacksuit;
+      .cardTitle, .boolTitle, .deleteTitle { 
+        @include flexBox; 
+        color: $white;
+        font-weight: 200;
+      }
     }
     .cardInfo {
       @extend .columnTitles;
       background-color: $white;
-      border-bottom: thin solid $redsuit;
+      border: 2px solid $blacksuit;
       & > * { padding: 10px; }
+      &:nth-child(odd) { background-color: #cfcfcf; }  
     }
     .cardContent {
-      border-right: thin solid $redsuit;
+      border-right: thin solid $blacksuit;
+      grid-column-end: span 1;
+      position: relative;
+      &:hover .edit { opacity: .95; }
     }
+    .edit {
+      @include flexBox;
+      @include size(100%, 100%);
+      @include position(absolute, $left: 0, $top: 0);
+      box-shadow: inset 0 0 200px 0 #555;
+      background: $gray;
+      opacity: 0;
+      color: #ddd;
+      transition: .7s;
+      cursor: pointer;
+    }
+
     .bool, .delete {
       @include flexBox;
+      cursor: pointer;
+      grid-column-end: span 1;
+      transition: .3s;
+    }
+    .delete:hover {
+      color: $redsuit;
+      font-weight: 500;
+      transform: scale(1.7);
     }
 
     input[type=checkbox] {
@@ -41,13 +127,13 @@ $radioSize: 1.4rem;
       filter: alpha(opacity=0);
       width: 2em;
       font-size: $radioSize;
-      z-index: 5;
+      z-index: 10;
       background: yellow;
       cursor: pointer;
 
       & + label > span {
         @extend %inputOuterCircle;
-        border: 2px solid $bluegreen;
+        border: 2px solid $darkbluegreen;
       }
       &:checked + label > span {
         @extend %inputOuterCircle;
@@ -81,5 +167,12 @@ $radioSize: 1.4rem;
       background-color: $redsuit;
       @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
     }
-  }
-}
+
+    .collections {
+      // background-color: orange;
+      position: relative;
+      border-top: thin solid $blacksuit;
+      grid-column: 1 / span 5;
+    }
+  } // end .Manage__card
+} // end .Manage__cards

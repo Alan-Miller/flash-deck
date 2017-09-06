@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 export default class Settings extends Component {
 
@@ -14,41 +13,41 @@ export default class Settings extends Component {
       ,pending: []
       ,potentialFriends: []
     }
-    this.handleInput = this.handleInput.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleInput = this.handleInput.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    axios.get(`http://localhost:3021/api/friends/${this.state.userId}`)
-      .then(response => {
-        const friends = response.data;
-        this.setState({ friends });
-      });
+    // axios.get(`${URL}/friends/${this.state.userId}`)
+    //   .then(response => {
+    //     const friends = response.data;
+    //     this.setState({ friends });
+    //   });
 
-    axios.get(`http://localhost:3021/api/pending/${this.state.userId}`)
-      .then(response => {
-        const pending = response.data;
-        this.setState({ pending });
-      });
-  }
-
-  handleInput(e) {
-    this.setState({
-      friendUsername: e.target.value
-    });
-  }
-  handleSubmit(e) {
-    e.preventDefault();
-    axios.get(`http://localhost:3021/api/user?username=${this.state.friendUsername}`)
-      .then(response => {
-        const potentialFriends = response.data;
-        this.setState({ potentialFriends });
-      })
+    // axios.get(`${URL}/pending/${this.state.userId}`)
+    //   .then(response => {
+    //     const pending = response.data;
+    //     this.setState({ pending });
+    //   });
   }
 
-  inviteFriend(inviteeId) {
-    axios.post(`http://localhost:3021/api/friends/${this.state.userId}/${inviteeId}`)
-  }
+  // handleInput(e) {
+  //   this.setState({
+  //     friendUsername: e.target.value
+  //   });
+  // }
+  // handleSubmit(e) {
+  //   e.preventDefault();
+  //   axios.get(`${URL}/user?username=${this.state.friendUsername}`)
+  //     .then(response => {
+  //       const potentialFriends = response.data;
+  //       this.setState({ potentialFriends });
+  //     })
+  // }
+
+  // inviteFriend(inviteeId) {
+  //   axios.post(`${URL}/friends/${this.state.userId}/${inviteeId}`)
+  // }
 
   render() {
     return (

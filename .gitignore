@@ -27,3 +27,4 @@ src/**/*.css
 config
 dev-notes.md
 db-notes.md
+flashdeck.sql

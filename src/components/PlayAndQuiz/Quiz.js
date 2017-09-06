@@ -65,8 +65,8 @@ class Quiz extends Component {
   }
 
   render() {
-    const { currentCardIndex, points, score, reveal } = this.state;
-    const { cards, deck } = this.props;
+    const { currentCardIndex, reveal } = this.state;
+    const { cards } = this.props;
     
     return(
       <section className="Quiz">
