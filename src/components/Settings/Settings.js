@@ -19,7 +19,7 @@ export default class Settings extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://localhost:3021/api/friends/${this.state.userId}`)
+    axios.get(`http://flashdeck.alan.provo411.com:3021/api/friends/${this.state.userId}`)
       .then(response => {
         const friends = response.data;
         this.setState({ friends });
