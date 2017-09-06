@@ -51,9 +51,17 @@ export default class Settings extends Component {
 
   render() {
     return (
-      <main className="Settings">
-        <Link to="/"><h4>Home</h4></Link>
-      </main>
+      <section className="Settings">
+        <div className="header">
+          <ul className="nav">
+            <Link to="/"><li>Home</li></Link>
+          </ul>
+        </div>
+        <main>
+          <span className="comingSoon">Play mode settings coming soon!</span>
+        </main>
+        
+      </section>
     )
   }
 }

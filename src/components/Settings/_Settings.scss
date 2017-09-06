@@ -1,12 +1,25 @@
-// main.Settings  {
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: center;
-//     height: 100vh;
+.Settings {
+  background-color: $redsuit;
+  @include size (100%, 100vh);
+  padding: .04px;
+  margin: .04px;
 
-//     font: {
-//         size: 2rem;
-//     }
-// }
+  .header {
+    background-color: $gray;
+    @include size(100%, 16vh);
+    @include flexBox;
+    font-size: 1.5rem;
 
+    .nav {
+      @include flexBox;
+      font-size: 1.5rem;
+      li { margin: 0 10px 0 10px; }
+    }
+  }
+
+  main {
+    @include size(100%, 84vh);
+    @include flexBox;
+    font-size: 1.5rem;
+  }
+}
