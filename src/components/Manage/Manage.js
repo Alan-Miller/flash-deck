@@ -9,6 +9,7 @@ import {
   getAllCards, 
   saveCard, 
   saveCards, 
+  editCard,
   switchBool, 
   deleteCard } from '../../services/cardService';
 
@@ -21,9 +22,11 @@ class Manage extends Component {
       userId: 2
       ,front: ''
       ,back: ''
-      ,cards: []
+      ,content: ''
+      ,editItem: ''
     }
     this.handleInput = this.handleInput.bind(this);
+    this.edit = this.edit.bind(this);
     this.handleFileSelect= this.handleFileSelect.bind(this);
   }
 
@@ -47,6 +50,15 @@ class Manage extends Component {
         this.setState({front: '', back: ''}); 
         this.props.setCards(cards);
       });
+  }
+
+  edit() {
+    const { editItem, content, cardId, userId } = this.state;
+    editCard(editItem, content, cardId, userId)
+    .then(cards => {
+      this.setState({content: ''});
+      this.props.setCards(cards);
+    })
   }
 
   toggleBool(cardId, colName) {
@@ -81,33 +93,66 @@ class Manage extends Component {
   }
 
   render() {
+    const { userId, front, back, content, editItem } = this.state;
+    console.log('item', editItem);
+    console.log('content', content);
 
     return (
       <section className="Manage" id="dropZone">
-        <Link to="/"><h1>HOME</h1></Link>
-        
-        <form className="newCardForm">
-          <h1>Make new card</h1>
-          <input
-            value={this.state.front}
-            type="text" placeholder="front"
-            onChange={(e) => this.handleInput(e, 'front')}
-          />
-          <input
-            value={this.state.back}
-            type="text" placeholder="back"
-            onChange={(e) => this.handleInput(e, 'back')}
-          />
-          <div
-            className="makeCard button"
-            onClick={() => this.makeCard(this.state.front, this.state.back)}
-          >
-            Make card
-          </div>
-        </form>
+        <div className="header" style={{height: editItem ? '400px': null}}>
 
-        <ul className="Manage__cards">
-          <h1>Cards</h1>
+          <Link to="/"><h1 className="goHome">HOME</h1></Link>
+
+          <ul className="editItems" style={{display: !editItem ? 'flex' : 'none'}}>
+            <li onClick={() => this.setState({editItem: 'newCard'})}>Make new card</li>
+            <li onClick={() => this.setState({editItem: 'newCollections'})}>New collection</li>
+            <li onClick={() => this.setState({editItem: 'editCollections'})}>Edit collections</li>
+          </ul>
+
+          <div className="x" 
+            style={{opacity: editItem ? 1 : 0}}
+            onClick={() => this.setState({editItem: ''})}>
+            x
+          </div>
+
+          <div className="editBox" style={{display: editItem ? 'flex' : 'none'}}>
+
+            <form className="newCardForm" style={{display: editItem === 'newCard' ? 'flex' : 'none'}}>
+              <h1>Make new card</h1>
+              <input
+                value={front}
+                type="text" placeholder="front"
+                onChange={(e) => this.handleInput(e, 'front')}/>
+              <input
+                value={back}
+                type="text" placeholder="back"
+                onChange={(e) => this.handleInput(e, 'back')}/>
+              <div
+                className="makeCard button"
+                onClick={() => this.makeCard(front, back)}>
+                Save card
+              </div>
+            </form>
+
+            <form className="editCardForm" style={{display: editItem === 'front' || editItem === 'back' ? 'block' : 'none'}}>
+              <h1>Edit { this.state.editItem } content for this card</h1>
+              <input
+                value={content}
+                type="text" placeholder="New content"
+                onChange={(e) => this.handleInput(e, 'content')}/>
+              <div
+                className="makeCard button"
+                onClick={this.edit}>
+                Edit card
+              </div>
+            </form>
+
+          </div>
+
+        </div>
+
+        <ul className="Manage__cards" style={{marginTop: editItem ? '440px' : null}}>
+          <h1>Choose an option above, or edit cards directly</h1>
           <div className="Manage__card">
             
             <div className="columnTitles">
@@ -120,16 +165,30 @@ class Manage extends Component {
             
             { this.props.cards && this.props.cards.map((card, i) => (
               <li key={i} className="cardInfo">
-                <div className="front cardContent">{card.front}</div>
+                <div className="front cardContent">
+                  {card.front}
+                  <div 
+                    className="edit"
+                    onClick={() => this.setState({editItem: 'front', cardId: card.id})}>
+                    EDIT
+                  </div>
+                </div>
 
-                <div className="back cardContent">{card.back}</div>
+                <div className="back cardContent">
+                  {card.back}
+                  <div 
+                    className="edit"
+                    onClick={() => this.setState({editItem: 'back', cardId: card.id})}>
+                    EDIT
+                  </div>
+                </div>
 
                 <div className="stopShowing bool">
                   <input id="stopShowing"
                     type="checkbox" 
                     checked={card.stop_showing} 
                     onChange={() => this.toggleBool(card.id, 'stop_showing')} />
-                  <label for="stopShowing"><span></span></label>
+                  <label htmlFor="stopShowing"><span></span></label>
                 </div>
 
                 <div className="showLess bool">
@@ -137,13 +196,16 @@ class Manage extends Component {
                     type="checkbox"
                     checked={card.show_less} 
                     onChange={() => this.toggleBool(card.id, 'show_less')} />
-                  <label for="showLess"><span></span></label>
+                  <label htmlFor="showLess"><span></span></label>
                 </div>
 
                 <div 
                   className="delete" 
-                  onClick={() => this.delete(card.id, this.state.userId)}>
+                  onClick={() => this.delete(card.id, userId)}>
                   X
+                </div>
+                <div className="collections">
+                  Collections:
                 </div>
               </li>
             )) }

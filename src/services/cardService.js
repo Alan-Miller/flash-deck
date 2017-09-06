@@ -17,6 +17,11 @@ export function saveCards(userId, cards) {
     .then(response => response.data);
 }
 
+export function editCard(cardFace, newContent, cardId, userId) {
+  return axios.put(`${URL}/card/${cardFace}/${cardId}/${userId}`, { newContent })
+    .then(response => response.data);
+}
+
 export function switchBool(cardId, colName, userId) {
   return axios.put(`${URL}/card/${cardId}/${colName}`, { userId })
     .then(response => response.data);
