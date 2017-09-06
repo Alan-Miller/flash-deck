@@ -1,12 +1,19 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
     IMPORTS
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+require('dotenv').config();
+
 const   express = require('express')
+        ,cors = require('cors')
+        ,bodyParser = require('body-parser')
+
+        ,session = require('express-session')
+        ,passport = require('passport')
+        ,Auth0Strategy = require('passport-auth0')
+
         ,massive = require('massive')
         ,api = require('./api.js')
-        ,bodyParser = require('body-parser')
-        ,cors = require('cors')
-        // ,controller = require('./controller')
+
         ,{ port } = require('../config')
         ,app = module.exports = express();
 
@@ -32,6 +39,50 @@ massive({
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static( `${__dirname}/../public` ));
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+    Auth
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new Auth0Strategy({
+    domain: process.env.AUTH_DOMAIN,
+    clientID: process.env.AUTH_CLIENT_ID,
+    clientSecret: process.env.AUTH_CLIENT_SECRET,
+    callbackURL: process.env.AUTH_CALLBACK
+}, (accessToken, refreshToken, extraParams, profile, done) => {
+    console.log(profile);
+    done(null, profile);
+}));
+
+app.get('/auth', passport.authenticate('auth0'));
+app.get('/auth/callback', passport.authenticate('auth0', {
+    successRedirect: '/',
+    failureRedirect: '/auth'
+}));
+
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+passport.deserializeUser((obj, done) => {
+    done(null, obj);
+});
+
+app.get('/auth/me', (req, res, next) => {
+    if (!req.user) res.status(400).send('User not found');
+    else return res.status(200).send(req.user);
+});
+app.get('/auth/logout', (req, res) => {
+    req.logOut();
+    return res.redirect(302, 'http://localhost:3023'); // front?
+})
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*

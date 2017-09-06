@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
+import Login from './components/Login/Login';
 import Home from './components/Home/Home';
 import Play from './components/PlayAndQuiz/Play';
 import Quiz from './components/PlayAndQuiz/Quiz';
@@ -18,7 +19,8 @@ export default class App extends Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/" component={Login} />
+        <Route path="/home" component={Home} />
         <Route path="/play" component={Play} />
         <Route path="/quiz" component={Quiz} />
         <Route path="/share" component={Share} />
