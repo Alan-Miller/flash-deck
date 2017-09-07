@@ -67,6 +67,20 @@ module.exports = function(app) {
     })
   });
 
+  app.get('/api/collections/:id', (req, res) => {
+    app.get('db').get_allCollections([req.params.id])
+    .then(response => {
+        res.status(200).send(response);
+    });
+  });
+  
+  app.post('/api/collection/:id', (req, res) => {
+    app.get('db').post_saveCollection([req.params.id, req.body.name, req.body.desc])
+    .then(response => {
+        res.status(200).send(response);
+    });
+  });
+
   app.put('/api/card/:cardFace/:cardId/:userId', (req, res) => {
     app.get('db')[`put_${req.params.cardFace}Content`]([req.body.newContent, req.params.cardId, req.params.userId])
       .then(response => {

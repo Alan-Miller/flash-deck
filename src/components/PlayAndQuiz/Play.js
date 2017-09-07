@@ -174,7 +174,7 @@ class Play extends Component {
         <div className="footer">
           <ul className="nav">
             <Link to="/"><li>Home</li></Link>
-            <Link to="/"><li><span className="altText">Settings</span></li></Link>
+            <Link to="/settings"><li><span className="altText">Settings</span></li></Link>
           </ul>
         </div>
 

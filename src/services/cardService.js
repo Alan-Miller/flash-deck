@@ -1,6 +1,7 @@
 import axios from 'axios';
-export const URL = 'http://localhost:3021/api'; // dev
+// export const URL = 'http://localhost:3021/api'; // dev
 // export const URL = 'http://flashdeck.alan.provo411.com/:3021/api'; // production
+export const URL = process.env.REACT_APP_URL
 
 export function getAllCards(userId) {
   return axios.get(`${URL}/cards/${userId}`)
@@ -14,6 +15,16 @@ export function saveCard(userId, front, back) {
 
 export function saveCards(userId, cards) {
   return axios.post(`${URL}/cards/${userId}`, { cards })
+    .then(response => response.data);
+}
+
+export function getAllCollections(userId) {
+  return axios.get(`${URL}/collections/${userId}`)
+    .then(response => response.data);
+}
+
+export function saveCollection(userId, name, desc) {
+  return axios.post(`${URL}/collection/${userId}`, { name, desc })
     .then(response => response.data);
 }
 

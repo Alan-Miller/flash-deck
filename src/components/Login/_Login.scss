@@ -1,0 +1,13 @@
+main.Login {
+  @include flexBox;
+  background-color: $darkbluegreen;
+  height: 100vh;
+}
+
+.Login ul {
+  @include position(relative, $top: -7vh, $deg: -11deg);
+  h1 { @include big3D($redsuit); }
+  li { @include lil3D($redsuit); }
+  *:last-child li { @include lil3D($blacksuit); }
+  color: $white;
+}
