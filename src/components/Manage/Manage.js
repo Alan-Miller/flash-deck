@@ -29,7 +29,7 @@ class Manage extends Component {
     this.handleFileSelect= this.handleFileSelect.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
 
     getAllCards(this.props.userId)
       .then(cards => { this.props.setCards(cards); }
@@ -52,7 +52,7 @@ class Manage extends Component {
     e.preventDefault();
     if (!front || !back) return;
     
-    document.getElementById('firstInput').focus();
+    document.getElementById('newCardFocus').focus();
 
     saveCard(this.props.userId, front, back)
       .then(cards => { 
@@ -61,13 +61,16 @@ class Manage extends Component {
       });
   }
 
-  makeCollection() {
+  makeCollection(e) {
+    e.preventDefault();
     const { name, content } = this.state;
     const { userId } = this.props;
 
+    document.getElementById('newCollectionFocus').focus();
+
     saveCollection(userId, name, content)
       .then(collections => { 
-        this.setState({collections}); 
+        this.setState({collections, name: '', content: ''}); 
       });
   }
 
@@ -141,7 +144,7 @@ class Manage extends Component {
               style={{display: editItem === 'newCard' ? 'flex' : 'none'}}
               onSubmit={e => this.makeCard(e, front, back) }>
               <h1>Make new card</h1>
-              <input id="firstInput"
+              <input id="newCardFocus"
                 value={front}
                 type="text" placeholder="front"
                 onChange={e => this.handleInput(e, 'front') }/>
@@ -179,9 +182,11 @@ class Manage extends Component {
               </div>
             </form>
 
-            <form className="newCollection form" style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
+            <form className="newCollection form" 
+              onSubmit={this.makeCollection}
+              style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
               <h1>Make new collection</h1>
-              <input
+              <input id="newCollectionFocus"
                 value={name}
                 type="text" placeholder="Name of collection"
                 onChange={e => this.handleInput(e, 'name') }/>
@@ -189,6 +194,7 @@ class Manage extends Component {
                 value={content}
                 type="text" placeholder="Description (optional)"
                 onChange={e => this.handleInput(e, 'content') }/>
+              <input type="submit" />
               <div
                 className="makeCollection button"
                 onClick={this.makeCollection}>

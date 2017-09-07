@@ -116,4 +116,11 @@ module.exports = function(app) {
         res.status(200).send(response);
     });
   });
+
+  app.delete('/api/cards/:userId', (req, res) => {
+    app.get('db').delete_allCards([req.params.userId])
+    .then(response => {
+        res.status(200).send(response);
+    });
+  });
 }

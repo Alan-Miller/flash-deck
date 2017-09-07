@@ -35,10 +35,10 @@ class Home extends Component {
 
   logout() {
     axios.get('/auth/logout')
-    .then(response => {
-      console.log(response);
-      // this.props.history.push('/login');
-    });
+    // .then(response => {
+    //   console.log(response);
+    //   // this.props.history.push('/login');
+    // });
   }
 
   render() {
