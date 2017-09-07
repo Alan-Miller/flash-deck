@@ -3,15 +3,14 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setCards } from '../../redux/reducer';
 
+import axios from 'axios';
+
 import { fileReaderUtil } from '../../utils/fileReaderUtil';
 
 import { 
-  getAllCards, 
-  saveCard, 
-  saveCards, 
-  editCard,
-  switchBool, 
-  deleteCard } from '../../services/cardService';
+  getAllCards, saveCard, saveCards, editCard,
+  getAllCollections, saveCollection, 
+  switchBool, deleteCard } from '../../services/cardService';
 
 class Manage extends Component {
 
@@ -22,21 +21,34 @@ class Manage extends Component {
       userId: 2
       ,front: ''
       ,back: ''
+      ,name: ''
       ,content: ''
       ,editItem: ''
+      ,oldContent: ''
     }
     this.handleInput = this.handleInput.bind(this);
     this.edit = this.edit.bind(this);
+    this.makeCollection = this.makeCollection.bind(this);
     this.handleFileSelect= this.handleFileSelect.bind(this);
   }
 
   componentDidMount() {
+    let user = axios.get('/auth/me').then(user => {
+      console.log('user', user);
+      return user.data
+    });
+    
+    if (!user) this.props.history.push('/login');
+
     const dropZone = document.getElementById('dropZone');
     dropZone.addEventListener('dragover', this.handleDragOver);
     dropZone.addEventListener('drop', this.handleFileSelect);
     
     getAllCards(this.state.userId)
       .then(cards => { this.props.setCards(cards); }
+    );
+    getAllCollections(this.state.userId)
+      .then(collections => { this.setState({ collections })}
     );
   }
 
@@ -49,6 +61,14 @@ class Manage extends Component {
       .then(cards => { 
         this.setState({front: '', back: ''}); 
         this.props.setCards(cards);
+      });
+  }
+
+  makeCollection() {
+    const { userId, name, content } = this.state;
+    saveCollection(userId, name, content)
+      .then(collections => { 
+        this.setState({collections}); 
       });
   }
 
@@ -93,19 +113,16 @@ class Manage extends Component {
   }
 
   render() {
-    const { userId, front, back, content, editItem } = this.state;
-    console.log('item', editItem);
-    console.log('content', content);
+    const { collections, userId, front, back, name, content, editItem } = this.state;
 
     return (
       <section className="Manage" id="dropZone">
         <div className="header" style={{height: editItem ? '400px': null}}>
 
-          <Link to="/home"><h1 className="goHome">HOME</h1></Link>
+          <Link to="/"><h1 className="goHome">HOME</h1></Link>
 
           <ul className="editItems" style={{display: !editItem ? 'flex' : 'none'}}>
             <li onClick={() => this.setState({editItem: 'newCard'})}>Make new card</li>
-            <li onClick={() => this.setState({editItem: 'newCollections'})}>New collection</li>
             <li onClick={() => this.setState({editItem: 'editCollections'})}>Edit collections</li>
           </ul>
 
@@ -117,7 +134,7 @@ class Manage extends Component {
 
           <div className="editBox" style={{display: editItem ? 'flex' : 'none'}}>
 
-            <form className="newCardForm" style={{display: editItem === 'newCard' ? 'flex' : 'none'}}>
+            <form className="newCard form" style={{display: editItem === 'newCard' ? 'flex' : 'none'}}>
               <h1>Make new card</h1>
               <input
                 value={front}
@@ -134,18 +151,47 @@ class Manage extends Component {
               </div>
             </form>
 
-            <form className="editCardForm" style={{display: editItem === 'front' || editItem === 'back' ? 'block' : 'none'}}>
-              <h1>Edit { this.state.editItem } content for this card</h1>
-              <input
-                value={content}
-                type="text" placeholder="New content"
-                onChange={(e) => this.handleInput(e, 'content')}/>
-              <div
-                className="makeCard button"
-                onClick={this.edit}>
-                Edit card
+            <form className="editCard form" style={{display: editItem === 'front' || editItem === 'back' ? 'flex' : 'none'}}>
+              <h1>Edit content for { this.state.editItem } of card</h1>
+              <div className="inputAndButton">
+                <input
+                  value={content}
+                  type="text" placeholder="New content"
+                  onChange={(e) => this.handleInput(e, 'content')}/>
+                <div
+                  className="editCard button"
+                  onClick={this.edit}>
+                  Edit card
+                </div>
+              </div>
+              <div className="currentContent">
+                <p>Current content:</p>
+                <p>{this.state.oldContent}</p>
               </div>
             </form>
+
+            <form className="newCollection form" style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
+              <h1>Make new collection</h1>
+              <input
+                value={name}
+                type="text" placeholder="Name of collection"
+                onChange={(e) => this.handleInput(e, 'name')}/>
+              <input
+                value={content}
+                type="text" placeholder="Description (optional)"
+                onChange={(e) => this.handleInput(e, 'content')}/>
+              <div
+                className="makeCollection button"
+                onClick={this.makeCollection}>
+                Save
+              </div>
+            </form>
+
+            <div className="collectionsList">
+              {collections && collections.map((collection, i) => (
+                <div key={i}>{collection.name}</div>
+              ))}
+            </div>
 
           </div>
 
@@ -169,7 +215,11 @@ class Manage extends Component {
                   {card.front}
                   <div 
                     className="edit"
-                    onClick={() => this.setState({editItem: 'front', cardId: card.id})}>
+                    onClick={(e) => {this.setState({
+                      editItem: 'front', 
+                      cardId: card.id,
+                      oldContent: card.front
+                    })}}>
                     EDIT
                   </div>
                 </div>
@@ -178,7 +228,11 @@ class Manage extends Component {
                   {card.back}
                   <div 
                     className="edit"
-                    onClick={() => this.setState({editItem: 'back', cardId: card.id})}>
+                    onClick={() => {this.setState({
+                      editItem: 'back', 
+                      cardId: card.id,
+                      oldContent: card.back
+                    })}}>
                     EDIT
                   </div>
                 </div>

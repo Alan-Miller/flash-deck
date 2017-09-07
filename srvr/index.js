@@ -26,11 +26,11 @@ massive({
   ,port: 5432
   ,database: 'flashdeck'
   //————————————————————————————————————————————>> production
-  // ,user: 'alan'
-  // ,password: 'horses'
-  // ,ssl: true
+  ,user: 'alan'
+  ,password: 'horses'
+  ,ssl: true
   //————————————————————————————————————————————>> dev
-  ,user: 'ashman'
+//   ,user: 'ashman'
 })
 .then(function(db) {
   app.set('db', db)
@@ -38,7 +38,8 @@ massive({
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static( `${__dirname}/../public` ));
+app.use(express.static( `${__dirname}/../build` ));
+app.use((req, res, next)=>{console.log(req.url);next();});
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
@@ -65,7 +66,7 @@ passport.use(new Auth0Strategy({
 app.get('/auth', passport.authenticate('auth0'));
 app.get('/auth/callback', passport.authenticate('auth0', {
     successRedirect: '/',
-    failureRedirect: '/auth'
+    failureRedirect: '/login'
 }));
 
 passport.serializeUser((user, done) => {
@@ -81,8 +82,8 @@ app.get('/auth/me', (req, res, next) => {
 });
 app.get('/auth/logout', (req, res) => {
     req.logOut();
-    return res.redirect(302, 'http://localhost:3023'); // front?
-})
+    return res.redirect(302, '/login'); // front?
+});
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*

@@ -54,7 +54,7 @@ export default class Settings extends Component {
       <section className="Settings">
         <div className="header">
           <ul className="nav">
-            <Link to="/home"><li>Home</li></Link>
+            <Link to="/"><li>Home</li></Link>
           </ul>
         </div>
         <main>

@@ -7,7 +7,7 @@ export default class Login extends Component {
       <main className="Login">
         <ul className="Login_ul">
           <h1>Flash Deck</h1>
-          <a href="http://localhost:3021/auth"><li>Log in</li></a>
+          <a href={process.env.REACT_APP_LOGIN}><li>Log in</li></a>
         </ul>
       </main>
     )

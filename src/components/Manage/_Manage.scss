@@ -40,7 +40,7 @@ $radioSize: 1.4rem;
   }
   .editBox {
     @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
-    @include size(null, 380px);
+    @include size(null, 370px);
     @include flexBox;
     padding: 0 50px;
     border: thin solid $redsuit;
@@ -50,8 +50,38 @@ $radioSize: 1.4rem;
       font-size: 1.3rem;
       padding: 10px;
     }
-
-    .makeCard.button {
+    .form {
+      @include flexBox(column);
+    }
+    .inputAndButton {
+      display: flex;
+    }
+    .currentContent {
+      max-width: 80%;
+      margin: 10px;
+      line-height: 1.5rem;
+      p:nth-child(1) { 
+        color: #777; 
+        font-size: 1.1rem;
+      }
+    }
+    .collectionsList {
+      border: thin solid #555;
+      margin: 0 30px;
+      @include size(250px, 350px);
+      @include flexBox($align: flex-start);
+      flex-wrap: wrap;
+      line-height: 1rem;
+      * { 
+        margin: 10px; 
+        background-color: $blue;
+        color: $gray;
+        padding: 5px;
+        border-radius: 5px;
+        word-wrap: wrap;
+      }
+    }
+    .button {
       background-color: $redsuit;
       margin: 10px;
       padding: 10px;
