@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export default class Home extends Component {
+
+  constructor() {
+    super()
+
+    this.logout = this.logout.bind(this);
+  }
+
+  logout() {
+    axios.get('/auth/logout')
+    .then(response => {
+      console.log(response);
+      // this.props.history.push('/login');
+    });
+  }
 
   render() {
     return (
@@ -13,6 +28,7 @@ export default class Home extends Component {
           <Link to="/share"><li>Share</li></Link>
           <Link to="/manage"><li>Manage</li></Link>
           <Link to="/settings"><li>Settings</li></Link>
+          <Link to=""><li onClick={this.logout} >Log out</li></Link>
         </ul>
       </main>
     )

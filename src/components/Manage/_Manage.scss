@@ -2,6 +2,7 @@ $radioSize: 1.4rem;
 
 .Manage {
   @include flexBox(column);
+  min-height: 100vh;
   background-color: $darkbluegreen;
   padding: 20px;
   padding: 0;
@@ -96,9 +97,12 @@ $radioSize: 1.4rem;
 .Manage__cards {
   width: 80vw;
   margin-top: 130px;
+  h3 { font-size: 1.2rem; }
+  line-height: 1.5rem;
 
   .Manage__card {
     border: medium solid $blacksuit;
+    margin-top: 20px;
 
     .columnTitles {
       display: grid;

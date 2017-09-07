@@ -35,9 +35,8 @@ class Manage extends Component {
   componentDidMount() {
     let user = axios.get('/auth/me').then(user => {
       console.log('user', user);
-      return user.data
+      return user;
     });
-    
     if (!user) this.props.history.push('/login');
 
     const dropZone = document.getElementById('dropZone');
@@ -76,7 +75,7 @@ class Manage extends Component {
     const { editItem, content, cardId, userId } = this.state;
     editCard(editItem, content, cardId, userId)
     .then(cards => {
-      this.setState({content: ''});
+      this.setState({content: '', editItem: ''});
       this.props.setCards(cards);
     })
   }
@@ -187,7 +186,7 @@ class Manage extends Component {
               </div>
             </form>
 
-            <div className="collectionsList">
+            <div className="collectionsList" style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
               {collections && collections.map((collection, i) => (
                 <div key={i}>{collection.name}</div>
               ))}
@@ -198,7 +197,9 @@ class Manage extends Component {
         </div>
 
         <ul className="Manage__cards" style={{marginTop: editItem ? '440px' : null}}>
-          <h1>Choose an option above, or edit cards directly</h1>
+            <h3>Choose an option above, or edit cards directly below.</h3>
+            <p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
+            </p>
           <div className="Manage__card">
             
             <div className="columnTitles">
