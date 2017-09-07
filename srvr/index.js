@@ -26,11 +26,11 @@ massive({
   ,port: 5432
   ,database: 'flashdeck'
   //————————————————————————————————————————————>> production
-  ,user: 'alan'
-  ,password: 'horses'
-  ,ssl: true
+//   ,user: 'alan'
+//   ,password: 'horses'
+//   ,ssl: true
   //————————————————————————————————————————————>> dev
-//   ,user: 'ashman'
+  ,user: 'ashman'
 })
 .then(function(db) {
   app.set('db', db)
