@@ -38,6 +38,10 @@ $radioSize: 1.4rem;
     font-size: 1.7rem;
     font-weight: 200;
     padding: 20px;
+    &:hover {
+      font-weight: 500;
+      transform: scale(1.7);
+    }
   }
   .editBox {
     @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
@@ -200,6 +204,10 @@ $radioSize: 1.4rem;
       border-radius: 50%;
       background-color: $redsuit;
       @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+    }
+
+    input[type=submit] {
+      display: none;
     }
 
     .collections {

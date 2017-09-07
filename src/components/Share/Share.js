@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import {
           getUsers,
@@ -7,14 +8,13 @@ import {
           postFriendshipInvite,
           getPendingFriendships  } from '../../services/friendService';
 
-export default class Share extends Component {
+class Share extends Component {
 
   constructor() {
     super()
 
     this.state = {
-      userId: 2
-      ,searchValue: ''
+      searchValue: ''
       ,friends: []
       ,pending: []
       ,searchResults: []
@@ -24,10 +24,10 @@ export default class Share extends Component {
   }
 
   componentDidMount() {
-    getUserFriends(this.state.userId)
+    getUserFriends(this.props.userId)
       .then(friends => { this.setState({ friends }) });
 
-    getPendingFriendships(this.state.userId)
+    getPendingFriendships(this.props.userId)
       .then(pending => { this.setState({ pending }) });
   }
 
@@ -40,12 +40,12 @@ export default class Share extends Component {
     if (this.state.searchValue.length < 1) return;
     this.setState({ searchValue: '' });
 
-    getUsers(this.state.userId, this.state.searchValue)
+    getUsers(this.props.userId, this.state.searchValue)
       .then(searchResults => { this.setState({ searchResults }) });
   }
 
   inviteFriend(inviteeId) {
-    postFriendshipInvite(this.state.userId, inviteeId)
+    postFriendshipInvite(this.props.userId, inviteeId)
       .then(pending => {
         console.log('pending', pending);
         this.setState({ pending });
@@ -102,3 +102,9 @@ export default class Share extends Component {
     )
   }
 }
+
+function mapStateToProps({ userId }) {
+  return { userId };
+}
+
+export default connect(mapStateToProps, null)(Share);

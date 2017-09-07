@@ -1,13 +1,36 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { connect } from 'react-redux'
+import { setUserId } from '../../redux/reducer';
+import { URL } from '../../services/cardService';
+// import { getAllCollections, getAllCards } from '../../services/cardService';
 
-export default class Home extends Component {
+class Home extends Component {
 
   constructor() {
     super()
 
     this.logout = this.logout.bind(this);
+  }
+
+  componentWillMount() {
+    
+    // Check for user's auth id
+    axios.get('/auth/me').then(response => {
+      return response.data.id;
+    })
+    // Send auth id to db to retrieve user id
+    .then(userAuthId => {
+      axios.get(`${URL}/user/${userAuthId}`)
+      .then(response => {
+        const userId = response.data[0].id;
+        this.props.setUserId(userId);
+        return userId;
+      });
+    });
+    // if (!user) this.props.history.push('/login');
+
   }
 
   logout() {
@@ -34,3 +57,5 @@ export default class Home extends Component {
     )
   }
 }
+
+export default connect(null, { setUserId })(Home);

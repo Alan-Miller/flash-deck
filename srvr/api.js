@@ -1,5 +1,12 @@
 module.exports = function(app) {
 
+  //————————————————————————————————————————————>> User
+  app.get('/api/user/:userAuthId', (req, res) => {
+    app.get('db').get_userId([req.params.userAuthId])
+    .then(response => { res.status(200).send(response); })
+  });
+
+
   //————————————————————————————————————————————>> Name
   app.get('/api/users/:userId', (req, res) => {
     app.get('db').get_users([req.params.userId, req.query.value])
@@ -10,6 +17,7 @@ module.exports = function(app) {
     app.get('db').get_displayName([req.params.id])
     .then(response => { res.status(200).send(response); });
   });
+
 
   //————————————————————————————————————————————>> Friends
   app.get('/api/friends/:user_id', (req, res) => {
