@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { URL } from './cardService';
+
+const URL = process.env.REACT_APP_URL;
 
 export function getUsers(userId, searchValue) {
   return axios.get(`${URL}/users/${userId}?value=${searchValue}`)

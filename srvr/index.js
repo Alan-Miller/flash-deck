@@ -38,7 +38,7 @@ massive({
 
 app.use(bodyParser.json());
 app.use(cors());
-// app.use(express.static( `${__dirname}/../build` )); // Turn off for testing
+app.use(express.static( `${__dirname}/../build` )); // Turn off for testing
 app.use((req, res, next) => { console.log(req.url); next(); });
 
 
@@ -66,7 +66,7 @@ passport.use(new Auth0Strategy({
 app.get('/auth', passport.authenticate('auth0'));
 app.get('/auth/callback', passport.authenticate('auth0', {
     successRedirect: '/',
-    failureRedirect: '/login'
+    failureRedirect: '/auth'
 }));
 
 passport.serializeUser((user, done) => {
@@ -82,7 +82,7 @@ app.get('/auth/me', (req, res, next) => {
 });
 app.get('/auth/logout', (req, res) => {
     req.logOut();
-    return res.redirect(302, '/#/login'); // front?
+    return res.redirect(302, '/'); // front?
 });
 
 

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setCards } from '../../redux/reducer';
+import { setCards, setUserId } from '../../redux/reducer';
 
 import { fileReaderUtil } from '../../utils/fileReaderUtil';
 
+import { getUserId } from '../../services/mainService';
 import { 
   getAllCards, saveCard, saveCards, editCard,
   getAllCollections, saveCollection, 
@@ -25,23 +26,33 @@ class Manage extends Component {
     }
     this.handleInput = this.handleInput.bind(this);
     this.edit = this.edit.bind(this);
+    this.getInfo = this.getInfo.bind(this);
     this.makeCollection = this.makeCollection.bind(this);
     this.handleFileSelect= this.handleFileSelect.bind(this);
   }
 
   componentDidMount() {
-
-    getAllCards(this.props.userId)
-      .then(cards => { this.props.setCards(cards); }
-    );
-    getAllCollections(this.props.userId)
-      .then(collections => { this.setState({ collections }); }
-    );
-
     const dropZone = document.getElementById('dropZone');
     dropZone.addEventListener('dragover', this.handleDragOver);
     dropZone.addEventListener('drop', this.handleFileSelect);
+    
+    if (this.props.userId) this.getInfo(this.props.userId);
+    else {
+      getUserId()
+      .then(userId => {
+        this.props.setUserId(userId);
+        this.getInfo(userId);
+      })
+    }
+  }
 
+  getInfo(userId) {
+    getAllCards(userId)
+      .then(cards => { this.props.setCards(cards); }
+    );
+    getAllCollections(userId)
+      .then(collections => { this.setState({ collections }); }
+    );
   }
 
   handleInput(e, stateVal) {
@@ -295,7 +306,20 @@ function mapStateToProps({ userId, cards, deckInPlay }) {
 }
 
 let outputActions = {
-  setCards
+  setCards, setUserId
 }
 
 export default connect(mapStateToProps, outputActions)(Manage);
+
+
+
+
+
+// else {
+//   new Promise((resolve, reject) => {
+//     if (this.props.setUserId(2).userId) resolve('userId!');
+//     else reject(new Error('No userId!'));
+//   })
+//   .then(fulfilled => {this.getInfo()})
+//   .catch(error => {console.log(error)});
+// }

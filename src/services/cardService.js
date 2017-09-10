@@ -1,7 +1,6 @@
 import axios from 'axios';
-// export const URL = 'http://localhost:3021/api'; // dev
-// export const URL = 'http://flashdeck.alan.provo411.com/:3021/api'; // production
-export const URL = process.env.REACT_APP_URL
+
+const URL = process.env.REACT_APP_URL;
 
 export function getAllCards(userId) {
   return axios.get(`${URL}/cards/${userId}`)

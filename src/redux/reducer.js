@@ -31,7 +31,7 @@ export function setDeck(deck) {
 
 // initialState
 const initialState = {
-  userId: -1
+  userId: 0
   ,cards: []
   ,deck: []
 }

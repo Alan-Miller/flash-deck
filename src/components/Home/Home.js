@@ -3,45 +3,32 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux'
 import { setUserId } from '../../redux/reducer';
-import { URL } from '../../services/cardService';
+import { getUserId } from '../../services/mainService';
+const URL = process.env.REACT_APP_LOGIN;
 // import { getAllCollections, getAllCards } from '../../services/cardService';
 
 class Home extends Component {
 
   constructor() {
     super()
-
-    this.logout = this.logout.bind(this);
   }
 
-  componentWillMount() {
-    // Turn this on and auth stuff off for testing (w/o logging in)
-    this.props.setUserId(2);
-    
-    // // Check for user's auth id
-    // axios.get('/auth/me').then(response => {
-    //   return response.data.id;
-    // })
-    // // Send auth id to db to retrieve user id
-    // .then(userAuthId => {
-    //   axios.get(`${URL}/user/${userAuthId}`)
-    //   .then(response => {
-    //     const userId = response.data[0].id;
-    //     this.props.setUserId(userId);
-    //     return userId;
-    //   });
-    // });
-    // // if (!user) this.props.history.push('/login');
-
+  componentDidMount() {
+    if (!this.props.userId) {
+      getUserId()
+      .then(userId => {
+        this.props.setUserId(userId);
+      })
+    }
   }
 
-  logout() {
-    axios.get('/auth/logout')
-    .then(response => {
-      console.log(response);
-      // this.props.history.push('/login');
-    });
-  }
+  // logout() {
+  //   axios.get('/auth/logout')
+  //   .then(response => {
+  //     console.log(response);
+  //     // this.props.history.push('/login');
+  //   });
+  // }
 
   render() {
     return (
@@ -53,11 +40,19 @@ class Home extends Component {
           <Link to="/share"><li>Share</li></Link>
           <Link to="/manage"><li>Manage</li></Link>
           <Link to="/settings"><li>Settings</li></Link>
-          <Link to=""><li onClick={this.logout} >Log out</li></Link>
+          { this.props.userId ? 
+            <a href={URL + '/logout'}><li>Log out</li></a>
+            : 
+            <a href={URL}><li>Log in</li></a>
+          }
         </ul>
       </main>
     )
   }
 }
 
-export default connect(null, { setUserId })(Home);
+function mapStateToProps({userId}) {
+  return {userId};
+}
+
+export default connect(mapStateToProps, { setUserId })(Home);
