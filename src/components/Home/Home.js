@@ -15,30 +15,32 @@ class Home extends Component {
   }
 
   componentWillMount() {
+    // Turn this on and auth stuff off for testing (w/o logging in)
+    this.props.setUserId(2);
     
-    // Check for user's auth id
-    axios.get('/auth/me').then(response => {
-      return response.data.id;
-    })
-    // Send auth id to db to retrieve user id
-    .then(userAuthId => {
-      axios.get(`${URL}/user/${userAuthId}`)
-      .then(response => {
-        const userId = response.data[0].id;
-        this.props.setUserId(userId);
-        return userId;
-      });
-    });
-    // if (!user) this.props.history.push('/login');
+    // // Check for user's auth id
+    // axios.get('/auth/me').then(response => {
+    //   return response.data.id;
+    // })
+    // // Send auth id to db to retrieve user id
+    // .then(userAuthId => {
+    //   axios.get(`${URL}/user/${userAuthId}`)
+    //   .then(response => {
+    //     const userId = response.data[0].id;
+    //     this.props.setUserId(userId);
+    //     return userId;
+    //   });
+    // });
+    // // if (!user) this.props.history.push('/login');
 
   }
 
   logout() {
     axios.get('/auth/logout')
-    // .then(response => {
-    //   console.log(response);
-    //   // this.props.history.push('/login');
-    // });
+    .then(response => {
+      console.log(response);
+      // this.props.history.push('/login');
+    });
   }
 
   render() {

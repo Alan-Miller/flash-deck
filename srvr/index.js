@@ -26,11 +26,11 @@ massive({
   ,port: 5432
   ,database: 'flashdeck'
   //————————————————————————————————————————————>> production
-  ,user: 'alan'
-  ,password: 'horses'
-  ,ssl: true
+//   ,user: 'alan'
+//   ,password: 'horses'
+//   ,ssl: true
   //————————————————————————————————————————————>> dev
-//   ,user: 'ashman'
+  ,user: 'ashman'
 })
 .then(function(db) {
   app.set('db', db)
@@ -38,8 +38,8 @@ massive({
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static( `${__dirname}/../build` ));
-app.use((req, res, next)=>{console.log(req.url);next();});
+// app.use(express.static( `${__dirname}/../build` )); // Turn off for testing
+app.use((req, res, next) => { console.log(req.url); next(); });
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
@@ -82,7 +82,7 @@ app.get('/auth/me', (req, res, next) => {
 });
 app.get('/auth/logout', (req, res) => {
     req.logOut();
-    return res.redirect(302, '/login'); // front?
+    return res.redirect(302, '/#/login'); // front?
 });
 
 

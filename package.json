@@ -1,10 +1,10 @@
 {
   "name": "flash-deck",
   "version": "0.1.0",
+  "private": true,
   "main": "srvr/index.js",
   "proxy": "http://localhost:3021",
   "homepage": "http://localhost:3023",
-  "private": true,
   "dependencies": {
     "auth0-js": "^8.9.3",
     "axios": "^0.16.2",

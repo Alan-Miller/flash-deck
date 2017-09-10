@@ -48,10 +48,8 @@ html {
 
 //————————————————————————————————————————————>> links
 
-Link {
-    cursor: pointer;
-}
 a {
+    cursor: pointer;
     &:active, &:hover, &:visited, &:link {
         text-decoration: none;
         color: whitesmoke;

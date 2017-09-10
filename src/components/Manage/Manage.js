@@ -29,7 +29,7 @@ class Manage extends Component {
     this.handleFileSelect= this.handleFileSelect.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
 
     getAllCards(this.props.userId)
       .then(cards => { this.props.setCards(cards); }

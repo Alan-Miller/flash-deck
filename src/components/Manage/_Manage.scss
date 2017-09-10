@@ -206,10 +206,6 @@ $radioSize: 1.4rem;
       @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
     }
 
-    input[type=submit] {
-      display: none;
-    }
-
     .collections {
       // background-color: orange;
       position: relative;
@@ -217,4 +213,8 @@ $radioSize: 1.4rem;
       grid-column: 1 / span 5;
     }
   } // end .Manage__card
+  
+  input[type=submit] {
+    display: none;
+  }
 } // end .Manage__cards
