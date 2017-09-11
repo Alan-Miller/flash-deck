@@ -17,6 +17,7 @@ class Play extends Component {
     this.state = {
       currentCardIndex: -1
       ,reveal: true
+      ,points: 0
       ,score: 0
     }
     this.advance = this.advance.bind(this);
@@ -66,7 +67,7 @@ class Play extends Component {
 
   handleKeyDown(e) {
     // if (e.which === 37) this.reverse();
-    if (e.which === 38 || e.which === 39) {
+    if (e.which === 38) {
       this.updateScore(true);
       this.advance();
     }
@@ -74,6 +75,7 @@ class Play extends Component {
       this.updateScore(false);
       this.advance();
     }
+    if (e.which === 39) { this.setState({reveal: !this.state.reveal})}
   }
 
   updateScore(correct) {
@@ -93,7 +95,7 @@ class Play extends Component {
 
         <div className="header">
           <ul className="info">
-            <li># Cards in deck: {deck.length}</li>
+            {deck && <li># Cards in deck: {deck.length}</li>}
             <li>Points: {points}</li>
             <li>Score: {score}</li>
           </ul>
@@ -110,7 +112,7 @@ class Play extends Component {
                 <div className="upper bar">
                   <CardButton 
                     className="right-answer button" 
-                    disabled={!reveal && 'disabled'}
+                    /* disabled={!reveal && 'disabled'} */
                     onClick={() => {
                       this.updateScore(true);
                       this.advance();
@@ -121,7 +123,7 @@ class Play extends Component {
                 <div className="lower bar">
                   <CardButton 
                     className="wrong-answer button" 
-                    disabled={!reveal && 'disabled'}
+                    /* disabled={!reveal && 'disabled'} */
                     onClick={() => {
                       this.updateScore(false);
                       this.advance();
@@ -143,7 +145,8 @@ class Play extends Component {
                     style={flipCard(i, currentCardIndex, reveal)}
                     onClick={
                       i < currentCardIndex ? this.reverse :
-                      i >= currentCardIndex ? this.advance :
+                      i > currentCardIndex ? this.advance :
+                      i === currentCardIndex ? _ => this.setState({reveal: !reveal}) :
                       null
                     }>
                     <div className="front face" style={cardFace(i, currentCardIndex, 'front')}>

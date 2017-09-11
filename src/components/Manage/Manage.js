@@ -23,18 +23,19 @@ class Manage extends Component {
       ,content: ''
       ,editItem: ''
       ,oldContent: ''
+      ,collections: []
     }
     this.handleInput = this.handleInput.bind(this);
     this.edit = this.edit.bind(this);
     this.getInfo = this.getInfo.bind(this);
     this.makeCollection = this.makeCollection.bind(this);
-    this.handleFileSelect= this.handleFileSelect.bind(this);
+    this.handleFileDrop= this.handleFileDrop.bind(this);
   }
 
   componentDidMount() {
     const dropZone = document.getElementById('dropZone');
     dropZone.addEventListener('dragover', this.handleDragOver);
-    dropZone.addEventListener('drop', this.handleFileSelect);
+    dropZone.addEventListener('drop', this.handleFileDrop);
     
     if (this.props.userId) this.getInfo(this.props.userId);
     else {
@@ -111,25 +112,42 @@ class Manage extends Component {
     e.preventDefault();
   }
   
-  handleFileSelect(e) {
-    const makeNewCards = fileReaderUtil(e);
+  handleFileDrop(e) {
+    const readFile = fileReaderUtil(e);
+    
     setTimeout(() => {
-      const newCards = makeNewCards();
-      saveCards(this.props.userId, newCards)
-      .then(cards => { console.log(cards) });
-      let cards = this.props.cards.concat(newCards);
-      this.props.setCards(cards);
-
-      setTimeout(() => {
-        getAllCards(this.props.userId)
-          .then(cards => { this.props.setCards(cards) }
-        );
-      }, 200);
-    }, 200);
+      let createNewCards = async () => {
+        const newCards = await readFile();
+        await saveCards(this.props.userId, newCards);
+        let cards = this.props.cards.concat(newCards);
+        this.props.setCards(cards);
+      }
+      createNewCards()
+      .then(_ => getAllCards(this.props.userId))
+      .then(cards => { this.props.setCards(cards) })
+    }, 100);
   }
 
+
+  // handleFileDrop(e) {
+  //   const makeNewCards = fileReaderUtil(e);
+  //   setTimeout(() => {
+  //     const newCards = makeNewCards();
+  //     saveCards(this.props.userId, newCards)
+  //     .then(cards => { console.log(cards) });
+  //     let cards = this.props.cards.concat(newCards);
+  //     this.props.setCards(cards);
+
+  //     setTimeout(() => {
+  //       getAllCards(this.props.userId)
+  //         .then(cards => { this.props.setCards(cards) }
+  //       );
+  //     }, 50);
+  //   }, 50);
+  // }
+
   render() {
-    const { collections, front, back, name, content, editItem } = this.state;
+    const { collections, front, back, name, content, editItem, editOptions } = this.state;
     const { userId } = this.props;
 
     return (
@@ -140,7 +158,7 @@ class Manage extends Component {
 
           <ul className="editItems" style={{display: !editItem ? 'flex' : 'none'}}>
             <li onClick={() => { this.setState({editItem: 'newCard'}); }}>Make new card</li>
-            <li onClick={() => this.setState({editItem: 'editCollections'})}>Edit collections</li>
+            <li onClick={() => this.setState({editItem: 'createCollections'})}>Make new collection</li>
           </ul>
 
           <div className="x" 
@@ -163,10 +181,10 @@ class Manage extends Component {
                 value={back}
                 type="text" placeholder="back"
                 onChange={e => this.handleInput(e, 'back') }/>
-              <input type="submit" />
+              <input className="submit" type="submit" />
               <div
                 className="makeCard button"
-                onClick={ _ => this.makeCard(null, front, back) }>
+                onClick={ e => this.makeCard(e, front, back) }>
                 Save card
               </div>
             </form>
@@ -180,7 +198,7 @@ class Manage extends Component {
                   value={content}
                   type="text" placeholder="New content"
                   onChange={e => this.handleInput(e, 'content') }/>
-                <input type="submit" />
+                <input className="submit" type="submit" />
                 <div
                   className="editCard button"
                   onClick={this.edit}>
@@ -195,7 +213,7 @@ class Manage extends Component {
 
             <form className="newCollection form" 
               onSubmit={this.makeCollection}
-              style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
+              style={{display: editItem === 'createCollections' ? 'flex' : 'none'}}>
               <h1>Make new collection</h1>
               <input id="newCollectionFocus"
                 value={name}
@@ -205,32 +223,52 @@ class Manage extends Component {
                 value={content}
                 type="text" placeholder="Description (optional)"
                 onChange={e => this.handleInput(e, 'content') }/>
-              <input type="submit" />
+              <input className="submit" type="submit" />
               <div
                 className="makeCollection button"
                 onClick={this.makeCollection}>
-                Save
+                Save collection
               </div>
             </form>
 
-            <div className="collectionsList" style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
-              Collections:
-              {collections && collections.map((collection, i) => (
-                <div key={i}>{collection.name}</div>
-              ))}
-            </div>
-
           </div>
+        </div>
 
+        <div className="collectionsList" 
+          onMouseOver={() => {document.body.style.overflow = 'hidden'}} 
+          onMouseOut={() => {document.body.style.overflow = 'auto'}} 
+          style={{display: editOptions === 'assignCollections' ? 'flex' : 'none'}}>
+          Collections:
+          <div className="collectionListContainer">
+            {collections && collections.map((collection, i) => (
+              <div className="collectionListItem" key={i}>
+                <input id="select"
+                  type="checkbox" 
+                  onChange={ _ => {} } />
+                <label htmlFor="select"><span></span></label>
+                {collection.name}
+              </div>
+            ))}
+          </div>
         </div>
 
         <ul className="Manage__cards" style={{marginTop: editItem ? '440px' : null}}>
-            <h3>Choose an option above, or edit cards directly below.</h3>
-            <p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
-            </p>
+          <h3>Choose an option above, or edit cards directly below.</h3>
+          <p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
+          </p>
+
           <div className="Manage__card">
             
+            <div className="editOptions">
+              <div className="assignCollections" 
+                onClick={() => this.setState({editOptions: 'assignCollections'})}>
+                Add card to collection
+              </div>
+              <div className="editCollections">Edit collections</div>
+            </div>
+
             <div className="columnTitles">
+              <h2 className="cardTitle">Select all</h2>
               <h2 className="cardTitle">Card front</h2>
               <h2 className="cardTitle">Card back</h2>
               <div className="boolTitle">Stop showing</div>
@@ -240,6 +278,14 @@ class Manage extends Component {
             
             { this.props.cards && this.props.cards.map((card, i) => (
               <li key={i} className="cardInfo">
+
+                <div className="select">
+                  <input id="select"
+                    type="checkbox" 
+                    onChange={ _ => {} } />
+                  <label htmlFor="select"><span></span></label>
+                </div>
+                
                 <div className="front cardContent">
                   {card.front}
                   <div 

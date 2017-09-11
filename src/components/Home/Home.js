@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { connect } from 'react-redux'
 import { setUserId } from '../../redux/reducer';
 import { getUserId } from '../../services/mainService';
@@ -8,10 +7,6 @@ const URL = process.env.REACT_APP_LOGIN;
 // import { getAllCollections, getAllCards } from '../../services/cardService';
 
 class Home extends Component {
-
-  constructor() {
-    super()
-  }
 
   componentDidMount() {
     if (!this.props.userId) {

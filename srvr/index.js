@@ -38,7 +38,7 @@ massive({
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static( `${__dirname}/../build` )); // Turn off for testing
+// app.use(express.static( `${__dirname}/../build` )); // Turn off for testing
 app.use((req, res, next) => { console.log(req.url); next(); });
 
 
