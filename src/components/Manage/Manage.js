@@ -128,24 +128,6 @@ class Manage extends Component {
     }, 100);
   }
 
-
-  // handleFileDrop(e) {
-  //   const makeNewCards = fileReaderUtil(e);
-  //   setTimeout(() => {
-  //     const newCards = makeNewCards();
-  //     saveCards(this.props.userId, newCards)
-  //     .then(cards => { console.log(cards) });
-  //     let cards = this.props.cards.concat(newCards);
-  //     this.props.setCards(cards);
-
-  //     setTimeout(() => {
-  //       getAllCards(this.props.userId)
-  //         .then(cards => { this.props.setCards(cards) }
-  //       );
-  //     }, 50);
-  //   }, 50);
-  // }
-
   render() {
     const { collections, front, back, name, content, editItem, editOptions } = this.state;
     const { userId } = this.props;
@@ -356,16 +338,3 @@ let outputActions = {
 }
 
 export default connect(mapStateToProps, outputActions)(Manage);
-
-
-
-
-
-// else {
-//   new Promise((resolve, reject) => {
-//     if (this.props.setUserId(2).userId) resolve('userId!');
-//     else reject(new Error('No userId!'));
-//   })
-//   .then(fulfilled => {this.getInfo()})
-//   .catch(error => {console.log(error)});
-// }
