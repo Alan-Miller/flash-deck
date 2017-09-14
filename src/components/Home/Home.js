@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { setUserId } from '../../redux/reducer';
 import { getUserId } from '../../services/mainService';
 const URL = process.env.REACT_APP_LOGIN;
-// import { getAllCollections, getAllCards } from '../../services/cardService';
 
 class Home extends Component {
 
@@ -16,14 +15,6 @@ class Home extends Component {
       })
     }
   }
-
-  // logout() {
-  //   axios.get('/auth/logout')
-  //   .then(response => {
-  //     console.log(response);
-  //     // this.props.history.push('/login');
-  //   });
-  // }
 
   render() {
     return (

@@ -7,7 +7,7 @@ import { buildDeck } from '../../utils/deckUtils';
 import { getRank, tallyPoints } from '../../utils/playUtils';
 import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
 import CardButton from '../CardButton/CardButton';
-import Pip from '../Pip/Pip';
+import { FrontFace, BackFace } from '../Face/Face';
 
 class Play extends Component {
 
@@ -106,6 +106,30 @@ class Play extends Component {
           <div className="table">
             
             <div className="card-space">
+              
+              { deck && deck.map((card, i) => (
+                <div className="card-container" key={i}
+                  style={styleCardContainer(i, currentCardIndex, deck.length)}>
+                  
+                  <div className="card"
+                    style={flipCard(i, currentCardIndex, reveal)}
+                    onClick={
+                      i < currentCardIndex ? this.reverse :
+                      i > currentCardIndex ? this.advance :
+                      i === currentCardIndex ? _ => this.setState({reveal: !reveal}) :
+                      null 
+                    }>
+                    <FrontFace rank={getRank(i)} style={cardFace(i, currentCardIndex, 'front')}>
+                      { card.front }
+                    </FrontFace>
+                    <BackFace style={cardFace(i, currentCardIndex, 'back')}>
+                      { card.back }
+                    </BackFace>
+                  </div>
+
+                </div>
+              ))}
+
               <div className="place-cards-here" onClick={this.reverse}></div>
 
               <div className="center-of-table">
@@ -132,44 +156,9 @@ class Play extends Component {
                   </CardButton>
                 </div>
               </div>
-              
+
               <div className="place-cards-here" onClick={this.advance}></div>
               
-             
-
-              { deck && deck.map((card, i) => (
-                <div className="card-container" key={i}
-                  style={styleCardContainer(i, currentCardIndex, deck.length)}>
-                  
-                  <div className="card"
-                    style={flipCard(i, currentCardIndex, reveal)}
-                    onClick={
-                      i < currentCardIndex ? this.reverse :
-                      i > currentCardIndex ? this.advance :
-                      i === currentCardIndex ? _ => this.setState({reveal: !reveal}) :
-                      null
-                    }>
-                    <div className="front face" style={cardFace(i, currentCardIndex, 'front')}>
-                      <Pip className="upper pipArea">
-                        { getRank(i) }
-                      </Pip>
-                      <div className="content">
-                        { card.front }
-                      </div>
-                      <Pip className="lower pipArea">
-                        { getRank(i) }
-                      </Pip>
-                    </div>
-
-                    <div className="back face" style={cardFace(i, currentCardIndex, 'back')}>
-                      <div className="content">
-                        { card.back }
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              ))}
             </div>
           </div>
         </main>
@@ -190,9 +179,10 @@ let outputActions = {
   setCards, setDeck
 }
 
-function mapStateToProps(state) {
-  if (!state) return {};
-  return state;
+function mapStateToProps({ userId, deck }) {
+  return { userId, deck };
+  // if (!state) return {};
+  // return state;
 }
 
 export default connect(mapStateToProps, outputActions)(Play);

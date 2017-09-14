@@ -1,48 +1,14 @@
+import clubs from '../imgs/clubs.png';
+import diamonds from '../imgs/diamonds.png';
+import spades from '../imgs/spades.png';
+import hearts from '../imgs/hearts.png';
 const $redsuit = `#C24444`;
 const $blacksuit = `#205050`;
-
-
-// export function flip(e, id) {
-//   e.stopPropagation();
-//   const card = document.getElementById(id);
-//   card.classList.toggle('flip');
-//   card.classList.add('fade-in');
-// }
-
-// export function dropCard(e, direction, firstCardContainer) {
-//   e.stopPropagation();
-//   /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-//       Buttons disappear on drop
-//       Drop styles added
-//       Reset button and card styles after drop animation
-//   /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-//   const buttons = firstCardContainer.children[0].children[1].children;
-//   [].forEach.call(buttons, button => button.style.display = 'none');
-
-//   firstCardContainer.classList.add(`drop-${direction}`);
-
-//   setTimeout(() => {
-//     firstCardContainer.style.display = 'none';
-//     firstCardContainer.classList.remove('drop-left', 'drop-right');
-//   }, 700);
-// }
-
-
-// const cardContainers = document.getElementsByClassName('card-container');
-// [].forEach.call(cardContainers, (container, index) => {
-//   container.classList.remove('fade-in');
-// });
-// [].forEach.call(document.getElementsByClassName('answer'), container => {
-//   container.style.display = 'flex';
-// });
-
 
 export function styleCardContainer(index, currentCardIndex, numCards) {
   // Position and rotation of cards on left
   let random = index % 13;
   random = index % 3 ? random * -1.2 : random * 3.7; // every third is different
-  // let random = Math.ceil(Math.random() * 11); // rotate up to 11 deg
-  // random = random % 2 ? random * -1 : random; // odd numbers rotate other way
   const leftStyles = {
     left: `250px`, 
     zIndex: index + 100,
@@ -105,28 +71,25 @@ export function cardFace(index, currentCardIndex, face) {
   if (face === 'front') {
     if (index < 13) style = {
       border: `medium solid ${$blacksuit}`,
-      color: $blacksuit
+      color: $blacksuit,
+      img: { backgroundImage: `url('${clubs}')`}
     };
     else if (index < 26) style = {
       border: `medium solid ${$redsuit}`,
-      color: $redsuit
+      color: $redsuit,
+      img: { backgroundImage: `url('${diamonds}')`}
     };
     else if (index < 39) style = {
       border: `medium solid ${$blacksuit}`,
-      color: $blacksuit
+      color: $blacksuit,
+      img: { backgroundImage: `url('${spades}')`}
     };
     else if (index < 52) style = {
       border: `medium solid ${$redsuit}`,
-      color: $redsuit
+      color: $redsuit,
+      img: { backgroundImage: `url('${hearts}')`}
     };
   }
-
+  
   return Object.assign({}, shadow, style);
 }
-
-// export function theSuitStyle(index) {
-//   if (index < 13) return {backgroundImage: `url('./imgs/clubs.png')`};
-//   if (index < 26) return {backgroundImage: `url('./imgs/diamonds.png')`};
-//   if (index < 39) return {backgroundImage: `url('./imgs/spades.png')`};
-//   if (index < 52) return {backgroundImage: `url('./imgs/hearts.png')`};
-// }

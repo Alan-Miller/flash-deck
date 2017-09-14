@@ -81,9 +81,19 @@ module.exports = function(app) {
         res.status(200).send(response);
     });
   });
+
+  app.put('/api/collections/:userId', (req, res) => {
+    console.log('id', req.body.userID)
+    console.log('cards', req.body.cardIDs)
+    console.log('collections', req.body.collectionIDs)
+    app.get('db').updateCollections([req.params.userId, req.body.cardIDs, req.body.collectionIDs])
+    .then(response => {
+        res.status(200).send(response);
+    });
+  });
   
   app.post('/api/collection/:id', (req, res) => {
-    app.get('db').post_saveCollection([req.params.id, req.body.name, req.body.desc])
+    app.get('db').post_saveCollection([req.params.id, req.body.name])
     .then(response => {
         res.status(200).send(response);
     });

@@ -150,9 +150,10 @@ let outputActions = {
   setCards
 }
 
-function mapStateToProps(state) {
-  if (!state) return {};
-  return state;
+function mapStateToProps({ cards, userId }) {
+  return { cards, userId };
+  // if (!state) return {};
+  // return state;
 }
 
 export default connect(mapStateToProps, outputActions)(Quiz);

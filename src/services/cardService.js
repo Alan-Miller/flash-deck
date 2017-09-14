@@ -17,16 +17,6 @@ export function saveCards(userId, cards) {
     .then(response => response.data);
 }
 
-export function getAllCollections(userId) {
-  return axios.get(`${URL}/collections/${userId}`)
-    .then(response => response.data);
-}
-
-export function saveCollection(userId, name, desc) {
-  return axios.post(`${URL}/collection/${userId}`, { name, desc })
-    .then(response => response.data);
-}
-
 export function editCard(cardFace, newContent, cardId, userId) {
   return axios.put(`${URL}/card/${cardFace}/${cardId}/${userId}`, { newContent })
     .then(response => response.data);
