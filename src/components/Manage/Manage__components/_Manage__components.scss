@@ -28,3 +28,20 @@
     word-wrap: wrap;
   }
 }
+.collection {
+  @include flexBox;
+  display: inline-flex;
+  margin: 0 4px;
+  padding: 5px 9px;
+  border-radius: 50px;
+  background-color: $redsuit;
+
+  .unapply {
+    @include size(100%, 100%);
+    opacity: .5;
+    transition: .5s;
+    padding-left: 7px;
+    cursor: pointer;
+    &:hover { color: $white; opacity: 1;}
+  }
+}

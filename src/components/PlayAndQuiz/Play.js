@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setCards, setDeck } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
-import { buildDeck } from '../../utils/deckUtils';
-import { getRank, tallyPoints } from '../../utils/playUtils';
-import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
+import { flipCard, buildDeck } from '../../utils/deckUtils';
+import { tallyPoints } from '../../utils/playUtils';
+import { getRank, styleCardContainer, cardStyle } from '../../utils/cardStyleUtils';
 import CardButton from '../CardButton/CardButton';
 import { FrontFace, BackFace } from '../Face/Face';
 
@@ -30,7 +30,7 @@ class Play extends Component {
     document.addEventListener('keydown', this.handleKeyDown);
     
     const playMode = true;
-    getAllCards(this.props.userId)
+    getAllCards(this.props.userID)
     .then(cards => {
       this.props.setDeck(buildDeck(cards, playMode));
     });
@@ -119,10 +119,10 @@ class Play extends Component {
                       i === currentCardIndex ? _ => this.setState({reveal: !reveal}) :
                       null 
                     }>
-                    <FrontFace rank={getRank(i)} style={cardFace(i, currentCardIndex, 'front')}>
+                    <FrontFace rank={getRank(i)} style={cardStyle(i, currentCardIndex, 'front')}>
                       { card.front }
                     </FrontFace>
-                    <BackFace style={cardFace(i, currentCardIndex, 'back')}>
+                    <BackFace style={cardStyle(i, currentCardIndex, 'back')}>
                       { card.back }
                     </BackFace>
                   </div>
@@ -179,8 +179,8 @@ let outputActions = {
   setCards, setDeck
 }
 
-function mapStateToProps({ userId, deck }) {
-  return { userId, deck };
+function mapStateToProps({ userID, deck }) {
+  return { userID, deck };
   // if (!state) return {};
   // return state;
 }

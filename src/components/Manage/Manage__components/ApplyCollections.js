@@ -9,13 +9,13 @@ class ApplyCollections extends Component {
   }
 
   render() {
-    const { applyCollection, makeCollection, content, editItem } = this.props;
+    const { makeCollection, content, editItem } = this.props;
 
     return (
       <div className="applyCollections"
         style={{display: editItem === 'applyCollections' ? 'flex' : 'none'}}>
         <div className="formContainer">
-          <form className="applyCollections form" onSubmit={applyCollection}>
+          <form className="applyCollections form">
             <input id="applyCollectionsFocus"
               value={content}
               type="text" placeholder="Make new collection"

@@ -2,32 +2,32 @@ import axios from 'axios';
 
 const URL = process.env.REACT_APP_URL;
 
-export function getAllCards(userId) {
-  return axios.get(`${URL}/cards/${userId}`)
+export function getAllCards(userID) {
+  return axios.get(`${URL}/cards/${userID}`)
     .then(response => response.data);
 }
 
-export function saveCard(userId, front, back) {
-  return axios.post(`${URL}/card/${userId}`, { front, back })
+export function saveCard(userID, front, back) {
+  return axios.post(`${URL}/card/${userID}`, { front, back })
     .then(response => response.data);
 }
 
-export function saveCards(userId, cards) {
-  return axios.post(`${URL}/cards/${userId}`, { cards })
+export function saveCards(userID, cards) {
+  return axios.post(`${URL}/cards/${userID}`, { cards })
     .then(response => response.data);
 }
 
-export function editCard(cardFace, newContent, cardId, userId) {
-  return axios.put(`${URL}/card/${cardFace}/${cardId}/${userId}`, { newContent })
+export function editCard(cardFace, newContent, cardID, userID) {
+  return axios.put(`${URL}/card/${cardFace}/${cardID}/${userID}`, { newContent })
     .then(response => response.data);
 }
 
-export function switchBool(cardId, colName, userId) {
-  return axios.put(`${URL}/card/${cardId}/${colName}`, { userId })
+export function switchBool(cardID, colName, userID) {
+  return axios.put(`${URL}/card/${cardID}/${colName}`, { userID })
     .then(response => response.data);
 }
 
-export function deleteCard(cardId, userId) {
-  return axios.delete(`${URL}/card/${cardId}/${userId}`)
+export function deleteCard(cardID, userID) {
+  return axios.delete(`${URL}/card/${cardID}/${userID}`)
     .then(response => response.data);
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setCollectionIDs } from '../../../redux/reducer';
+import { setCollections, setCollectionIDs } from '../../../redux/reducer';
 import { updateCollections } from '../../../services/collectionService';
 
 class CollectionsList extends Component {
@@ -25,8 +25,9 @@ class CollectionsList extends Component {
   }
 
   updateWithSelectedCollections() {
-    const { userId, selectedCardIDs, selectedCollectionIDs } = this.props;
-    updateCollections(userId, selectedCardIDs, selectedCollectionIDs);
+    const { userID, selectedCardIDs, selectedCollectionIDs } = this.props;
+    updateCollections(userID, selectedCardIDs, selectedCollectionIDs)
+    .then(collections => {this.props.setCollections(collections); console.log('why', this.props.collections)});
   }
 
   render() {
@@ -56,8 +57,8 @@ class CollectionsList extends Component {
   }
 }
 
-function mapStateToProps({ userId, collections, selectedCardIDs, selectedCollectionIDs }) {
-  return { userId, collections, selectedCardIDs, selectedCollectionIDs }
+function mapStateToProps({ userID, collections, collectionInfo, selectedCardIDs, selectedCollectionIDs }) {
+  return { userID, collections, collectionInfo, selectedCardIDs, selectedCollectionIDs }
 }
 
-export default connect(mapStateToProps, {setCollectionIDs })(CollectionsList);
+export default connect(mapStateToProps, { setCollections, setCollectionIDs })(CollectionsList);

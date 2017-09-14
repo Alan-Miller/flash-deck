@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { setCardIDs } from '../../../redux/reducer';
+import { unapplyCollection } from '../../../services/collectionService';
 
 import EditContent from './EditContent';
 import ColumnTitles from './ColumnTitles';
@@ -13,23 +14,29 @@ class ManageCards extends Component {
     this.state = { selectedCardIDs: [] };
     this.handleSelect = this.handleSelect.bind(this);
     this.isACardOnState = this.isACardOnState.bind(this);
-    // this.isChecked = this.isChecked.bind(this);
+    this.unapplyThisCollection = this.unapplyThisCollection.bind(this);
   }
 
-  handleSelect(cardId) {
+  handleSelect(cardID) {
     const selectedCardIDs = [...this.props.selectedCardIDs];
-    const index = selectedCardIDs.indexOf(cardId);
-    if (this.isACardOnState(cardId)) selectedCardIDs.splice(index, 1);
-    else selectedCardIDs.push(cardId);
+    const index = selectedCardIDs.indexOf(cardID);
+    if (this.isACardOnState(cardID)) selectedCardIDs.splice(index, 1);
+    else selectedCardIDs.push(cardID);
     this.props.setCardIDs(selectedCardIDs);
   }
 
-  isACardOnState(cardId) { return this.props.selectedCardIDs.indexOf(cardId) !== -1; }
-  // isChecked(cardId) { return this.refs[`card${cardId}`].checked; }
+  unapplyThisCollection(userID) {
+    unapplyCollection(userID)
+    .then(collections => { this.props.setCollections(collections); });
+  }
+
+  isACardOnState(cardID) { return this.props.selectedCardIDs.indexOf(cardID) !== -1; }
 
   render() {
-    const { userId, cards, editCardContent, 
-            toggleBool, deleteThis, setToEdit, setToApply, editItem } = this.props;
+    const { 
+      userID, collections, collectionInfo, unapplyThisCollection, cards, editCardContent, 
+      deleteThisCard, setToEdit, setToApply, toggleBool, editItem 
+    } = this.props;
 
     return (
       <div className="Manage__cards" style={{marginTop: editItem ? '440px' : null}}>
@@ -92,12 +99,21 @@ class ManageCards extends Component {
 
                 <div 
                   className="delete" 
-                  onClick={() => deleteThis(card.id, userId)}>
+                  onClick={() => deleteThisCard(card.id, userID)}>
                   X
                 </div>
                 <div className="collections">
-                  Collections:
+                  { collectionInfo && collectionInfo.filter(info => info.card_id === card.id).map((info, i) => (
+                    <div className="collection" key={i}>
+                      {info.name}
+                      <span className="unapply" 
+                        onClick={() => unapplyThisCollection(info.id, userID)}>
+                        x
+                      </span>
+                    </div>
+                  ))}
                 </div>
+
               </li>
             ))}
           </ul>
@@ -112,8 +128,8 @@ class ManageCards extends Component {
   }
 }
 
-function mapStateToProps({ cards, userId, selectedCardIDs }) {
-  return { cards, userId, selectedCardIDs };
+function mapStateToProps({ cards, collections, collectionInfo, userID, selectedCardIDs }) {
+  return { cards, collections, collectionInfo, userID, selectedCardIDs };
 }
 
 export default connect(mapStateToProps, { setCardIDs })(ManageCards);

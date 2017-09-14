@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { setCards } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
-import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
+import { flipCard } from '../../utils/deckUtils';
+import { styleCardContainer, cardStyle } from '../../utils/cardStyleUtils';
 import CardButton from '../CardButton/CardButton';
 import { Link } from 'react-router-dom';
 
@@ -24,7 +25,7 @@ class Quiz extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
 
-    getAllCards(this.props.userId)
+    getAllCards(this.props.userID)
     .then(cards => {
       this.props.setCards(shuffle(cards));
     });
@@ -115,13 +116,13 @@ class Quiz extends Component {
                       i >= currentCardIndex ? this.advance :
                       null
                     }>
-                    <div className="front face" style={cardFace(i, currentCardIndex, 'front')}>
+                    <div className="front face" style={cardStyle(i, currentCardIndex, 'front')}>
                       <div className="content">
                         { card.front }
                       </div>
                     </div>
 
-                    <div className="back face" style={cardFace(i, currentCardIndex, 'back')}>
+                    <div className="back face" style={cardStyle(i, currentCardIndex, 'back')}>
                       <div className="content">
                         { card.back }
                       </div>
@@ -150,8 +151,8 @@ let outputActions = {
   setCards
 }
 
-function mapStateToProps({ cards, userId }) {
-  return { cards, userId };
+function mapStateToProps({ cards, userID }) {
+  return { cards, userID };
   // if (!state) return {};
   // return state;
 }

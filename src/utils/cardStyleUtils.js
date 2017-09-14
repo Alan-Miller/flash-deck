@@ -5,6 +5,11 @@ import hearts from '../imgs/hearts.png';
 const $redsuit = `#C24444`;
 const $blacksuit = `#205050`;
 
+export const getRank = index => {
+  index = index % 13;
+  return ['A','2','3','4','5','6','7','8','9','10','J','Q','K'][index];
+}
+
 export function styleCardContainer(index, currentCardIndex, numCards) {
   // Position and rotation of cards on left
   let random = index % 13;
@@ -16,7 +21,6 @@ export function styleCardContainer(index, currentCardIndex, numCards) {
     transition: `.2s`
   }
   if (index < currentCardIndex) return leftStyles;
-
   // Position and rotation of current card (middle)
   const currentCardStyles = {
     left: `50%`, 
@@ -25,7 +29,6 @@ export function styleCardContainer(index, currentCardIndex, numCards) {
     transition: `.5s`
   }
   if (index === currentCardIndex) return currentCardStyles;
-
   // Position and rotation of cards on right
   let rightStyles = {
     left: `auto`,
@@ -44,19 +47,7 @@ export function styleCardContainer(index, currentCardIndex, numCards) {
 
 
 
-
-export function flipCard(index, currentCardIndex, reveal) {
-  if (index < currentCardIndex || (index === currentCardIndex && reveal)) {
-    return {transform: `rotateY(180deg)`};
-  }
-  else return {transform: `rotateY(360deg)`};
-}
-
-
-
-
-
-export function cardFace(index, currentCardIndex, face) {
+export function cardStyle(index, currentCardIndex, face) {
   let shadow, style;
   if (index === currentCardIndex) shadow = {boxShadow: `17px 17px 17px 0px rgba(22, 22, 22, .7)`}
   else shadow = {boxShadow: `4px 4px 4px 0px rgba(22, 22, 22, .4)`}

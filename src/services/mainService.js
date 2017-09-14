@@ -14,9 +14,9 @@ export function getUserId() {
     return axios.get(`${URL}/user/${userAuthId}`)
     .then(response => {
       return response.data[0].id;
-      // const userId = response.data[0].id;
-      // this.props.setUserId(userId);
-      // return userId;
+      // const userID = response.data[0].id;
+      // this.props.setUserId(userID);
+      // return userID;
     });
   });
 }

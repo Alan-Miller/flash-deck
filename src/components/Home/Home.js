@@ -8,10 +8,10 @@ const URL = process.env.REACT_APP_LOGIN;
 class Home extends Component {
 
   componentDidMount() {
-    if (!this.props.userId) {
+    if (!this.props.userID) {
       getUserId()
-      .then(userId => {
-        this.props.setUserId(userId);
+      .then(userID => {
+        this.props.setUserId(userID);
       })
     }
   }
@@ -26,7 +26,7 @@ class Home extends Component {
           <Link to="/share"><li>Share</li></Link>
           <Link to="/manage"><li>Manage</li></Link>
           <Link to="/settings"><li>Settings</li></Link>
-          { this.props.userId ? 
+          { this.props.userID ? 
             <a href={URL + '/logout'}><li>Log out</li></a>
             : 
             <a href={URL}><li>Log in</li></a>
@@ -37,8 +37,8 @@ class Home extends Component {
   }
 }
 
-function mapStateToProps({userId}) {
-  return {userId};
+function mapStateToProps({userID}) {
+  return {userID};
 }
 
 export default connect(mapStateToProps, { setUserId })(Home);

@@ -6,6 +6,7 @@ const SET_DECK = 'SET_DECK';
 const SET_CARD_IDS = 'SET_CARD_IDS';
 const SET_COLLECTIONS = 'SET_COLLECTIONS';
 const SET_COLLECTION_IDS = 'SET_COLLECTION_IDS';
+const SET_COLLECTION_INFO = 'SET_COLLECTION_INFO';
 
 // Action creators
 export function getUserId() {
@@ -13,10 +14,10 @@ export function getUserId() {
     type: GET_USER_ID
   }
 }
-export function setUserId(userId) {
+export function setUserId(userID) {
   return {
     type: SET_USER_ID
-    ,userId
+    ,userID
   }
 }
 export function setCards(cards) {
@@ -49,13 +50,20 @@ export function setCollectionIDs(collectionIDs) {
     ,collectionIDs
   }
 }
+export function setCollectionInfo(collectionInfo) {
+  return {
+    type: SET_COLLECTION_INFO
+    ,collectionInfo
+  }
+}
 
 // initialState
 const initialState = {
-  userId: 7
+  userID: 7
   ,cards: []
   ,deck: []
   ,collections: []
+  ,collectionInfo: []
   ,selectedCardIDs: []
   ,selectedCollectionIDs: []
 }
@@ -64,9 +72,9 @@ const initialState = {
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case GET_USER_ID:
-      return state.userId;
+      return state.userID;
     case SET_USER_ID:
-      return Object.assign({}, state, { userId: action.userId });
+      return Object.assign({}, state, { userID: action.userID });
     case SET_CARDS:
       return Object.assign({}, state, { cards: action.cards });
     case SET_DECK:
@@ -75,6 +83,8 @@ export default function reducer(state = initialState, action) {
       return Object.assign({}, state, { selectedCardIDs: action.cardIDs });
     case SET_COLLECTIONS:
       return Object.assign({}, state, { collections: action.collections });
+    case SET_COLLECTION_INFO:
+      return Object.assign({}, state, { collectionInfo: action.collectionInfo });
     case SET_COLLECTION_IDS:
       return Object.assign({}, state, { selectedCollectionIDs: action.collectionIDs });
     default:

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setCards, setUserId, setCollections } from '../../redux/reducer';
+import { setCards, setUserId, setCollections, setCollectionInfo } from '../../redux/reducer';
 
 import { fileReaderUtil } from '../../utils/fileReaderUtil';
 
 import { getUserId } from '../../services/mainService';
-import { getAllCollections, saveCollection } from '../../services/collectionService';
+import { getCollections, getAllCollectionInfo, saveCollection } from '../../services/collectionService';
 import { getAllCards, saveCard, saveCards, 
          editCard, switchBool, deleteCard } from '../../services/cardService';
 
@@ -27,12 +27,11 @@ class Manage extends Component {
     }
     this.edit = this.edit.bind(this);
     this.getInfo = this.getInfo.bind(this);
-    this.deleteThis= this.deleteThis.bind(this);
-    this.toggleBool= this.toggleBool.bind(this);
+    this.toggleBool = this.toggleBool.bind(this);
     this.handleInput = this.handleInput.bind(this);
-    this.handleFileDrop= this.handleFileDrop.bind(this);
+    this.handleFileDrop = this.handleFileDrop.bind(this);
+    this.deleteThisCard = this.deleteThisCard.bind(this);
     this.makeCollection = this.makeCollection.bind(this);
-    this.applyCollection = this.applyCollection.bind(this);
   }
 
   componentDidMount() {
@@ -40,22 +39,25 @@ class Manage extends Component {
     dropZone.addEventListener('dragover', this.handleDragOver);
     dropZone.addEventListener('drop', this.handleFileDrop);
     
-    if (this.props.userId) this.getInfo(this.props.userId);
+    if (this.props.userID) this.getInfo(this.props.userID);
     else {
       getUserId()
-      .then(userId => {
-        this.props.setUserId(userId);
-        this.getInfo(userId);
+      .then(userID => {
+        this.props.setUserId(userID);
+        this.getInfo(userID);
       })
     }
   }
 
-  getInfo(userId) {
-    getAllCards(userId)
+  getInfo(userID) {
+    getAllCards(userID)
       .then(cards => { this.props.setCards(cards); }
     );
-    getAllCollections(userId)
+    getCollections(userID)
       .then(collections => { this.props.setCollections(collections); }
+    );
+    getAllCollectionInfo(userID)
+      .then(collectionInfo => { this.props.setCollectionInfo(collectionInfo); }
     );
   }
 
@@ -69,7 +71,7 @@ class Manage extends Component {
     
     document.getElementById('newCardFocus').focus();
 
-    saveCard(this.props.userId, front, back)
+    saveCard(this.props.userID, front, back)
       .then(cards => { 
         this.setState({content1: '', content2: ''}); 
         this.props.setCards(cards);
@@ -79,41 +81,36 @@ class Manage extends Component {
   makeCollection(e) {
     e.preventDefault();
     const { content1 } = this.state;
-    const { userId } = this.props;
+    const { userID } = this.props;
 
     document.getElementById('newCollectionFocus').focus();
 
-    saveCollection(userId, content1)
+    saveCollection(userID, content1)
       .then(collections => { 
         this.setState({content1: ''}); 
         this.props.setCollections(collections);
       });
   }
 
-  applyCollection(e) {
-    e.preventDefault();
-
-  }
-
   edit(e) {
     e.preventDefault();
-    const { editItem, content2, cardId } = this.state;
-    const { userId } = this.props;
+    const { editItem, content2, cardID } = this.state;
+    const { userID } = this.props;
 
-    editCard(editItem, content2, cardId, userId)
+    editCard(editItem, content2, cardID, userID)
     .then(cards => {
       this.setState({content2: '', editItem: ''});
       this.props.setCards(cards);
     })
   }
 
-  toggleBool(cardId, colName) {
-    switchBool(cardId, colName, this.props.userId)
+  toggleBool(cardID, colName) {
+    switchBool(cardID, colName, this.props.userID)
       .then(cards => { this.props.setCards(cards); })
   }
 
-  deleteThis(userId, cardId) {
-    deleteCard(userId, cardId)
+  deleteThisCard(userID, cardID) {
+    deleteCard(userID, cardID)
       .then(cards => { this.props.setCards(cards); });
   }
 
@@ -127,20 +124,20 @@ class Manage extends Component {
     setTimeout(() => {
       let createNewCards = async () => {
         const newCards = await readFile();
-        await saveCards(this.props.userId, newCards);
+        await saveCards(this.props.userID, newCards);
         let cards = this.props.cards.concat(newCards);
         this.props.setCards(cards);
       }
       createNewCards()
-      .then(_ => getAllCards(this.props.userId))
+      .then(_ => getAllCards(this.props.userID))
       .then(cards => { this.props.setCards(cards) })
     }, 100);
   }
 
   render() {
-    const { content1, content2, editItem, applyCollection } = this.state;
+    const { content1, content2, editItem } = this.state;
     const editCardContent = (face, card) => {
-      this.setState({ editItem: face, cardId: card.id, content1: card[face] })
+      this.setState({ editItem: face, cardID: card.id, content1: card[face] })
     };
 
     return (
@@ -221,7 +218,7 @@ class Manage extends Component {
               <CollectionsList editItem={editItem} />
             </div>
 
-            <ApplyCollections content={content1} editItem={editItem} makeCollection={this.makeCollection} applyCollection={applyCollection} />
+            <ApplyCollections content={content1} editItem={editItem} makeCollection={this.makeCollection} />
 
           </div>
         </div>
@@ -230,21 +227,22 @@ class Manage extends Component {
           setToApply={() => this.setState({editItem: 'applyCollections'})}
           setToEdit={() => this.setState({editItem: 'editCollections'})}
           editItem={editItem}
-          deleteThis={this.deleteThis} 
+          deleteThisCard={this.deleteThisCard} 
           editCardContent={editCardContent} 
-          toggleBool={this.toggleBool}/>
+          toggleBool={this.toggleBool}
+        />
 
       </section>
     )
   }
 }
 
-function mapStateToProps({ userId, cards, collections }) {
-  return { userId, cards, collections };
+function mapStateToProps({ userID, cards, collections }) {
+  return { userID, cards, collections };
 }
 
 let outputActions = {
-  setCards, setUserId, setCollections
+  setCards, setUserId, setCollections, setCollectionInfo
 }
 
 export default connect(mapStateToProps, outputActions)(Manage);

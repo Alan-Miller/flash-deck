@@ -1,13 +1,28 @@
 import axios from 'axios';
 const URL = process.env.REACT_APP_URL;
 
-export function getAllCollections(userId) {
-  return axios.get(`${URL}/collections/${userId}`)
+export function getCollections(userID) {
+  return axios.get(`${URL}/collections/${userID}`)
     .then(response => response.data);
 }
 
-export function saveCollection(userId, name) {
-  return axios.post(`${URL}/collection/${userId}`, { name })
+export function getAllCollectionInfo(userID) {
+  return axios.get(`${URL}/collection/info/${userID}`)
+    .then(response => response.data);
+}
+
+// export function getCollectionsForThisCard(userID, cardID) {
+//   return axios.get(`${URL}/collections/${userID}/${cardID}`)
+//     .then(response => response.data);
+// }
+
+export function unapplyCollection(userID) {
+  // return axios.put(`${URL}/collections/${userID}`)
+  //   .then(response => response.data);
+}
+
+export function saveCollection(userID, name) {
+  return axios.post(`${URL}/collection/${userID}`, { name })
     .then(response => response.data);
 }
 
