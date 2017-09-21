@@ -57,7 +57,6 @@ class Play extends Component {
 
     if (currentCardIndex <= -1) {
       this.setState({currentCardIndex: deck.length});
-      console.log(currentCardIndex)
     }
     else {
       if (!reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
@@ -137,7 +136,7 @@ class Play extends Component {
                 <div className="upper bar">
                   <CardButton 
                     className="right-answer button" 
-                    /* disabled={!reveal && 'disabled'} */
+                    // disabled={!reveal && 'disabled'}
                     onClick={() => {
                       this.updateScore(true);
                       this.advance();
@@ -148,7 +147,7 @@ class Play extends Component {
                 <div className="lower bar">
                   <CardButton 
                     className="wrong-answer button" 
-                    /* disabled={!reveal && 'disabled'} */
+                    // disabled={!reveal && 'disabled'}
                     onClick={() => {
                       this.updateScore(false);
                       this.advance();
