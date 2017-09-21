@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
 import { setCards } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
-import { flipCard } from '../../utils/deckUtils';
-import { positionCard, styleCard } from '../../utils/cardStyleUtils';
-import CardButton from '../CardButton/CardButton';
+import CardTable from './CardTable';
 import { Link } from 'react-router-dom';
 
 class Quiz extends Component {
@@ -52,7 +50,6 @@ class Quiz extends Component {
 
     if (currentCardIndex <= -1) {
       this.setState({currentCardIndex: cards.length});
-      console.log(currentCardIndex)
     }
     else {
       if (!reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
@@ -66,70 +63,29 @@ class Quiz extends Component {
   }
 
   render() {
+    const deck = this.props.cards;
     const { currentCardIndex, reveal } = this.state;
-    const { cards } = this.props;
     
     return(
       <section className="Quiz">
 
         <div className="header">
           <ul className="info">
-            <li># Cards: {cards.length}</li>
+            <li># Cards: {deck.length}</li>
           </ul>
         </div>
 
         <main className="main">
-          <div className="table">
-            
-            <div className="card-space">
-              <div className="place-cards-here" onClick={this.reverse}></div>
-
-              <div className="center-of-table">
-                <div className="upper bar">
-                  <CardButton 
-                    className="right-answer button" 
-                    disabled={!reveal && 'disabled'}
-                    onClick={() => this.updateScore(true)}>
-                    Stop showing
-                  </CardButton>
-                </div>
-                <div className="lower bar">
-                  <CardButton 
-                    className="wrong-answer button" 
-                    disabled={!reveal && 'disabled'}
-                    onClick={() => this.updateScore(false)}>
-                    Show less
-                  </CardButton>
-                </div>
-              </div>
-
-              <div className="place-cards-here" onClick={this.advance}></div>
-
-              { cards && cards.map((card, i) => {
-                console.log('card', card)
-                return <div className="card-container" key={i}
-                  style={positionCard(i, currentCardIndex, cards.length)}>
-                  
-                  <div className="card"
-                    style={flipCard(i, currentCardIndex, reveal)}
-                    onClick={
-                      i < currentCardIndex ? this.reverse :
-                      i >= currentCardIndex ? this.advance :
-                      null
-                    }>
-                    <div className="front face" style={styleCard(i, currentCardIndex, 'front')}>
-                      <span>{ card.front }</span>
-                    </div>
-
-                    <div className="back face" style={styleCard(i, currentCardIndex, 'back')}>
-                      <span>{ card.back }</span>
-                    </div>
-                  </div>
-
-                </div>
-              })}
-            </div>
-          </div>
+          <CardTable 
+            passedProps={
+                          { deck, 
+                            reveal, 
+                            currentCardIndex, 
+                            playMode: false, 
+                            advance: this.advance, 
+                            reverse: this.reverse
+                          }
+            } />
         </main>
 
         <div className="footer">
@@ -155,3 +111,21 @@ function mapStateToProps({ cards, userID }) {
 }
 
 export default connect(mapStateToProps, outputActions)(Quiz);
+
+
+
+
+
+
+
+
+
+/* 
+<div className="front face" style={styleCard(i, currentCardIndex, 'front')}>
+  <span>{ card.front }</span>
+</div>
+
+<div className="back face" style={styleCard(i, currentCardIndex, 'back')}>
+  <span>{ card.back }</span>
+</div>
+*/

@@ -3,11 +3,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setCards, setDeck } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
-import { flipCard, buildDeck } from '../../utils/deckUtils';
+import { buildDeck } from '../../utils/deckUtils';
 import { tallyPoints } from '../../utils/playUtils';
-import { getRank, positionCard, styleCard } from '../../utils/cardStyleUtils';
-import CardButton from '../CardButton/CardButton';
-import { FrontFace, BackFace } from '../Face/Face';
+import CardTable from './CardTable';
 
 class Play extends Component {
 
@@ -45,7 +43,7 @@ class Play extends Component {
     let nextIndex = this.state.currentCardIndex + 1;
     
     if (currentCardIndex >= deck.length) return;
-    // if (currentCardIndex >= deck.length) this.setState({currentCardIndex: -1, reveal: false});
+    
     if (reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
     else this.setState({reveal: true});
   }
@@ -101,66 +99,18 @@ class Play extends Component {
         </div>
 
         <main className="main">
+
+        <CardTable 
+          passedProps={
+                        { deck, 
+                          reveal, 
+                          currentCardIndex, 
+                          playMode: true, 
+                          advance: this.advance, 
+                          reverse: this.reverse
+                        }
+          } />
           
-          <div className="table">
-            
-            <div className="card-space">
-              
-              { deck && deck.map((card, i) => (
-                <div className="card-container" key={i}
-                  style={positionCard(i, currentCardIndex, deck.length)}>
-                  
-                  <div className="card"
-                    style={flipCard(i, currentCardIndex, reveal)}
-                    onClick={
-                      i < currentCardIndex ? this.reverse :
-                      i > currentCardIndex ? this.advance :
-                      i === currentCardIndex ? _ => this.setState({reveal: !reveal}) :
-                      null 
-                    }>
-                    <FrontFace rank={getRank(i)} style={styleCard(i, currentCardIndex, 'front')}>
-                      <span>{ card.front }</span>
-                    </FrontFace>
-
-                    <BackFace style={styleCard(i, currentCardIndex, 'back')}>
-                      <span>{ card.back }</span>
-                    </BackFace>
-                  </div>
-
-                </div>
-              ))}
-
-              <div className="place-cards-here" onClick={this.reverse}></div>
-
-              <div className="center-of-table">
-                <div className="upper bar">
-                  <CardButton 
-                    className="right-answer button" 
-                    // disabled={!reveal && 'disabled'}
-                    onClick={() => {
-                      this.updateScore(true);
-                      this.advance();
-                    }}>
-                    Right
-                  </CardButton>
-                </div>
-                <div className="lower bar">
-                  <CardButton 
-                    className="wrong-answer button" 
-                    // disabled={!reveal && 'disabled'}
-                    onClick={() => {
-                      this.updateScore(false);
-                      this.advance();
-                    }}>
-                    Wrong
-                  </CardButton>
-                </div>
-              </div>
-
-              <div className="place-cards-here" onClick={this.advance}></div>
-              
-            </div>
-          </div>
         </main>
 
         <div className="footer">

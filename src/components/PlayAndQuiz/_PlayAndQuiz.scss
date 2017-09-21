@@ -67,15 +67,15 @@
                 &.upper {
                     bottom: $cardHeight;
                     @include flexBox($justify: flex-start);
-                    .button { border-radius: 0 27px 0 0; }
+                    button { border-radius: 0 27px 0 0; }
                 }
                 &.lower {
                     top: $cardHeight;
                     @include flexBox($justify: flex-end);
-                    .button { border-radius: 0 0 0 27px; }
+                    button { border-radius: 0 0 0 27px; }
                 }
 
-                .button {
+                button {
                     // opacity: 0;
                     transition: .2s;
                     margin: 0;
