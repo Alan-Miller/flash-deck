@@ -5,7 +5,7 @@ import { setCards, setDeck } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { flipCard, buildDeck } from '../../utils/deckUtils';
 import { tallyPoints } from '../../utils/playUtils';
-import { getRank, styleCardContainer, cardStyle } from '../../utils/cardStyleUtils';
+import { getRank, positionCard, styleCard } from '../../utils/cardStyleUtils';
 import CardButton from '../CardButton/CardButton';
 import { FrontFace, BackFace } from '../Face/Face';
 
@@ -109,7 +109,7 @@ class Play extends Component {
               
               { deck && deck.map((card, i) => (
                 <div className="card-container" key={i}
-                  style={styleCardContainer(i, currentCardIndex, deck.length)}>
+                  style={positionCard(i, currentCardIndex, deck.length)}>
                   
                   <div className="card"
                     style={flipCard(i, currentCardIndex, reveal)}
@@ -119,11 +119,12 @@ class Play extends Component {
                       i === currentCardIndex ? _ => this.setState({reveal: !reveal}) :
                       null 
                     }>
-                    <FrontFace rank={getRank(i)} style={cardStyle(i, currentCardIndex, 'front')}>
-                      { card.front }
+                    <FrontFace rank={getRank(i)} style={styleCard(i, currentCardIndex, 'front')}>
+                      <span>{ card.front }</span>
                     </FrontFace>
-                    <BackFace style={cardStyle(i, currentCardIndex, 'back')}>
-                      { card.back }
+
+                    <BackFace style={styleCard(i, currentCardIndex, 'back')}>
+                      <span>{ card.back }</span>
                     </BackFace>
                   </div>
 

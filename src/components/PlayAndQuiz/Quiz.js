@@ -4,7 +4,7 @@ import { setCards } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
 import { flipCard } from '../../utils/deckUtils';
-import { styleCardContainer, cardStyle } from '../../utils/cardStyleUtils';
+import { positionCard, styleCard } from '../../utils/cardStyleUtils';
 import CardButton from '../CardButton/CardButton';
 import { Link } from 'react-router-dom';
 
@@ -105,9 +105,10 @@ class Quiz extends Component {
 
               <div className="place-cards-here" onClick={this.advance}></div>
 
-              { cards && cards.map((card, i) => (
-                <div className="card-container" key={i}
-                  style={styleCardContainer(i, currentCardIndex, cards.length)}>
+              { cards && cards.map((card, i) => {
+                console.log('card', card)
+                return <div className="card-container" key={i}
+                  style={positionCard(i, currentCardIndex, cards.length)}>
                   
                   <div className="card"
                     style={flipCard(i, currentCardIndex, reveal)}
@@ -116,21 +117,17 @@ class Quiz extends Component {
                       i >= currentCardIndex ? this.advance :
                       null
                     }>
-                    <div className="front face" style={cardStyle(i, currentCardIndex, 'front')}>
-                      <div className="content">
-                        { card.front }
-                      </div>
+                    <div className="front face" style={styleCard(i, currentCardIndex, 'front')}>
+                      <span>{ card.front }</span>
                     </div>
 
-                    <div className="back face" style={cardStyle(i, currentCardIndex, 'back')}>
-                      <div className="content">
-                        { card.back }
-                      </div>
+                    <div className="back face" style={styleCard(i, currentCardIndex, 'back')}>
+                      <span>{ card.back }</span>
                     </div>
                   </div>
 
                 </div>
-              ))}
+              })}
             </div>
           </div>
         </main>

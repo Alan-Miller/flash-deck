@@ -8,20 +8,20 @@ export function FrontFace(props) {
           <div className="rank">
             { props.rank }
           </div>
-          <div className="suit" style={props.style.img}></div>
+          <div className="suit" style={props.style.pipImg}></div>
         </span>
       </div>
 
-      <div className="content">
+      <span className="content">
         { props.children }
-      </div>
+      </span>
 
       <div className="lower pipArea">
         <div className="pip">
           <div className="rank">
             { props.rank }
           </div>
-          <div className="suit" style={props.style.img}></div>
+          <div className="suit" style={props.style.pipImg}></div>
         </div>
       </div>
     </div>
@@ -31,9 +31,9 @@ export function FrontFace(props) {
 export function BackFace(props) {
   return (
     <div className="back face" style={props.style}>
-      <div className="content">
+      <span className="content">
         { props.children }
-      </div>
+      </span>
     </div>
   )
 }

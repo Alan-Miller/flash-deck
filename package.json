@@ -3,8 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "main": "srvr/index.js",
-  "proxy": "http://localhost:3021",
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:3021/",
+      "secure": false,
+      "pathRewrite": {"^/api" : ""}
+    }
+  },
   "homepage": "http://localhost:3023",
+  
   "dependencies": {
     "auth0-js": "^8.9.3",
     "axios": "^0.16.2",

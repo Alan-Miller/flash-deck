@@ -120,7 +120,14 @@
                 @include flexBox(column, space-between, auto);
                 font-size: 1.7rem;
                 background-color: $white;
-                & .content { @include flexBox; }
+                & .content { 
+                    @include flexBox; 
+                    // display: inline-block;
+                    background-color: rgba(22, 22, 22, .7); 
+                    color: $white;
+                    padding: 5px;
+                    font-weight: 200;
+                }
             }
 
             &.back {
