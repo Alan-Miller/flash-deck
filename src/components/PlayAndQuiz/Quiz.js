@@ -77,13 +77,14 @@ class Quiz extends Component {
 
         <main className="main">
           <CardTable 
-            passedProps={
-                          { deck, 
+            passedProps={ { 
+                            deck, 
                             reveal, 
                             currentCardIndex, 
                             playMode: false, 
                             advance: this.advance, 
-                            reverse: this.reverse
+                            reverse: this.reverse,
+                            buttonText: ['Show less', 'Stop showing']
                           }
             } />
         </main>
@@ -106,26 +107,6 @@ let outputActions = {
 
 function mapStateToProps({ cards, userID }) {
   return { cards, userID };
-  // if (!state) return {};
-  // return state;
 }
 
 export default connect(mapStateToProps, outputActions)(Quiz);
-
-
-
-
-
-
-
-
-
-/* 
-<div className="front face" style={styleCard(i, currentCardIndex, 'front')}>
-  <span>{ card.front }</span>
-</div>
-
-<div className="back face" style={styleCard(i, currentCardIndex, 'back')}>
-  <span>{ card.back }</span>
-</div>
-*/

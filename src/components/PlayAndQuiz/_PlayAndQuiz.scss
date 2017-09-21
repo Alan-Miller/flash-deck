@@ -137,6 +137,7 @@
                 color: $white;
                 background-color: $white;
                 transform: rotateY(-180deg);
+                overflow: scroll;
             }
         } // end of .face
     } // end of .card

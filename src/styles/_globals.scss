@@ -60,7 +60,7 @@ a {
 
 @mixin bgColor($color) {
     background-color: $color;
-}                
+}
 
 @mixin size($width: null, $height: null) {
     width: $width;

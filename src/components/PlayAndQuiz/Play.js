@@ -101,13 +101,14 @@ class Play extends Component {
         <main className="main">
 
         <CardTable 
-          passedProps={
-                        { deck, 
+          passedProps={ { 
+                          deck, 
                           reveal, 
                           currentCardIndex, 
                           playMode: true, 
                           advance: this.advance, 
-                          reverse: this.reverse
+                          reverse: this.reverse,
+                          buttonText: ['Right', 'Wrong']
                         }
           } />
           
@@ -130,9 +131,8 @@ let outputActions = {
 }
 
 function mapStateToProps({ userID, deck }) {
+  if (!userID || !deck) return {};
   return { userID, deck };
-  // if (!state) return {};
-  // return state;
 }
 
 export default connect(mapStateToProps, outputActions)(Play);

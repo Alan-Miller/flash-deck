@@ -1,25 +1,20 @@
 // Global styles
-@import './globalStyles/reset';
-@import './globalStyles/globals';
+@import './reset';
+@import './globals';
 
 // Modular styles
-@import './modularStyles/buttonStyles';
-@import './modularStyles/formStyles';
-@import './modularStyles/textStyles';
-@import './modularStyles/CardExtras';
+@import './buttonStyles';
+@import './cardStyles';
+@import './formStyles';
+@import './textStyles';
 
 // Component styles
 @import '../App';
 
-@import '../components/Home/Home';
-
-@import '../components/PlayAndQuiz/PlayAndQuiz';
 @import '../components/Face/Face';
-@import '../components/CardButton/CardButton';
-
-@import '../components/Share/Share';
-
-@import '../components/Settings/Settings';
-
+@import '../components/Home/Home';
 @import '../components/Manage/Manage';
 @import '../components/Manage/Manage__components/Manage__components';
+@import '../components/PlayAndQuiz/PlayAndQuiz';
+@import '../components/Settings/Settings';
+@import '../components/Share/Share';

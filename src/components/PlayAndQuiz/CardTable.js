@@ -7,33 +7,30 @@ import { FrontFace, BackFace } from '../Face/Face';
 class CardTable extends Component {
 
   render() {
-    const { deck, currentCardIndex, reveal, playMode, advance, reverse } = this.props.passedProps;
+    const { deck, currentCardIndex, reveal, playMode, advance, reverse, buttonText } = this.props.passedProps;
 
     return (
       <div className="table">
 
         <div className="card-space">
+          
           <div className="place-cards-here" onClick={reverse}></div>
 
           <div className="center-of-table">
             <div className="upper bar">
               <button
                 disabled={!reveal && 'disabled'}
-                onClick={ _ => {
-                  advance();
-                  playMode && this.updateScore(true);
-                }}>
-                Right
+                onClick={ _ => { advance(); playMode && this.updateScore(true); }}
+              >
+                { buttonText[0] }
               </button>
             </div>
             <div className="lower bar">
               <button 
                 disabled={!reveal && 'disabled'}
-                onClick={ _ => {
-                  advance();
-                  playMode && this.updateScore(false);
-                }}>
-                Wrong
+                onClick={ _ => { advance(); playMode && this.updateScore(false); }}
+              >
+                { buttonText[1] }
               </button>
             </div>
           </div>
@@ -64,8 +61,9 @@ class CardTable extends Component {
             </div>
           ))}
 
-        </div>
-      </div>
+        </div>  
+
+      </div> // end of table
     )
   }
 }

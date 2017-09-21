@@ -34,7 +34,7 @@ class ManageCards extends Component {
 
   render() {
     const { 
-      userID, collections, collectionInfo, unapplyThisCollection, cards, editCardContent, 
+      userID, collections, collectionInfo, cards, editCardContent, 
       deleteThisCard, setToEdit, setToApply, toggleBool, editItem 
     } = this.props;
 
@@ -107,7 +107,7 @@ class ManageCards extends Component {
                     <div className="collection" key={i}>
                       {info.name}
                       <span className="unapply" 
-                        onClick={() => unapplyThisCollection(info.id, userID)}>
+                        onClick={() => this.unapplyThisCollection(userID)}>
                         x
                       </span>
                     </div>
