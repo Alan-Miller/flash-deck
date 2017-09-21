@@ -1,8 +1,8 @@
 module.exports = function(app) {
 
   //————————————————————————————————————————————>> User
-  app.get('/api/user/:userAuthId', (req, res) => {
-    app.get('db').get_userID([req.params.userAuthId])
+  app.get('/api/user/:userAuthID', (req, res) => {
+    app.get('db').get_userID([req.params.userAuthID])
     .then(response => { res.status(200).send(response); })
   });
 

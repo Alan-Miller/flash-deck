@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { setUserId } from '../../redux/reducer';
-import { getUserId } from '../../services/mainService';
+import { setUserID } from '../../redux/reducer';
+import { getUserID } from '../../services/mainService';
 const URL = process.env.REACT_APP_LOGIN;
 
 class Home extends Component {
 
   componentDidMount() {
     if (!this.props.userID) {
-      getUserId()
+      getUserID()
       .then(userID => {
-        this.props.setUserId(userID);
+        this.props.setUserID(userID);
       })
     }
   }
@@ -41,4 +41,4 @@ function mapStateToProps({userID}) {
   return {userID};
 }
 
-export default connect(mapStateToProps, { setUserId })(Home);
+export default connect(mapStateToProps, { setUserID })(Home);

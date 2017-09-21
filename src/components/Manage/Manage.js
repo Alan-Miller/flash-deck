@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setCards, setUserId, setCollections, setCollectionInfo } from '../../redux/reducer';
+import { setCards, setUserID, setCollections, setCollectionInfo } from '../../redux/reducer';
 
 import { fileReaderUtil } from '../../utils/fileReaderUtil';
 
-import { getUserId } from '../../services/mainService';
+import { getUserID } from '../../services/mainService';
 import { getCollections, getAllCollectionInfo, saveCollection } from '../../services/collectionService';
 import { getAllCards, saveCard, saveCards, 
          editCard, switchBool, deleteCard } from '../../services/cardService';
@@ -41,9 +41,9 @@ class Manage extends Component {
     
     if (this.props.userID) this.getInfo(this.props.userID);
     else {
-      getUserId()
+      getUserID()
       .then(userID => {
-        this.props.setUserId(userID);
+        this.props.setUserID(userID);
         this.getInfo(userID);
       })
     }
@@ -242,7 +242,7 @@ function mapStateToProps({ userID, cards, collections }) {
 }
 
 let outputActions = {
-  setCards, setUserId, setCollections, setCollectionInfo
+  setCards, setUserID, setCollections, setCollectionInfo
 }
 
 export default connect(mapStateToProps, outputActions)(Manage);

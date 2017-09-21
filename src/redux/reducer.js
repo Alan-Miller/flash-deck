@@ -9,12 +9,12 @@ const SET_COLLECTION_IDS = 'SET_COLLECTION_IDS';
 const SET_COLLECTION_INFO = 'SET_COLLECTION_INFO';
 
 // Action creators
-export function getUserId() {
+export function getUserID() {
   return {
     type: GET_USER_ID
   }
 }
-export function setUserId(userID) {
+export function setUserID(userID) {
   return {
     type: SET_USER_ID
     ,userID
@@ -59,7 +59,8 @@ export function setCollectionInfo(collectionInfo) {
 
 // initialState
 const initialState = {
-  userID: 7
+  // userID: 7 // hard-coded for no-auth dev testing
+  userID: 0 // 0 (falsy) for production
   ,cards: []
   ,deck: []
   ,collections: []
