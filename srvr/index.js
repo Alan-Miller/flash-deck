@@ -38,8 +38,8 @@ massive({
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static( `${__dirname}/../build` ));
-app.use((req, res, next)=>{console.log(req.url);next();});
+// app.use(express.static( `${__dirname}/../build` )); // Turn off for dev testing
+app.use((req, res, next) => { console.log(req.url); next(); });
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
@@ -59,20 +59,22 @@ passport.use(new Auth0Strategy({
     clientSecret: process.env.AUTH_CLIENT_SECRET,
     callbackURL: process.env.AUTH_CALLBACK
 }, (accessToken, refreshToken, extraParams, profile, done) => {
-    console.log(profile);
+    // console.log(profile); // see if profile comes back from auth
     done(null, profile);
 }));
 
 app.get('/auth', passport.authenticate('auth0'));
 app.get('/auth/callback', passport.authenticate('auth0', {
     successRedirect: '/',
-    failureRedirect: '/login'
+    failureRedirect: '/auth'
 }));
 
 passport.serializeUser((user, done) => {
+    console.log('user', user)
     done(null, user);
 });
 passport.deserializeUser((obj, done) => {
+    console.log('obj', obj)
     done(null, obj);
 });
 
@@ -82,7 +84,7 @@ app.get('/auth/me', (req, res, next) => {
 });
 app.get('/auth/logout', (req, res) => {
     req.logOut();
-    return res.redirect(302, '/login'); // front?
+    return res.redirect(302, '/'); // front?
 });
 
 

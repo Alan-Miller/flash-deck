@@ -1,5 +1,5 @@
 // Answer buttons
-.card .answer {
+.card .button {
   @include flexBox;
   @include size(100px, 55px);
   @include position(absolute, $left: 50%, $x: -50%);

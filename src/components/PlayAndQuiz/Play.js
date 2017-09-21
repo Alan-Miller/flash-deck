@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setCards, setDeck } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
-import { buildDeck } from '../../utils/deckUtils';
-import { getRank, tallyPoints } from '../../utils/playUtils';
-import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
+import { flipCard, buildDeck } from '../../utils/deckUtils';
+import { tallyPoints } from '../../utils/playUtils';
+import { getRank, positionCard, styleCard } from '../../utils/cardStyleUtils';
 import CardButton from '../CardButton/CardButton';
-import Pip from '../Pip/Pip';
+import { FrontFace, BackFace } from '../Face/Face';
 
 class Play extends Component {
 
@@ -17,6 +17,7 @@ class Play extends Component {
     this.state = {
       currentCardIndex: -1
       ,reveal: true
+      ,points: 0
       ,score: 0
     }
     this.advance = this.advance.bind(this);
@@ -29,7 +30,7 @@ class Play extends Component {
     document.addEventListener('keydown', this.handleKeyDown);
     
     const playMode = true;
-    getAllCards(this.props.userId)
+    getAllCards(this.props.userID)
     .then(cards => {
       this.props.setDeck(buildDeck(cards, playMode));
     });
@@ -66,7 +67,7 @@ class Play extends Component {
 
   handleKeyDown(e) {
     // if (e.which === 37) this.reverse();
-    if (e.which === 38 || e.which === 39) {
+    if (e.which === 38) {
       this.updateScore(true);
       this.advance();
     }
@@ -74,6 +75,7 @@ class Play extends Component {
       this.updateScore(false);
       this.advance();
     }
+    if (e.which === 39) { this.setState({reveal: !this.state.reveal})}
   }
 
   updateScore(correct) {
@@ -93,7 +95,7 @@ class Play extends Component {
 
         <div className="header">
           <ul className="info">
-            <li># Cards in deck: {deck.length}</li>
+            {deck && <li># Cards in deck: {deck.length}</li>}
             <li>Points: {points}</li>
             <li>Score: {score}</li>
           </ul>
@@ -104,13 +106,38 @@ class Play extends Component {
           <div className="table">
             
             <div className="card-space">
+              
+              { deck && deck.map((card, i) => (
+                <div className="card-container" key={i}
+                  style={positionCard(i, currentCardIndex, deck.length)}>
+                  
+                  <div className="card"
+                    style={flipCard(i, currentCardIndex, reveal)}
+                    onClick={
+                      i < currentCardIndex ? this.reverse :
+                      i > currentCardIndex ? this.advance :
+                      i === currentCardIndex ? _ => this.setState({reveal: !reveal}) :
+                      null 
+                    }>
+                    <FrontFace rank={getRank(i)} style={styleCard(i, currentCardIndex, 'front')}>
+                      <span>{ card.front }</span>
+                    </FrontFace>
+
+                    <BackFace style={styleCard(i, currentCardIndex, 'back')}>
+                      <span>{ card.back }</span>
+                    </BackFace>
+                  </div>
+
+                </div>
+              ))}
+
               <div className="place-cards-here" onClick={this.reverse}></div>
 
               <div className="center-of-table">
                 <div className="upper bar">
                   <CardButton 
                     className="right-answer button" 
-                    disabled={!reveal && 'disabled'}
+                    /* disabled={!reveal && 'disabled'} */
                     onClick={() => {
                       this.updateScore(true);
                       this.advance();
@@ -121,7 +148,7 @@ class Play extends Component {
                 <div className="lower bar">
                   <CardButton 
                     className="wrong-answer button" 
-                    disabled={!reveal && 'disabled'}
+                    /* disabled={!reveal && 'disabled'} */
                     onClick={() => {
                       this.updateScore(false);
                       this.advance();
@@ -130,43 +157,9 @@ class Play extends Component {
                   </CardButton>
                 </div>
               </div>
-              
+
               <div className="place-cards-here" onClick={this.advance}></div>
               
-             
-
-              { deck && deck.map((card, i) => (
-                <div className="card-container" key={i}
-                  style={styleCardContainer(i, currentCardIndex, deck.length)}>
-                  
-                  <div className="card"
-                    style={flipCard(i, currentCardIndex, reveal)}
-                    onClick={
-                      i < currentCardIndex ? this.reverse :
-                      i >= currentCardIndex ? this.advance :
-                      null
-                    }>
-                    <div className="front face" style={cardFace(i, currentCardIndex, 'front')}>
-                      <Pip className="upper pipArea">
-                        { getRank(i) }
-                      </Pip>
-                      <div className="content">
-                        { card.front }
-                      </div>
-                      <Pip className="lower pipArea">
-                        { getRank(i) }
-                      </Pip>
-                    </div>
-
-                    <div className="back face" style={cardFace(i, currentCardIndex, 'back')}>
-                      <div className="content">
-                        { card.back }
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              ))}
             </div>
           </div>
         </main>
@@ -187,9 +180,10 @@ let outputActions = {
   setCards, setDeck
 }
 
-function mapStateToProps(state) {
-  if (!state) return {};
-  return state;
+function mapStateToProps({ userID, deck }) {
+  return { userID, deck };
+  // if (!state) return {};
+  // return state;
 }
 
 export default connect(mapStateToProps, outputActions)(Play);

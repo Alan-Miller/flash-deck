@@ -1,22 +1,23 @@
 import axios from 'axios';
-import { URL } from './cardService';
 
-export function getUsers(userId, searchValue) {
-  return axios.get(`${URL}/users/${userId}?value=${searchValue}`)
+const URL = process.env.REACT_APP_URL;
+
+export function getUsers(userID, searchValue) {
+  return axios.get(`${URL}/users/${userID}?value=${searchValue}`)
     .then(response => response.data);
 }
 
-export function getUserFriends(userId) {
-  return axios.get(`${URL}/friends/${userId}`)
+export function getUserFriends(userID) {
+  return axios.get(`${URL}/friends/${userID}`)
     .then(response => response.data);
 }
 
-export function postFriendshipInvite(userId, inviteeId) {
-  return axios.post(`${URL}/friends/${userId}/${inviteeId}`)
+export function postFriendshipInvite(userID, inviteeId) {
+  return axios.post(`${URL}/friends/${userID}/${inviteeId}`)
     .then(response => response.data);
 }
 
-export function getPendingFriendships(userId) {
-  return axios.get(`${URL}/pending/${userId}`)
+export function getPendingFriendships(userID) {
+  return axios.get(`${URL}/pending/${userID}`)
     .then(response => response.data);
 }

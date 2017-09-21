@@ -82,6 +82,7 @@
                     border: medium solid $blacksuit;
                     font-size: 1rem;
                     padding: 0 10px;
+                    z-index: 10px;
                 }
             } // end of .bar
         } // end of .center-of-table
@@ -119,7 +120,14 @@
                 @include flexBox(column, space-between, auto);
                 font-size: 1.7rem;
                 background-color: $white;
-                & .content { @include flexBox; }
+                & .content { 
+                    @include flexBox; 
+                    // display: inline-block;
+                    background-color: rgba(22, 22, 22, .7); 
+                    color: $white;
+                    padding: 5px;
+                    font-weight: 200;
+                }
             }
 
             &.back {

@@ -1,44 +1,19 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { connect } from 'react-redux'
-import { setUserId } from '../../redux/reducer';
-import { URL } from '../../services/cardService';
-// import { getAllCollections, getAllCards } from '../../services/cardService';
+import { setUserID } from '../../redux/reducer';
+import { getUserID } from '../../services/mainService';
+const URL = process.env.REACT_APP_LOGIN;
 
 class Home extends Component {
 
-  constructor() {
-    super()
-
-    this.logout = this.logout.bind(this);
-  }
-
-  componentWillMount() {
-    
-    // Check for user's auth id
-    axios.get('/auth/me').then(response => {
-      return response.data.id;
-    })
-    // Send auth id to db to retrieve user id
-    .then(userAuthId => {
-      axios.get(`${URL}/user/${userAuthId}`)
-      .then(response => {
-        const userId = response.data[0].id;
-        this.props.setUserId(userId);
-        return userId;
-      });
-    });
-    // if (!user) this.props.history.push('/login');
-
-  }
-
-  logout() {
-    axios.get('/auth/logout')
-    .then(response => {
-      console.log(response);
-      // this.props.history.push('/login');
-    });
+  componentDidMount() {
+    if (!this.props.userID) {
+      getUserID()
+      .then(userID => {
+        this.props.setUserID(userID);
+      })
+    }
   }
 
   render() {
@@ -51,11 +26,19 @@ class Home extends Component {
           <Link to="/share"><li>Share</li></Link>
           <Link to="/manage"><li>Manage</li></Link>
           <Link to="/settings"><li>Settings</li></Link>
-          <Link to=""><li onClick={this.logout} >Log out</li></Link>
+          { this.props.userID ? 
+            <a href={URL + '/logout'}><li>Log out</li></a>
+            : 
+            <a href={URL}><li>Log in</li></a>
+          }
         </ul>
       </main>
     )
   }
 }
 
-export default connect(null, { setUserId })(Home);
+function mapStateToProps({userID}) {
+  return {userID};
+}
+
+export default connect(mapStateToProps, { setUserID })(Home);

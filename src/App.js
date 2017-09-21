@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Login from './components/Login/Login';
 import Home from './components/Home/Home';
 import Play from './components/PlayAndQuiz/Play';
 import Quiz from './components/PlayAndQuiz/Quiz';
@@ -19,8 +18,6 @@ export default class App extends Component {
   render() {
     return (
       <Switch>
-        <Route path="/login" component={Login} />
-        
         <Route exact path="/" component={Home} />
         <Route path="/play" component={Play} />
         <Route path="/quiz" component={Quiz} />

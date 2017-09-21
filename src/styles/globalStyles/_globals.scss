@@ -48,10 +48,8 @@ html {
 
 //————————————————————————————————————————————>> links
 
-Link {
-    cursor: pointer;
-}
 a {
+    cursor: pointer;
     &:active, &:hover, &:visited, &:link {
         text-decoration: none;
         color: whitesmoke;
@@ -85,11 +83,11 @@ a {
 }
 
 @mixin position(
-    $position: null, 
-    $left: null, 
-    $top: null, 
-    $bottom: null, 
-    $right: null,
+    $position: relative, 
+    $left: 0, 
+    $top: 0, 
+    $bottom: 0, 
+    $right: 0,
     $x: 0,
     $y: 0,
     $deg: 0deg

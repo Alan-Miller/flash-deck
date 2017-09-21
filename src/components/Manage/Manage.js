@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setCards } from '../../redux/reducer';
+import { setCards, setUserID, setCollections, setCollectionInfo } from '../../redux/reducer';
 
 import { fileReaderUtil } from '../../utils/fileReaderUtil';
 
-import { 
-  getAllCards, saveCard, saveCards, editCard,
-  getAllCollections, saveCollection, 
-  switchBool, deleteCard } from '../../services/cardService';
+import { getUserID } from '../../services/mainService';
+import { getCollections, getAllCollectionInfo, saveCollection } from '../../services/collectionService';
+import { getAllCards, saveCard, saveCards, 
+         editCard, switchBool, deleteCard } from '../../services/cardService';
+
+import ManageCards from './Manage__components/ManageCards';
+import CollectionsList from './Manage__components/CollectionsList';
+import ApplyCollections from './Manage__components/ApplyCollections';
 
 class Manage extends Component {
 
@@ -16,32 +20,45 @@ class Manage extends Component {
     super()
 
     this.state = {
-      front: ''
-      ,back: ''
-      ,name: ''
-      ,content: ''
+      content1: ''
+      ,content2: ''
       ,editItem: ''
-      ,oldContent: ''
+      ,collections: []
     }
-    this.handleInput = this.handleInput.bind(this);
     this.edit = this.edit.bind(this);
+    this.getInfo = this.getInfo.bind(this);
+    this.toggleBool = this.toggleBool.bind(this);
+    this.handleInput = this.handleInput.bind(this);
+    this.handleFileDrop = this.handleFileDrop.bind(this);
+    this.deleteThisCard = this.deleteThisCard.bind(this);
     this.makeCollection = this.makeCollection.bind(this);
-    this.handleFileSelect= this.handleFileSelect.bind(this);
   }
 
   componentDidMount() {
-
-    getAllCards(this.props.userId)
-      .then(cards => { this.props.setCards(cards); }
-    );
-    getAllCollections(this.props.userId)
-      .then(collections => { this.setState({ collections }); }
-    );
-
     const dropZone = document.getElementById('dropZone');
     dropZone.addEventListener('dragover', this.handleDragOver);
-    dropZone.addEventListener('drop', this.handleFileSelect);
+    dropZone.addEventListener('drop', this.handleFileDrop);
+    
+    if (this.props.userID) this.getInfo(this.props.userID);
+    else {
+      getUserID()
+      .then(userID => {
+        this.props.setUserID(userID);
+        this.getInfo(userID);
+      })
+    }
+  }
 
+  getInfo(userID) {
+    getAllCards(userID)
+      .then(cards => { this.props.setCards(cards); }
+    );
+    getCollections(userID)
+      .then(collections => { this.props.setCollections(collections); }
+    );
+    getAllCollectionInfo(userID)
+      .then(collectionInfo => { this.props.setCollectionInfo(collectionInfo); }
+    );
   }
 
   handleInput(e, stateVal) {
@@ -52,44 +69,48 @@ class Manage extends Component {
     e.preventDefault();
     if (!front || !back) return;
     
-    document.getElementById('firstInput').focus();
+    document.getElementById('newCardFocus').focus();
 
-    saveCard(this.props.userId, front, back)
+    saveCard(this.props.userID, front, back)
       .then(cards => { 
-        this.setState({front: '', back: ''}); 
+        this.setState({content1: '', content2: ''}); 
         this.props.setCards(cards);
       });
   }
 
-  makeCollection() {
-    const { name, content } = this.state;
-    const { userId } = this.props;
+  makeCollection(e) {
+    e.preventDefault();
+    const { content1 } = this.state;
+    const { userID } = this.props;
 
-    saveCollection(userId, name, content)
+    document.getElementById('newCollectionFocus').focus();
+
+    saveCollection(userID, content1)
       .then(collections => { 
-        this.setState({collections}); 
+        this.setState({content1: ''}); 
+        this.props.setCollections(collections);
       });
   }
 
   edit(e) {
     e.preventDefault();
-    const { editItem, content, cardId } = this.state;
-    const { userId } = this.props;
+    const { editItem, content2, cardID } = this.state;
+    const { userID } = this.props;
 
-    editCard(editItem, content, cardId, userId)
+    editCard(editItem, content2, cardID, userID)
     .then(cards => {
-      this.setState({content: '', editItem: ''});
+      this.setState({content2: '', editItem: ''});
       this.props.setCards(cards);
     })
   }
 
-  toggleBool(cardId, colName) {
-    switchBool(cardId, colName, this.props.userId)
+  toggleBool(cardID, colName) {
+    switchBool(cardID, colName, this.props.userID)
       .then(cards => { this.props.setCards(cards); })
   }
 
-  delete(userId, cardId) {
-    deleteCard(userId, cardId)
+  deleteThisCard(userID, cardID) {
+    deleteCard(userID, cardID)
       .then(cards => { this.props.setCards(cards); });
   }
 
@@ -97,26 +118,27 @@ class Manage extends Component {
     e.preventDefault();
   }
   
-  handleFileSelect(e) {
-    const makeNewCards = fileReaderUtil(e);
+  handleFileDrop(e) {
+    const readFile = fileReaderUtil(e);
+    
     setTimeout(() => {
-      const newCards = makeNewCards();
-      saveCards(this.props.userId, newCards)
-      .then(cards => { console.log(cards) });
-      let cards = this.props.cards.concat(newCards);
-      this.props.setCards(cards);
-
-      setTimeout(() => {
-        getAllCards(this.props.userId)
-          .then(cards => { this.props.setCards(cards) }
-        );
-      }, 200);
-    }, 200);
+      let createNewCards = async () => {
+        const newCards = await readFile();
+        await saveCards(this.props.userID, newCards);
+        let cards = this.props.cards.concat(newCards);
+        this.props.setCards(cards);
+      }
+      createNewCards()
+      .then(_ => getAllCards(this.props.userID))
+      .then(cards => { this.props.setCards(cards) })
+    }, 100);
   }
 
   render() {
-    const { collections, front, back, name, content, editItem } = this.state;
-    const { userId } = this.props;
+    const { content1, content2, editItem } = this.state;
+    const editCardContent = (face, card) => {
+      this.setState({ editItem: face, cardID: card.id, content1: card[face] })
+    };
 
     return (
       <section className="Manage" id="dropZone">
@@ -139,20 +161,20 @@ class Manage extends Component {
 
             <form className="newCard form" 
               style={{display: editItem === 'newCard' ? 'flex' : 'none'}}
-              onSubmit={e => this.makeCard(e, front, back) }>
+              onSubmit={e => this.makeCard(e, content1, content2) }>
               <h1>Make new card</h1>
-              <input id="firstInput"
-                value={front}
+              <input id="newCardFocus"
+                value={content1}
                 type="text" placeholder="front"
-                onChange={e => this.handleInput(e, 'front') }/>
+                onChange={e => this.handleInput(e, 'content1') }/>
               <input
-                value={back}
+                value={content2}
                 type="text" placeholder="back"
-                onChange={e => this.handleInput(e, 'back') }/>
-              <input type="submit" />
+                onChange={e => this.handleInput(e, 'content2') }/>
+              <input className="submit" type="submit" />
               <div
                 className="makeCard button"
-                onClick={ _ => this.makeCard(null, front, back) }>
+                onClick={ e => this.makeCard(e, content1, content2) }>
                 Save card
               </div>
             </form>
@@ -160,13 +182,13 @@ class Manage extends Component {
             <form className="editCard form" 
               onSubmit={this.edit}
               style={{display: editItem === 'front' || editItem === 'back' ? 'flex' : 'none'}}>
-              <h1>Edit content for { this.state.editItem } of card</h1>
+              <h1>Edit content for { editItem } of card</h1>
               <div className="inputAndButton">
                 <input
-                  value={content}
+                  value={content2}
                   type="text" placeholder="New content"
-                  onChange={e => this.handleInput(e, 'content') }/>
-                <input type="submit" />
+                  onChange={e => this.handleInput(e, 'content2') }/>
+                <input className="submit" type="submit" />
                 <div
                   className="editCard button"
                   onClick={this.edit}>
@@ -175,121 +197,52 @@ class Manage extends Component {
               </div>
               <div className="currentContent">
                 <p>Current content:</p>
-                <p>{this.state.oldContent}</p>
+                <p>{content1}</p>
               </div>
             </form>
 
-            <form className="newCollection form" style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
-              <h1>Make new collection</h1>
-              <input
-                value={name}
-                type="text" placeholder="Name of collection"
-                onChange={e => this.handleInput(e, 'name') }/>
-              <input
-                value={content}
-                type="text" placeholder="Description (optional)"
-                onChange={e => this.handleInput(e, 'content') }/>
-              <div
-                className="makeCollection button"
-                onClick={this.makeCollection}>
-                Save
-              </div>
-            </form>
-
-            <div className="collectionsList" style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
-              Collections:
-              {collections && collections.map((collection, i) => (
-                <div key={i}>{collection.name}</div>
-              ))}
+            <div className="editCollections"
+              style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
+              <form className="newCollection form" onSubmit={this.makeCollection}>
+                <input id="newCollectionFocus"
+                  value={content1}
+                  type="text" placeholder="Name of collection"
+                  onChange={e => this.handleInput(e, 'content1') }/>
+                <input className="submit" type="submit" />
+                <div
+                  className="makeCollection button"
+                  onClick={this.makeCollection}>
+                  Save
+                </div>
+              </form>
+              <CollectionsList editItem={editItem} />
             </div>
 
-          </div>
+            <ApplyCollections content={content1} editItem={editItem} makeCollection={this.makeCollection} />
 
+          </div>
         </div>
 
-        <ul className="Manage__cards" style={{marginTop: editItem ? '440px' : null}}>
-            <h3>Choose an option above, or edit cards directly below.</h3>
-            <p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
-            </p>
-          <div className="Manage__card">
-            
-            <div className="columnTitles">
-              <h2 className="cardTitle">Card front</h2>
-              <h2 className="cardTitle">Card back</h2>
-              <div className="boolTitle">Stop showing</div>
-              <div className="boolTitle">Show less</div>
-              <div className="deleteTitle">Delete</div>
-            </div>
-            
-            { this.props.cards && this.props.cards.map((card, i) => (
-              <li key={i} className="cardInfo">
-                <div className="front cardContent">
-                  {card.front}
-                  <div 
-                    className="edit"
-                    onClick={e => {this.setState({
-                      editItem: 'front', 
-                      cardId: card.id,
-                      oldContent: card.front
-                    })}}>
-                    EDIT
-                  </div>
-                </div>
+        <ManageCards 
+          setToApply={() => this.setState({editItem: 'applyCollections'})}
+          setToEdit={() => this.setState({editItem: 'editCollections'})}
+          editItem={editItem}
+          deleteThisCard={this.deleteThisCard} 
+          editCardContent={editCardContent} 
+          toggleBool={this.toggleBool}
+        />
 
-                <div className="back cardContent">
-                  {card.back}
-                  <div
-                    className="edit"
-                    onClick={() => {this.setState({
-                      editItem: 'back', 
-                      cardId: card.id,
-                      oldContent: card.back
-                    })}}>
-                    EDIT
-                  </div>
-                </div>
-
-                <div className="stopShowing bool">
-                  <input id="stopShowing"
-                    type="checkbox" 
-                    checked={card.stop_showing} 
-                    onChange={() => this.toggleBool(card.id, 'stop_showing')} />
-                  <label htmlFor="stopShowing"><span></span></label>
-                </div>
-
-                <div className="showLess bool">
-                  <input id="showLess"
-                    type="checkbox"
-                    checked={card.show_less} 
-                    onChange={() => this.toggleBool(card.id, 'show_less')} />
-                  <label htmlFor="showLess"><span></span></label>
-                </div>
-
-                <div 
-                  className="delete" 
-                  onClick={() => this.delete(card.id, userId)}>
-                  X
-                </div>
-                <div className="collections">
-                  Collections:
-                </div>
-              </li>
-            )) }
-
-          </div>
-        </ul>
       </section>
     )
   }
 }
 
-function mapStateToProps({ userId, cards, deckInPlay }) {
-  // if (!state) return {};
-  return { userId, cards, deckInPlay };
+function mapStateToProps({ userID, cards, collections }) {
+  return { userID, cards, collections };
 }
 
 let outputActions = {
-  setCards
+  setCards, setUserID, setCollections, setCollectionInfo
 }
 
 export default connect(mapStateToProps, outputActions)(Manage);

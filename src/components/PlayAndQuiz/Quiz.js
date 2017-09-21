@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { setCards } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
-import { styleCardContainer, flipCard, cardFace } from '../../utils/cardUtils';
+import { flipCard } from '../../utils/deckUtils';
+import { positionCard, styleCard } from '../../utils/cardStyleUtils';
 import CardButton from '../CardButton/CardButton';
 import { Link } from 'react-router-dom';
 
@@ -24,7 +25,7 @@ class Quiz extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
 
-    getAllCards(this.props.userId)
+    getAllCards(this.props.userID)
     .then(cards => {
       this.props.setCards(shuffle(cards));
     });
@@ -104,9 +105,10 @@ class Quiz extends Component {
 
               <div className="place-cards-here" onClick={this.advance}></div>
 
-              { cards && cards.map((card, i) => (
-                <div className="card-container" key={i}
-                  style={styleCardContainer(i, currentCardIndex, cards.length)}>
+              { cards && cards.map((card, i) => {
+                console.log('card', card)
+                return <div className="card-container" key={i}
+                  style={positionCard(i, currentCardIndex, cards.length)}>
                   
                   <div className="card"
                     style={flipCard(i, currentCardIndex, reveal)}
@@ -115,21 +117,17 @@ class Quiz extends Component {
                       i >= currentCardIndex ? this.advance :
                       null
                     }>
-                    <div className="front face" style={cardFace(i, currentCardIndex, 'front')}>
-                      <div className="content">
-                        { card.front }
-                      </div>
+                    <div className="front face" style={styleCard(i, currentCardIndex, 'front')}>
+                      <span>{ card.front }</span>
                     </div>
 
-                    <div className="back face" style={cardFace(i, currentCardIndex, 'back')}>
-                      <div className="content">
-                        { card.back }
-                      </div>
+                    <div className="back face" style={styleCard(i, currentCardIndex, 'back')}>
+                      <span>{ card.back }</span>
                     </div>
                   </div>
 
                 </div>
-              ))}
+              })}
             </div>
           </div>
         </main>
@@ -150,9 +148,10 @@ let outputActions = {
   setCards
 }
 
-function mapStateToProps(state) {
-  if (!state) return {};
-  return state;
+function mapStateToProps({ cards, userID }) {
+  return { cards, userID };
+  // if (!state) return {};
+  // return state;
 }
 
 export default connect(mapStateToProps, outputActions)(Quiz);

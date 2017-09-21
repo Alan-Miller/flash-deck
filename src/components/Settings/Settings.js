@@ -7,7 +7,7 @@ export default class Settings extends Component {
     super()
 
     this.state = {
-      userId: 2
+      userID: 2
       ,friendUsername: ''
       ,friends: []
       ,pending: []
@@ -18,13 +18,13 @@ export default class Settings extends Component {
   }
 
   componentDidMount() {
-    // axios.get(`${URL}/friends/${this.state.userId}`)
+    // axios.get(`${URL}/friends/${this.state.userID}`)
     //   .then(response => {
     //     const friends = response.data;
     //     this.setState({ friends });
     //   });
 
-    // axios.get(`${URL}/pending/${this.state.userId}`)
+    // axios.get(`${URL}/pending/${this.state.userID}`)
     //   .then(response => {
     //     const pending = response.data;
     //     this.setState({ pending });
@@ -46,7 +46,7 @@ export default class Settings extends Component {
   // }
 
   // inviteFriend(inviteeId) {
-  //   axios.post(`${URL}/friends/${this.state.userId}/${inviteeId}`)
+  //   axios.post(`${URL}/friends/${this.state.userID}/${inviteeId}`)
   // }
 
   render() {

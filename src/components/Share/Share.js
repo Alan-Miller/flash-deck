@@ -24,10 +24,10 @@ class Share extends Component {
   }
 
   componentDidMount() {
-    getUserFriends(this.props.userId)
+    getUserFriends(this.props.userID)
       .then(friends => { this.setState({ friends }) });
 
-    getPendingFriendships(this.props.userId)
+    getPendingFriendships(this.props.userID)
       .then(pending => { this.setState({ pending }) });
   }
 
@@ -40,12 +40,12 @@ class Share extends Component {
     if (this.state.searchValue.length < 1) return;
     this.setState({ searchValue: '' });
 
-    getUsers(this.props.userId, this.state.searchValue)
+    getUsers(this.props.userID, this.state.searchValue)
       .then(searchResults => { this.setState({ searchResults }) });
   }
 
   inviteFriend(inviteeId) {
-    postFriendshipInvite(this.props.userId, inviteeId)
+    postFriendshipInvite(this.props.userID, inviteeId)
       .then(pending => {
         console.log('pending', pending);
         this.setState({ pending });
@@ -103,8 +103,8 @@ class Share extends Component {
   }
 }
 
-function mapStateToProps({ userId }) {
-  return { userId };
+function mapStateToProps({ userID }) {
+  return { userID };
 }
 
 export default connect(mapStateToProps, null)(Share);
