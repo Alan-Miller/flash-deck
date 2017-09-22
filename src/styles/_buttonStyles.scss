@@ -1,4 +1,4 @@
-.button {
+button {
   cursor: pointer;
   @include flexBox;
   @include size($height: 50px);

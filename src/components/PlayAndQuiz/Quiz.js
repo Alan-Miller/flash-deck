@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { setCards } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
-import { flipCard } from '../../utils/deckUtils';
-import { positionCard, styleCard } from '../../utils/cardStyleUtils';
-import CardButton from '../CardButton/CardButton';
-import { Link } from 'react-router-dom';
+import CardTable from '../CardTable/CardTable';
 
 class Quiz extends Component {
 
@@ -18,7 +16,6 @@ class Quiz extends Component {
       ,reveal: true
     }
     this.advance = this.advance.bind(this);
-    this.reverse = this.reverse.bind(this);
     this.handleKeyDown= this.handleKeyDown.bind(this);
   }
 
@@ -34,102 +31,56 @@ class Quiz extends Component {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  advance() {
+  advance(amt) {
     const { cards } = this.props;
     const { currentCardIndex, reveal } = this.state;
-    let nextIndex = this.state.currentCardIndex + 1;
+    let nextIndex = this.state.currentCardIndex + amt;
     
-    if (currentCardIndex >= cards.length) this.setState({currentCardIndex: -1, reveal: false});
-    
-    if (reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
-    else this.setState({reveal: true});
-  }
-
-  reverse() {
-    const { cards } = this.props;
-    const { currentCardIndex, reveal } = this.state;
-    const nextIndex = this.state.currentCardIndex - 1;
-
-    if (currentCardIndex <= -1) {
-      this.setState({currentCardIndex: cards.length});
-      console.log(currentCardIndex)
+    if (amt === 1) {
+      if (currentCardIndex >= cards.length) this.setState({currentCardIndex: -1, reveal: false});
+      if (reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
+      else this.setState({reveal: true});
     }
-    else {
-      if (!reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
-      else this.setState({reveal: false});
+    else if (amt === -1) {
+      if (currentCardIndex <= -1) this.setState({currentCardIndex: cards.length});
+      else {
+        if (!reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
+        else this.setState({reveal: false});
+      }
     }
+    else if (!amt) this.setState({reveal: !reveal});
   }
 
   handleKeyDown(e) {
-    if (e.which === 37) this.reverse();
-    if (e.which === 39) this.advance();
+    if (e.which === 37) this.advance(-1);
+    if (e.which === 39) this.advance(1);
   }
 
   render() {
+    const deck = this.props.cards;
     const { currentCardIndex, reveal } = this.state;
-    const { cards } = this.props;
     
     return(
       <section className="Quiz">
 
         <div className="header">
           <ul className="info">
-            <li># Cards: {cards.length}</li>
+            <li># Cards: {deck.length}</li>
           </ul>
         </div>
 
         <main className="main">
-          <div className="table">
-            
-            <div className="card-space">
-              <div className="place-cards-here" onClick={this.reverse}></div>
-
-              <div className="center-of-table">
-                <div className="upper bar">
-                  <CardButton 
-                    className="right-answer button" 
-                    disabled={!reveal && 'disabled'}
-                    onClick={() => this.updateScore(true)}>
-                    Stop showing
-                  </CardButton>
-                </div>
-                <div className="lower bar">
-                  <CardButton 
-                    className="wrong-answer button" 
-                    disabled={!reveal && 'disabled'}
-                    onClick={() => this.updateScore(false)}>
-                    Show less
-                  </CardButton>
-                </div>
-              </div>
-
-              <div className="place-cards-here" onClick={this.advance}></div>
-
-              { cards && cards.map((card, i) => {
-                console.log('card', card)
-                return <div className="card-container" key={i}
-                  style={positionCard(i, currentCardIndex, cards.length)}>
-                  
-                  <div className="card"
-                    style={flipCard(i, currentCardIndex, reveal)}
-                    onClick={
-                      i < currentCardIndex ? this.reverse :
-                      i >= currentCardIndex ? this.advance :
-                      null
-                    }>
-                    <div className="front face" style={styleCard(i, currentCardIndex, 'front')}>
-                      <span>{ card.front }</span>
-                    </div>
-
-                    <div className="back face" style={styleCard(i, currentCardIndex, 'back')}>
-                      <span>{ card.back }</span>
-                    </div>
-                  </div>
-
-                </div>
-              })}
-            </div>
-          </div>
+          <CardTable 
+            passedProps={ 
+              { 
+                deck 
+                ,reveal 
+                ,currentCardIndex 
+                ,playMode: false 
+                ,advance: this.advance 
+                ,buttonText: ['', '']
+              }
+            } />
         </main>
 
         <div className="footer">
@@ -150,8 +101,6 @@ let outputActions = {
 
 function mapStateToProps({ cards, userID }) {
   return { cards, userID };
-  // if (!state) return {};
-  // return state;
 }
 
 export default connect(mapStateToProps, outputActions)(Quiz);

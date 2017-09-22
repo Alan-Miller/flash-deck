@@ -25,4 +25,3 @@ export function buildDeck(cards, playMode = false) {
   }
   else if (!playMode) return shuffle(cards);
 }
-

@@ -1,0 +1,7 @@
+@mixin cardColor($color) {
+  .front {
+      border: medium solid $color;
+      color: $color;
+  }
+  .back { background-color: $color; }
+}
