@@ -18,20 +18,22 @@ class CardTable extends Component {
 
           <div className="center-of-table">
             <div className="upper bar">
-              <button
-                disabled={!reveal && 'disabled'}
-                onClick={ _ => { advance(); playMode && this.updateScore(true); }}
-              >
-                { buttonText[0] }
-              </button>
+              { buttonText[0] && 
+                <button
+                  disabled={!reveal && 'disabled'}
+                  onClick={ _ => { advance(); playMode && this.updateScore(true); }} >
+                    { buttonText[0] }
+                </button>
+              }
             </div>
             <div className="lower bar">
-              <button 
-                disabled={!reveal && 'disabled'}
-                onClick={ _ => { advance(); playMode && this.updateScore(false); }}
-              >
-                { buttonText[1] }
-              </button>
+              { buttonText[1] && 
+                <button 
+                  disabled={!reveal && 'disabled'}
+                  onClick={ _ => { advance(); playMode && this.updateScore(false); }} >
+                    { buttonText[1] }
+                </button>
+              }
             </div>
           </div>
 

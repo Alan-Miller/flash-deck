@@ -84,7 +84,7 @@ class Quiz extends Component {
                             playMode: false, 
                             advance: this.advance, 
                             reverse: this.reverse,
-                            buttonText: ['Show less', 'Stop showing']
+                            buttonText: ['', '']
                           }
             } />
         </main>
