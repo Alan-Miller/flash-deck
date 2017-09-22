@@ -104,11 +104,12 @@
         @include cardColor($blacksuit);
         display: block;
         transform-style: preserve-3d;
-        transition: .5s ease;
+        transition: .5s;
         border-radius: 18px;
 
         .face {
             @include size(100%, 100%);
+            transform-style: preserve-3d; // seems to fix see-pip-through-card bug
             position: absolute;
             backface-visibility: hidden;
             border-radius: 18px;

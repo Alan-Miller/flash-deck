@@ -3,7 +3,7 @@
     @include wordBreak(normal);
     @include flexBox(row, flex-start);
 
-    &.lower { transform: rotate(180deg); }
+    &.lower { transform: rotateZ(180deg); }
     & .pip { @include flexBox(column); }
     & .suit {
         @include size(35px, 35px);

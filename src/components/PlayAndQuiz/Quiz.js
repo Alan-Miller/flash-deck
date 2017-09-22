@@ -78,13 +78,13 @@ class Quiz extends Component {
         <main className="main">
           <CardTable 
             passedProps={ { 
-                            deck, 
-                            reveal, 
-                            currentCardIndex, 
-                            playMode: false, 
-                            advance: this.advance, 
-                            reverse: this.reverse,
-                            buttonText: ['', '']
+                            deck 
+                            ,reveal 
+                            ,currentCardIndex 
+                            ,playMode: false 
+                            ,advance: this.advance 
+                            ,reverse: this.reverse
+                            ,buttonText: ['', '']
                           }
             } />
         </main>
