@@ -25,11 +25,19 @@ export function Card(props) {
         onClick={handleClickCard}>
 
         <div className="front face" style={styleFront} >
-          {playMode && <Pip className="upper pipArea" rank={getRank(i)} style={styleFront} />}
+          { playMode && 
+            <Pip  className="upper pipArea" 
+                  rank={getRank(i)} 
+                  style={styleFront} />}
+                  
           <span className="content">
             <span>{ card.front }</span>
           </span>
-          {playMode && <Pip className="lower pipArea" rank={getRank(i)} style={styleFront} />}
+
+          { playMode && 
+            <Pip  className="lower pipArea" 
+                  rank={getRank(i)} 
+                  style={styleFront} />}
         </div>
 
         <div className="back face" style={styleBack}>
