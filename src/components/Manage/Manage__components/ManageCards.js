@@ -39,7 +39,7 @@ class ManageCards extends Component {
     } = this.props;
 
     return (
-      <div className="Manage__cards" style={{marginTop: editItem ? '440px' : null}}>
+      <div className="Manage__cards">
         <h3>Choose an option above, or edit cards directly below.</h3>
         <p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
         </p>

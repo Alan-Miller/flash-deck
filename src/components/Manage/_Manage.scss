@@ -34,60 +34,89 @@ $radioSize: 1.4rem;
     z-index: 4;
     & > li { padding: 0 0 0 40px; }
   }
-  .x {
-    font-size: 1.7rem;
-    font-weight: 200;
-    padding: 20px;
-    &:hover {
-      font-weight: 500;
-      transform: scale(1.5);
-    }
+}
+
+.editModal {
+  @include position(fixed, 0, 0);
+  @include size(100vw, 100vh);
+  background-color: rgba(22, 22, 22, .85);
+  color: $white;
+  z-index: 5;
+}
+.flipButton {
+  padding: 12px 18px;
+  background-color: $white;
+  color: $blacksuit;
+  cursor: pointer;
+  @include position(absolute, 50%, $top:20px, $x:-50%);
+}
+.saveButton {
+  @extend .flipButton;
+  @include position(absolute, 50%, $bottom:20px, $x:-50%);
+}
+.editBox {
+  @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+  // background-color: rgba(200, 200, 200, .75);
+  @include size(#{$cardWidth * 1.5}, #{$cardHeight * 1.5});
+  @include flexBox(column);
+  padding: 0 50px;
+  // border: thin solid $white;
+  border-radius: 7px;
+  display: none;
+  // font-size: 2rem;
+  h1 {
+    font-size: 1.3rem;
+    padding: 10px;
   }
-  .editBox {
-    @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
-    @include size(null, 370px);
-    @include flexBox;
-    padding: 0 50px;
-    border: thin solid $redsuit;
-    border-radius: 7px;
-    display: none;
-    h1 {
-      font-size: 1.3rem;
-      padding: 10px;
-    }
-    .editCard.form {
-      @include flexBox(column);
-    }
-    .newCard.form {
-      @include flexBox(column);
-    }
-    
-    .inputAndButton {
-      display: flex;
-    }
-    .currentContent {
-      max-width: 80%;
-      margin: 10px;
-      line-height: 1.5rem;
-      p:nth-child(1) { 
-        color: #777; 
-        font-size: 1.1rem;
-      }
-    }
-    button {
-      background-color: $redsuit;
-      margin: 10px;
-      padding: 10px;
-      &:hover {
-        background: $white;
-        color: $redsuit;
-      }
+  .editCard.form {
+    @include flexBox(column);
+  }
+  .newCard.form {
+    @include flexBox(column);
+    textarea {
+      @include position(absolute, $top:50%, $y:-50%);
+      font-size: 1rem;
+      padding: 12px;
+      height: 12rem;
     }
   }
   
+  .inputAndButton {
+    display: flex;
+  }
+  .currentContent {
+    max-width: 80%;
+    margin: 10px;
+    line-height: 1.5rem;
+    p:nth-child(1) { 
+      color: #777; 
+      font-size: 1.1rem;
+    }
+  }
+  button {
+    background-color: $redsuit;
+    margin: 10px;
+    padding: 10px;
+    &:hover {
+      background: $white;
+      color: $redsuit;
+    }
+  }
 }
 
-
+.x {
+  @include position(absolute, $right:0, $top:0);
+  font-size: 1.7rem;
+  font-weight: 200;
+  padding: 25px;
+  margin: 50px;
+  transition: .2s;
+  &:hover {
+    font-weight: 500;
+    cursor: pointer; 
+    transform: scale(2);
+  }
+}
 
 .Manage__cards {
   width: 80vw;
@@ -201,7 +230,6 @@ input[type=checkbox] {
 input[type=submit] {
   display: none;
 }
-
 
 .edit {
   @include flexBox;

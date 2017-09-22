@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { setCards, setUserID, setCollections, setCollectionInfo } from '../../redux/reducer';
 
 import { fileReaderUtil } from '../../utils/fileReaderUtil';
+import { getRank, positionCard, styleCard } from '../../utils/cardStyleUtils';
 
 import { getUserID } from '../../services/mainService';
 import { getCollections, getAllCollectionInfo, saveCollection } from '../../services/collectionService';
@@ -11,6 +12,8 @@ import { getAllCards, saveCard, saveCards,
          editCard, switchBool, deleteCard } from '../../services/cardService';
 
 import ManageCards from './Manage__components/ManageCards';
+import { Card } from '../Card/Card';
+import { flipCard } from '../../utils/deckUtils';
 import CollectionsList from './Manage__components/CollectionsList';
 import ApplyCollections from './Manage__components/ApplyCollections';
 
@@ -24,8 +27,10 @@ class Manage extends Component {
       ,content2: ''
       ,editItem: ''
       ,collections: []
+      ,reveal: false
     }
     this.edit = this.edit.bind(this);
+    this.flip = this.flip.bind(this);
     this.getInfo = this.getInfo.bind(this);
     this.toggleBool = this.toggleBool.bind(this);
     this.handleInput = this.handleInput.bind(this);
@@ -134,22 +139,30 @@ class Manage extends Component {
     }, 100);
   }
 
+  flip() {
+    this.setState({reveal: !this.state.reveal});
+  }
+
   render() {
-    const { content1, content2, editItem } = this.state;
+    const { content1, content2, editItem, reveal } = this.state;
     const editCardContent = (face, card) => {
       this.setState({ editItem: face, cardID: card.id, content1: card[face] })
     };
+    const styleBack = styleCard(1, 1, 'back');
 
     return (
       <section className="Manage" id="dropZone">
-        <div className="header" style={{height: editItem ? '400px': null}}>
-
+        <div className="header">
           <Link to="/"><h1 className="goHome">HOME</h1></Link>
 
-          <ul className="editItems" style={{display: !editItem ? 'flex' : 'none'}}>
+          <ul className="editItems">
             <li onClick={() => { this.setState({editItem: 'newCard'}); }}>Make new card</li>
             <li onClick={() => this.setState({editItem: 'editCollections'})}>Edit collections</li>
           </ul>
+          
+        </div>
+
+        <div className="editModal" style={{display: editItem ? 'flex' : 'none'}}>
 
           <div className="x" 
             style={{opacity: editItem ? 1 : 0}}
@@ -159,25 +172,45 @@ class Manage extends Component {
 
           <div className="editBox" style={{display: editItem ? 'flex' : 'none'}}>
 
-            <form className="newCard form" 
-              style={{display: editItem === 'newCard' ? 'flex' : 'none'}}
-              onSubmit={e => this.makeCard(e, content1, content2) }>
-              <h1>Make new card</h1>
-              <input id="newCardFocus"
-                value={content1}
-                type="text" placeholder="front"
-                onChange={e => this.handleInput(e, 'content1') }/>
-              <input
-                value={content2}
-                type="text" placeholder="back"
-                onChange={e => this.handleInput(e, 'content2') }/>
-              <input className="submit" type="submit" />
-              <div
-                className="makeCard button"
-                onClick={ e => this.makeCard(e, content1, content2) }>
-                Save card
+            <div className="flipButton" onClick={this.flip}>Flip</div>
+            <div 
+              className="saveButton" 
+              onClick={e => this.makeCard(e, content1, content2)}>
+              Save
+            </div>
+
+            <div className="card-container"
+              style={positionCard(1, 1, 1)}>
+
+              <div className="card" style={flipCard(1, 1, reveal)}>
+
+                <div className="front face">
+                  <form className="newCard form" 
+                    style={{display: editItem === 'newCard' ? 'flex' : 'none'}}>
+                    <textarea id="newCardFocus"
+                      value={content1}
+                      placeholder="Edit front of card"
+                      onChange={e => this.handleInput(e, 'content1') }>
+                    </textarea>
+                  </form>
+                </div>
+
+                <div className="back face" style={styleBack}>
+                  <form className="newCard form" 
+                    style={{display: editItem === 'newCard' ? 'flex' : 'none'}}
+                    onSubmit={e => this.makeCard(e, content1, content2) }>
+                    <textarea
+                      value={content2}
+                      placeholder="Edit back of card"
+                      onChange={e => this.handleInput(e, 'content2') }>
+                    </textarea>
+                    <input className="submit" type="submit" />
+                  </form>
+                </div>
+
               </div>
-            </form>
+
+            </div> 
 
             <form className="editCard form" 
               onSubmit={this.edit}
@@ -219,7 +252,6 @@ class Manage extends Component {
             </div>
 
             <ApplyCollections content={content1} editItem={editItem} makeCollection={this.makeCollection} />
-
           </div>
         </div>
 

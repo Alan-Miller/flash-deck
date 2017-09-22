@@ -5,12 +5,12 @@ import { getRank, positionCard, styleCard } from '../../utils/cardStyleUtils';
 import { Pip } from '../Pip/Pip';
 
 export function Card(props) {
-  const { card, i, deck, currentCardIndex, reveal, playMode, advance, buttonText } = props.passedProps;
+  const { card, i, deck, currentCardIndex, reveal, playMode, advance } = props.passedProps;
 
   const styleFront= styleCard(i, currentCardIndex, 'front');
   const styleBack = styleCard(i, currentCardIndex, 'back');
   
-  const handleClickCard = _ => {
+  const advanceCard = _ => {
     if (i < currentCardIndex) advance(-1); // click left stack to reverse
     if (i > currentCardIndex) advance(1); // click right stack to advance
     if (i === currentCardIndex) advance(0); // flip middle card
@@ -22,7 +22,7 @@ export function Card(props) {
 
       <div className="card"
         style={flipCard(i, currentCardIndex, reveal)}
-        onClick={handleClickCard}>
+        onClick={advanceCard}>
 
         <div className="front face" style={styleFront} >
           { playMode && 
