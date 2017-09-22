@@ -1,0 +1,61 @@
+.table {
+  @include size(800px, 100%);
+  position: relative;
+  
+  .card-space {
+      @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
+      z-index: 2;
+      @include flexBox($justify: space-between);
+      @include size(100%, $cardHeight);
+  }
+  
+  .place-cards-here {
+      @include size($cardWidth, $cardHeight);
+      border-radius: 18px;
+      border: medium dashed $white;
+      cursor: pointer;
+      z-index: 1;
+      transform: scale(.7);
+  }
+
+  .center-of-table {
+      @include size($cardWidth, $cardHeight);
+      border: medium solid $blacksuit;
+      border-radius: 18px;
+      // border-radius: 0 18px 0 18px;
+      background-color: $blacksuit;
+      cursor: pointer;
+      z-index: 1;
+      margin: 0;
+
+      .bar {
+          width: $cardWidth;
+          @include flexBox;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 0 15px;
+
+          &.upper {
+              bottom: $cardHeight;
+              @include flexBox($justify: flex-start);
+              button { border-radius: 27px 27px 0 0; }
+          }
+          &.lower {
+              top: $cardHeight;
+              @include flexBox($justify: flex-end);
+              button { border-radius: 0 0 27px 27px; }
+          }
+
+          button {
+              // opacity: 0;
+              transition: .2s;
+              margin: 0;
+              border: medium solid $blacksuit;
+              font-size: 1rem;
+              padding: 0 10px;
+              z-index: 10px;
+          }
+      } // end of .bar
+  } // end of .center-of-table
+} // end of .table

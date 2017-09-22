@@ -1,10 +1,10 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { setCards } from '../../redux/reducer';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
-import CardTable from './CardTable';
-import { Link } from 'react-router-dom';
+import CardTable from '../CardTable/CardTable';
 
 class Quiz extends Component {
 
@@ -16,7 +16,6 @@ class Quiz extends Component {
       ,reveal: true
     }
     this.advance = this.advance.bind(this);
-    this.reverse = this.reverse.bind(this);
     this.handleKeyDown= this.handleKeyDown.bind(this);
   }
 
@@ -32,34 +31,29 @@ class Quiz extends Component {
     document.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  advance() {
+  advance(amt) {
     const { cards } = this.props;
     const { currentCardIndex, reveal } = this.state;
-    let nextIndex = this.state.currentCardIndex + 1;
+    let nextIndex = this.state.currentCardIndex + amt;
     
-    if (currentCardIndex >= cards.length) this.setState({currentCardIndex: -1, reveal: false});
-    
-    if (reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
-    else this.setState({reveal: true});
-  }
-
-  reverse() {
-    const { cards } = this.props;
-    const { currentCardIndex, reveal } = this.state;
-    const nextIndex = this.state.currentCardIndex - 1;
-
-    if (currentCardIndex <= -1) {
-      this.setState({currentCardIndex: cards.length});
+    if (amt === 1) {
+      if (currentCardIndex >= cards.length) this.setState({currentCardIndex: -1, reveal: false});
+      if (reveal) this.setState({currentCardIndex: nextIndex, reveal: false});
+      else this.setState({reveal: true});
     }
-    else {
-      if (!reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
-      else this.setState({reveal: false});
+    else if (amt === -1) {
+      if (currentCardIndex <= -1) this.setState({currentCardIndex: cards.length});
+      else {
+        if (!reveal) this.setState({currentCardIndex: nextIndex, reveal: true});
+        else this.setState({reveal: false});
+      }
     }
+    else if (!amt) this.setState({reveal: !reveal});
   }
 
   handleKeyDown(e) {
-    if (e.which === 37) this.reverse();
-    if (e.which === 39) this.advance();
+    if (e.which === 37) this.advance(-1);
+    if (e.which === 39) this.advance(1);
   }
 
   render() {
@@ -77,15 +71,15 @@ class Quiz extends Component {
 
         <main className="main">
           <CardTable 
-            passedProps={ { 
-                            deck 
-                            ,reveal 
-                            ,currentCardIndex 
-                            ,playMode: false 
-                            ,advance: this.advance 
-                            ,reverse: this.reverse
-                            ,buttonText: ['', '']
-                          }
+            passedProps={ 
+              { 
+                deck 
+                ,reveal 
+                ,currentCardIndex 
+                ,playMode: false 
+                ,advance: this.advance 
+                ,buttonText: ['', '']
+              }
             } />
         </main>
 
