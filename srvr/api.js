@@ -54,6 +54,7 @@ module.exports = function(app) {
 
 
   //————————————————————————————————————————————>> Cards
+  // Get all cards by user ID
   app.get('/api/cards/:id', (req, res) => {
     app.get('db').get_allCards([req.params.id])
     .then(response => {
@@ -61,6 +62,7 @@ module.exports = function(app) {
     });
   });
 
+  // Create new card through modal
   app.post('/api/card/:id', (req, res) => {
     app.get('db').post_saveCard([req.params.id, req.body.front, req.body.back])
     .then(response => {
@@ -68,6 +70,7 @@ module.exports = function(app) {
     });
   });
 
+  // Batch create new cards with .csv file
   app.post('/api/cards/:id', (req, res) => {
     app.get('db').post_saveCards([req.params.id, req.body.cards])
     .then(response => {
@@ -75,6 +78,7 @@ module.exports = function(app) {
     })
   });
 
+  // Get all existing collection names
   app.get('/api/collections/:userID', (req, res) => {
     app.get('db').get_collections([req.params.userID])
     .then(response => {
@@ -82,6 +86,7 @@ module.exports = function(app) {
     });
   });
 
+  // Get all collection info, including which collections each card has
   app.get('/api/collection/info/:userID', (req, res) => {
     app.get('db').get_allCollectionInfo([req.params.userID])
     .then(response => {

@@ -134,7 +134,7 @@ $radioSize: 1.4rem;
 
 .Manage__cards {
   width: 80vw;
-  margin-top: 130px;
+  margin: 130px 0 70px 0;
   h3 { font-size: 1.2rem; }
   line-height: 1.5rem;
 
@@ -164,6 +164,7 @@ $radioSize: 1.4rem;
       border-right: thin solid $blacksuit;
       grid-column-end: span 1;
       position: relative;
+      word-break: break-word;
       &:hover .edit { opacity: .95; }
     }
     

@@ -12,6 +12,7 @@ class ManageCards extends Component {
   constructor() {
     super() 
     this.state = { selectedCardIDs: [] };
+    this.cardFilter = this.cardFilter.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.isACardOnState = this.isACardOnState.bind(this);
     this.unapplyThisCollection = this.unapplyThisCollection.bind(this);
@@ -31,6 +32,16 @@ class ManageCards extends Component {
   }
 
   isACardOnState(cardID) { return this.props.selectedCardIDs.indexOf(cardID) !== -1; }
+
+  cardFilter(card, index, cards) {
+    const info = this.props.collectionInfo;
+    console.log('card', card)
+    console.log('info', info) // card_id, id 18, name
+    if (!this.state.filter) return card;
+    else for (let i = 0; i < info.length; i++) {
+      if (info[i].card_id === card.id && info[i].id === this.state.filter) return card;
+    }
+  }
 
   render() {
     const { 
@@ -59,7 +70,7 @@ class ManageCards extends Component {
 
           <ColumnTitles />
           <ul> 
-            {cards && cards.map((card, i) => (
+            {cards && cards.filter(this.cardFilter).map((card, i) => (
               <li key={i} className="cardInfo">
 
                 <div className="select">
@@ -104,7 +115,7 @@ class ManageCards extends Component {
                 </div>
                 <div className="collections">
                   { collectionInfo && collectionInfo.filter(info => info.card_id === card.id).map((info, i) => (
-                    <div className="collection" key={i}>
+                    <div className="collection" key={i} onClick={_ => this.setState({filter: info.id})} >
                       {info.name}
                       <span className="unapply" 
                         onClick={() => this.unapplyThisCollection(userID)}>

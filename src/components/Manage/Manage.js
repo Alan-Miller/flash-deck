@@ -29,7 +29,7 @@ class Manage extends Component {
       ,collections: []
       ,reveal: false
     }
-    this.edit = this.edit.bind(this);
+    this.editCard = this.editCard.bind(this);
     this.flip = this.flip.bind(this);
     this.getInfo = this.getInfo.bind(this);
     this.makeCard = this.makeCard.bind(this);
@@ -89,7 +89,7 @@ class Manage extends Component {
       e.preventDefault();
       if (content1.length && content2.length) {
         if (editItem === 'newCard') this.makeCard();
-        if (editItem === 'front' || editItem === 'back') this.edit();
+        if (editItem === 'front' || editItem === 'back') this.editCard();
       }
       else if ((content1 && !reveal) || (content2 && reveal)) this.flip();
     }
@@ -127,7 +127,7 @@ class Manage extends Component {
       });
   }
 
-  edit() {
+  editCard() {
     const { editItem, content1, content2, cardID } = this.state;
     const { userID } = this.props;
     const newContent = editItem === 'front' ? content1 : content2;
