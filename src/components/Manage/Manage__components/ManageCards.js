@@ -35,11 +35,13 @@ class ManageCards extends Component {
 
   cardFilter(card, index, cards) {
     const info = this.props.collectionInfo;
-    console.log('card', card)
-    console.log('info', info) // card_id, id 18, name
-    if (!this.state.filter) return card;
+    const collectionID = this.state.collectionID;
+
+    // If nothing to filter by, do not filter
+    if (!collectionID) return card; 
+    // Otherwise, filter cards where card ID and this.state.collectionID match collectionInfo
     else for (let i = 0; i < info.length; i++) {
-      if (info[i].card_id === card.id && info[i].id === this.state.filter) return card;
+      if (info[i].card_id === card.id && info[i].id === collectionID) return card;
     }
   }
 
@@ -48,6 +50,7 @@ class ManageCards extends Component {
       userID, collections, collectionInfo, cards, editCardContent, 
       deleteThisCard, setParentState, toggleBool, editItem 
     } = this.props;
+    const colSelect = document.getElementById('colSelect');
 
     return (
       <div className="Manage__cards">
@@ -66,6 +69,17 @@ class ManageCards extends Component {
               onClick={_ => setParentState('editItem', 'editCollections')}>
               Edit collections
             </div>
+          </div>
+          <div className="collectionSelect">
+            Select collection <br/>
+            <select id="colSelect" onChange={_ => this.setState({collectionID: +colSelect.value})}>
+              <option selected value="0">All collections</option>
+              {collections.map((col, i) => (
+                <option key={i} value={col.id} selected={col.id === this.state.collectionID}>
+                  { col.name }
+                </option>
+              ))}
+            </select>
           </div>
 
           <ColumnTitles />
@@ -115,7 +129,7 @@ class ManageCards extends Component {
                 </div>
                 <div className="collections">
                   { collectionInfo && collectionInfo.filter(info => info.card_id === card.id).map((info, i) => (
-                    <div className="collection" key={i} onClick={_ => this.setState({filter: info.id})} >
+                    <div className="collection" key={i} onClick={_ => this.setState({collectionID: info.id})} >
                       {info.name}
                       <span className="unapply" 
                         onClick={() => this.unapplyThisCollection(userID)}>
