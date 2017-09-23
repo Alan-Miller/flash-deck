@@ -35,7 +35,7 @@ class ManageCards extends Component {
   render() {
     const { 
       userID, collections, collectionInfo, cards, editCardContent, 
-      deleteThisCard, setToEdit, setToApply, toggleBool, editItem 
+      deleteThisCard, setParentState, toggleBool, editItem 
     } = this.props;
 
     return (
@@ -48,11 +48,11 @@ class ManageCards extends Component {
 
           <div className="editOptions">
             <div className="applyCollections" 
-              onClick={setToApply}>
+              onClick={_ => setParentState('editItem', 'applyCollections')}>
               Add card to collection
             </div>
             <div className="editCollections" 
-              onClick={setToEdit}>
+              onClick={_ => setParentState('editItem', 'editCollections')}>
               Edit collections
             </div>
           </div>

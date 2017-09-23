@@ -28,7 +28,7 @@ $radioSize: 1.4rem;
   .goHome {
     font-size: 1.7rem;
   }
-  .editItems {
+  .headerList {
     font-size: 1.5rem;
     display: flex;
     z-index: 4;
@@ -96,9 +96,9 @@ $radioSize: 1.4rem;
     }
   }
   
-  .inputAndButton {
-    display: flex;
-  }
+  // .inputAndButton {
+  //   display: flex;
+  // }
   .currentContent {
     max-width: 80%;
     margin: 10px;

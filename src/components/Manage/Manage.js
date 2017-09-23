@@ -32,6 +32,7 @@ class Manage extends Component {
     this.edit = this.edit.bind(this);
     this.flip = this.flip.bind(this);
     this.getInfo = this.getInfo.bind(this);
+    this.makeCard = this.makeCard.bind(this);
     this.toggleBool = this.toggleBool.bind(this);
     this.handleInput = this.handleInput.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -78,18 +79,19 @@ class Manage extends Component {
 
   handleKeyDown(e) {
     
-    const { content1, content2, reveal } = this.state;
+    const { content1, content2, reveal, editItem } = this.state;
 
     // Tab flips card and focuses cursor
-    // if (e.which === 9 || (e.which === 13 && !reveal)) this.flip();
     if (e.which === 9) this.flip();
 
     // Return (from back of card) saves card
     if (e.which === 13) {
       e.preventDefault();
-      if (content1.length && content2.length) this.makeCard(e, content1, content2);
-      else if (content1 && !reveal) this.flip();
-      else if (content2 && reveal) this.flip();
+      if (content1.length && content2.length) {
+        if (editItem === 'newCard') this.makeCard();
+        if (editItem === 'front' || editItem === 'back') this.edit();
+      }
+      else if ((content1 && !reveal) || (content2 && reveal)) this.flip();
     }
 
     // Esc leaves modal
@@ -98,8 +100,8 @@ class Manage extends Component {
     }
   }
 
-  makeCard(e, content1, content2) {
-    e.preventDefault();
+  makeCard() {
+    const { content1, content2 } = this.state;
     if (!content1 || !content2) return;
     
     document.getElementById('frontTextarea').focus();
@@ -125,14 +127,14 @@ class Manage extends Component {
       });
   }
 
-  edit(e) {
-    e.preventDefault();
-    const { editItem, content2, cardID } = this.state;
+  edit() {
+    const { editItem, content1, content2, cardID } = this.state;
     const { userID } = this.props;
+    const newContent = editItem === 'front' ? content1 : content2;
 
-    editCard(editItem, content2, cardID, userID)
+    editCard(editItem, newContent, cardID, userID)
     .then(cards => {
-      this.setState({content2: '', editItem: ''});
+      this.setState({content1: '', content2: '', editItem: ''});
       this.props.setCards(cards);
     })
   }
@@ -179,8 +181,18 @@ class Manage extends Component {
 
   render() {
     const { content1, content2, editItem, reveal } = this.state;
+    const frontTextarea = document.getElementById('frontTextarea');
+    const backTextarea = document.getElementById('backTextarea');
     const editCardContent = (face, card) => {
-      this.setState({ editItem: face, cardID: card.id, content1: card[face] })
+      this.setState({ editItem: face, cardID: card.id });
+      if (face === 'front') {
+        setTimeout(_ => { frontTextarea.focus(); }, 0);
+        this.setState({reveal: false, content1: card[face], content2: card.back});
+      }
+      if (face === 'back') {
+        setTimeout(_ => { backTextarea.focus(); }, 0);
+        this.setState({reveal: true, content1: card.front, content2: card[face]});
+      }
     };
     const $redsuit = `#C24444`;
     const $blacksuit = `#205050`;
@@ -191,14 +203,13 @@ class Manage extends Component {
       boxShadow: `17px 17px 17px 0px rgba(22, 22, 22, .7)`
     };
     const styleBack = styleCard(1, 1, 'back');
-    const frontTextarea = document.getElementById('frontTextarea');
 
     return (
       <section className="Manage" id="dropZone">
         <div className="header">
           <Link to="/"><h1 className="goHome">HOME</h1></Link>
 
-          <ul className="editItems">
+          <ul className="headerList">
             <li onClick={() => {
               this.setState({editItem: 'newCard', reveal: false});
               setTimeout(_ => { frontTextarea.focus(); }, 0);
@@ -230,7 +241,7 @@ class Manage extends Component {
 
                 <div className="front face" style={styleFront}>
                   <form className="newCard form" 
-                    style={{display: editItem === 'newCard' ? 'flex' : 'none'}}>
+                    style={{display: editItem ? 'flex' : 'none'}}>
                     <textarea id="frontTextarea"
                       value={content1}
                       placeholder="Add content to front"
@@ -241,7 +252,7 @@ class Manage extends Component {
 
                 <div className="back face" style={styleBack}>
                   <form className="newCard form" 
-                    style={{display: editItem === 'newCard' ? 'flex' : 'none'}}>
+                    style={{display: editItem ? 'flex' : 'none'}}>
                     <textarea id="backTextarea"
                       value={content2}
                       placeholder="Add content to back"
@@ -260,30 +271,8 @@ class Manage extends Component {
             </div>
             <div className="saveButtonContainer">
               <span>Click to save, or press 'Return'</span>
-              <div onClick={e => this.makeCard(e, content1, content2)}>Save</div>
+              <div onClick={this.makeCard}>Save</div>
             </div>
-
-            <form className="editCard form" 
-              onSubmit={this.edit}
-              style={{display: editItem === 'front' || editItem === 'back' ? 'flex' : 'none'}}>
-              <h1>Edit content for { editItem } of card</h1>
-              <div className="inputAndButton">
-                <input
-                  value={content2}
-                  type="text" placeholder="New content"
-                  onChange={e => this.handleInput(e, 'content2') }/>
-                <input className="submit" type="submit" />
-                <div
-                  className="editCard button"
-                  onClick={this.edit}>
-                  Edit card
-                </div>
-              </div>
-              <div className="currentContent">
-                <p>Current content:</p>
-                <p>{content1}</p>
-              </div>
-            </form>
 
             <div className="editCollections"
               style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
@@ -307,8 +296,7 @@ class Manage extends Component {
         </div>
 
         <ManageCards 
-          setToApply={() => this.setState({editItem: 'applyCollections'})}
-          setToEdit={() => this.setState({editItem: 'editCollections'})}
+          setParentState={(prop, val) => this.setState({[prop]: val})}
           editItem={editItem}
           deleteThisCard={this.deleteThisCard} 
           editCardContent={editCardContent} 
