@@ -43,23 +43,34 @@ $radioSize: 1.4rem;
   color: $white;
   z-index: 5;
 }
-.flipButton {
-  padding: 12px 18px;
-  background-color: $white;
-  color: $blacksuit;
-  cursor: pointer;
-  @include position(absolute, 50%, $top:20px, $x:-50%);
+.flipButtonContainer {
+  @include position(absolute, 50%, $top:0, $x:-50%);
+  @include flexBox(column);
+  z-index: 100;
+  div {
+    background-color: $white;
+    color: $blacksuit;
+    padding: 12px 18px;
+    display: inline-block;
+    cursor: pointer;
+  }
+  span { 
+    margin: 12px 0;
+    width: $cardWidth; 
+    text-align: center;
+    font-size: .9rem;
+  }
 }
-.saveButton {
-  @extend .flipButton;
-  @include position(absolute, 50%, $bottom:20px, $x:-50%);
+.saveButtonContainer {
+  @extend .flipButtonContainer;
+  @include position(absolute, 50%, $bottom:0, $x:-50%);
 }
 .editBox {
   @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
   // background-color: rgba(200, 200, 200, .75);
-  @include size(#{$cardWidth * 1.5}, #{$cardHeight * 1.5});
+  @include size(#{$cardWidth * 1.55}, #{$cardHeight * 1.55});
   @include flexBox(column);
-  padding: 0 50px;
+  // padding: 0 50px;
   // border: thin solid $white;
   border-radius: 7px;
   display: none;
@@ -75,9 +86,13 @@ $radioSize: 1.4rem;
     @include flexBox(column);
     textarea {
       @include position(absolute, $top:50%, $y:-50%);
+      border: none;
       font-size: 1rem;
       padding: 12px;
-      height: 12rem;
+      border-radius: 5px;
+      resize: none;
+      height: calc(#{$cardHeight * 0.85});
+      width: calc(#{$cardWidth * 0.8});
     }
   }
   
@@ -102,19 +117,18 @@ $radioSize: 1.4rem;
       color: $redsuit;
     }
   }
-}
 
-.x {
-  @include position(absolute, $right:0, $top:0);
-  font-size: 1.7rem;
-  font-weight: 200;
-  padding: 25px;
-  margin: 50px;
-  transition: .2s;
-  &:hover {
-    font-weight: 500;
-    cursor: pointer; 
-    transform: scale(2);
+  .x {
+    @include position(absolute, $right:0, $top:0);
+    font-size: 2rem;
+    font-weight: 200;
+    padding: 25px;
+    margin: 0px;
+    transition: .2s;
+    &:hover {
+      font-weight: 500;
+      cursor: pointer; 
+    }
   }
 }
 

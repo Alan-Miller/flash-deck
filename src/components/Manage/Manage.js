@@ -34,6 +34,7 @@ class Manage extends Component {
     this.getInfo = this.getInfo.bind(this);
     this.toggleBool = this.toggleBool.bind(this);
     this.handleInput = this.handleInput.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleFileDrop = this.handleFileDrop.bind(this);
     this.deleteThisCard = this.deleteThisCard.bind(this);
     this.makeCollection = this.makeCollection.bind(this);
@@ -43,6 +44,11 @@ class Manage extends Component {
     const dropZone = document.getElementById('dropZone');
     dropZone.addEventListener('dragover', this.handleDragOver);
     dropZone.addEventListener('drop', this.handleFileDrop);
+    document.addEventListener('keydown', this.handleKeyDown);
+    // this.refs.editModal.addEventListener('click', function(e) {
+    //   e.stopPropagation();
+    // });
+    
     
     if (this.props.userID) this.getInfo(this.props.userID);
     else {
@@ -70,15 +76,37 @@ class Manage extends Component {
     this.setState({ [stateVal]: e.target.value });
   }
 
-  makeCard(e, front, back) {
-    e.preventDefault();
-    if (!front || !back) return;
+  handleKeyDown(e) {
     
-    document.getElementById('newCardFocus').focus();
+    const { content1, content2, reveal } = this.state;
 
-    saveCard(this.props.userID, front, back)
+    // Tab flips card and focuses cursor
+    // if (e.which === 9 || (e.which === 13 && !reveal)) this.flip();
+    if (e.which === 9) this.flip();
+
+    // Return (from back of card) saves card
+    if (e.which === 13) {
+      e.preventDefault();
+      if (content1.length && content2.length) this.makeCard(e, content1, content2);
+      else if (content1 && !reveal) this.flip();
+      else if (content2 && reveal) this.flip();
+    }
+
+    // Esc leaves modal
+    if (e.which === 27) { 
+      this.setState({editItem: '', content1: '', content2: ''});
+    }
+  }
+
+  makeCard(e, content1, content2) {
+    e.preventDefault();
+    if (!content1 || !content2) return;
+    
+    document.getElementById('frontTextarea').focus();
+
+    saveCard(this.props.userID, content1, content2)
       .then(cards => { 
-        this.setState({content1: '', content2: ''}); 
+        this.setState({content1: '', content2: '', reveal: false}); 
         this.props.setCards(cards);
       });
   }
@@ -141,6 +169,12 @@ class Manage extends Component {
 
   flip() {
     this.setState({reveal: !this.state.reveal});
+    setTimeout(_ => {
+      const textarea = !this.state.reveal ? 
+        document.getElementById('frontTextarea') : 
+        document.getElementById('backTextarea');
+      textarea.focus();
+    }, 0);
   }
 
   render() {
@@ -148,7 +182,16 @@ class Manage extends Component {
     const editCardContent = (face, card) => {
       this.setState({ editItem: face, cardID: card.id, content1: card[face] })
     };
+    const $redsuit = `#C24444`;
+    const $blacksuit = `#205050`;
+    const styleFront = {
+      backgroundColor: `#C7C7C7`,
+      border: `medium solid whitesmoke`,
+      color: $blacksuit,
+      boxShadow: `17px 17px 17px 0px rgba(22, 22, 22, .7)`
+    };
     const styleBack = styleCard(1, 1, 'back');
+    const frontTextarea = document.getElementById('frontTextarea');
 
     return (
       <section className="Manage" id="dropZone">
@@ -156,27 +199,28 @@ class Manage extends Component {
           <Link to="/"><h1 className="goHome">HOME</h1></Link>
 
           <ul className="editItems">
-            <li onClick={() => { this.setState({editItem: 'newCard'}); }}>Make new card</li>
-            <li onClick={() => this.setState({editItem: 'editCollections'})}>Edit collections</li>
+            <li onClick={() => {
+              this.setState({editItem: 'newCard', reveal: false});
+              setTimeout(_ => { frontTextarea.focus(); }, 0);
+            }}>
+              Make new card
+            </li>
+            <li onClick={() => this.setState({editItem: 'editCollections'})}>
+              Edit collections
+            </li>
           </ul>
           
         </div>
 
-        <div className="editModal" style={{display: editItem ? 'flex' : 'none'}}>
-
-          <div className="x" 
-            style={{opacity: editItem ? 1 : 0}}
-            onClick={() => this.setState({editItem: ''})}>
-            x
-          </div>
+        <div className="editModal" ref="editModal"
+          style={{display: editItem ? 'flex' : 'none'}}>
 
           <div className="editBox" style={{display: editItem ? 'flex' : 'none'}}>
 
-            <div className="flipButton" onClick={this.flip}>Flip</div>
-            <div 
-              className="saveButton" 
-              onClick={e => this.makeCard(e, content1, content2)}>
-              Save
+            <div className="x"
+              style={{opacity: editItem ? 1 : 0}}
+              onClick={_ => this.setState({editItem: '', content1: '', content2: ''})}>
+              x
             </div>
 
             <div className="card-container"
@@ -184,12 +228,12 @@ class Manage extends Component {
 
               <div className="card" style={flipCard(1, 1, reveal)}>
 
-                <div className="front face">
+                <div className="front face" style={styleFront}>
                   <form className="newCard form" 
                     style={{display: editItem === 'newCard' ? 'flex' : 'none'}}>
-                    <textarea id="newCardFocus"
+                    <textarea id="frontTextarea"
                       value={content1}
-                      placeholder="Edit front of card"
+                      placeholder="Add content to front"
                       onChange={e => this.handleInput(e, 'content1') }>
                     </textarea>
                   </form>
@@ -197,20 +241,27 @@ class Manage extends Component {
 
                 <div className="back face" style={styleBack}>
                   <form className="newCard form" 
-                    style={{display: editItem === 'newCard' ? 'flex' : 'none'}}
-                    onSubmit={e => this.makeCard(e, content1, content2) }>
-                    <textarea
+                    style={{display: editItem === 'newCard' ? 'flex' : 'none'}}>
+                    <textarea id="backTextarea"
                       value={content2}
-                      placeholder="Edit back of card"
+                      placeholder="Add content to back"
                       onChange={e => this.handleInput(e, 'content2') }>
                     </textarea>
-                    <input className="submit" type="submit" />
                   </form>
                 </div>
 
               </div>
 
             </div> 
+
+            <div className="flipButtonContainer">
+              <div onClick={this.flip}>Flip</div>
+              <span>Click to flip, or press 'Tab'</span>
+            </div>
+            <div className="saveButtonContainer">
+              <span>Click to save, or press 'Return'</span>
+              <div onClick={e => this.makeCard(e, content1, content2)}>Save</div>
+            </div>
 
             <form className="editCard form" 
               onSubmit={this.edit}
