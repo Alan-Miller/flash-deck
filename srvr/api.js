@@ -101,6 +101,7 @@ module.exports = function(app) {
   //   });
   // });
 
+  // Add all selected collections to all selected cards
   app.put('/api/collections/:userID', (req, res) => {
     app.get('db').put_editCollections([req.params.userID, req.body.cardIDs, req.body.collectionIDs])
     .then(response => {

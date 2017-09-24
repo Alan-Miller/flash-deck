@@ -1,32 +1,41 @@
 $radioSize: 1.4rem;
 
 .Manage {
-  @include flexBox(column, $justify: flex-start);
+  @include flexBox(column, $justify: center);
   min-height: 100vh;
   background-color: $darkbluegreen;
   padding: 20px;
   padding: 0;
+  padding-top: 100px;
 }
 
-.Manage .header {
-  background-color: $gray;
+.Manage #header {
+  @include flexBox;
+  width: 80vw;
+  height: calc(#{$headerHeight} + 20px);
+  line-height: 1.5rem;
+  background-color: #222;
+  // border: thick solid $blacksuit;
   color: $white;
-  @include flexBox(row, $justify: space-between);
-  @include size(100%, 80px);
-  @include position(fixed, 0, 0);
   z-index: 2;
-  padding: 0 24px;
+  padding: 10px 24px;
   transition: .2s;
+  // transition: margin 0s;
   & * { 
     cursor: pointer; 
     transition: .2s;
+    margin-right: 20px;
   }
   &.extended {
     height: 300px;
   }
-
-  .goHome {
+  & .home {
+    @include flexBox;
+    @include position(fixed, $left:0, $top:0);
+    @include size(150px, $headerHeight);
     font-size: 1.7rem;
+    padding: 0;
+    margin: 0;
   }
   .headerList {
     font-size: 1.5rem;
@@ -134,19 +143,20 @@ $radioSize: 1.4rem;
 
 .Manage__cards {
   width: 80vw;
-  margin: 130px 0 70px 0;
+  margin: 0px 0 70px 0;
   h3 { font-size: 1.2rem; }
   line-height: 1.5rem;
 
   .Manage__card {
     border: medium solid $blacksuit;
-    margin-top: 20px;
+    // margin-top: 20px;
 
     .columnTitles {
       display: grid;
       grid-template-columns: 4fr 35fr 35fr 7fr 7fr 8fr;
       grid-row: 1fr;
       background-color: $blacksuit;
+      // height: 80px;
       .cardTitle, .boolTitle, .deleteTitle { 
         @include flexBox; 
         color: $white;
