@@ -23,9 +23,9 @@ class Home extends Component {
           <h1>Flash Deck</h1>
           <Link to="/play"><li>Play</li></Link>
           <Link to="/quiz"><li>Quiz</li></Link>
-          <Link to="/share"><li>Share</li></Link>
+          {/* <Link to="/share"><li>Share</li></Link> */}
           <Link to="/manage"><li>Manage</li></Link>
-          <Link to="/settings"><li>Settings</li></Link>
+          {/* <Link to="/settings"><li>Settings</li></Link> */}
           { this.props.userID ? 
             <a href={URL + '/logout'}><li>Log out</li></a>
             : 

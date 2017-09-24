@@ -35,13 +35,18 @@
   padding: 5px 9px;
   border-radius: 50px;
   background-color: $redsuit;
+  cursor: pointer;
+  &:hover { 
+    color: $white; 
+    opacity: 1; 
+    & .unapply { opacity: .2; }
+  }
 
   .unapply {
     @include size(100%, 100%);
-    opacity: .5;
     transition: .5s;
+    opacity: 0;
     padding-left: 7px;
-    cursor: pointer;
     &:hover { color: $white; opacity: 1;}
   }
 }

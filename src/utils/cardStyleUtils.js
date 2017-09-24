@@ -13,6 +13,7 @@ export const getRank = index => {
 }
 
 export function positionCard(index, currentCardIndex, numCards) {
+  if (index === false) return;
   // Position and rotation of cards on left
   let random = index % 13;
   random = index % 3 ? random * -1.2 : random * 3.7; // every third is different

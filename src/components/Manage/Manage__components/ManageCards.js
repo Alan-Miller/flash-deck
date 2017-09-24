@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setCardIDs } from '../../../redux/reducer';
+import { setCards, setCardIDs } from '../../../redux/reducer';
 import { unapplyCollection } from '../../../services/collectionService';
 
 import EditContent from './EditContent';
 import ColumnTitles from './ColumnTitles';
+
+import { switchBool, deleteCard } from '../../../services/cardService';
+
 
 class ManageCards extends Component {
 
   constructor() {
     super() 
     this.state = { selectedCardIDs: [] };
+    this.cardFilter = this.cardFilter.bind(this);
+    this.toggleBool = this.toggleBool.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.isACardOnState = this.isACardOnState.bind(this);
+    this.deleteThisCard = this.deleteThisCard.bind(this);
     this.unapplyThisCollection = this.unapplyThisCollection.bind(this);
   }
 
@@ -25,6 +31,11 @@ class ManageCards extends Component {
     this.props.setCardIDs(selectedCardIDs);
   }
 
+  toggleBool(cardID, colName) {
+    switchBool(cardID, colName, this.props.userID)
+      .then(cards => { this.props.setCards(cards); })
+  }
+
   unapplyThisCollection(userID) {
     unapplyCollection(userID)
     .then(collections => { this.props.setCollections(collections); });
@@ -32,34 +43,34 @@ class ManageCards extends Component {
 
   isACardOnState(cardID) { return this.props.selectedCardIDs.indexOf(cardID) !== -1; }
 
+  cardFilter(card, index, cards) {
+    const info = this.props.collectionInfo;
+    const collectionID = this.props.collectionID;
+
+    // If nothing to filter by, do not filter
+    if (!collectionID) return card; 
+    // Otherwise, filter cards where card ID and this.state.collectionID match collectionInfo
+    else for (let i = 0; i < info.length; i++) {
+      if (info[i].card_id === card.id && info[i].id === collectionID) return card;
+    }
+  }
+
+  deleteThisCard(userID, cardID) {
+    deleteCard(userID, cardID)
+      .then(cards => { this.props.setCards(cards); });
+  }
+
   render() {
-    const { 
-      userID, collections, collectionInfo, cards, editCardContent, 
-      deleteThisCard, setToEdit, setToApply, toggleBool, editItem 
-    } = this.props;
+    const { userID, collectionInfo, cards, editCardContent, setParentState } = this.props;
 
     return (
-      <div className="Manage__cards" style={{marginTop: editItem ? '440px' : null}}>
-        <h3>Choose an option above, or edit cards directly below.</h3>
-        <p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
-        </p>
+      <div className="Manage__cards">
 
         <div className="Manage__card">
 
-          <div className="editOptions">
-            <div className="applyCollections" 
-              onClick={setToApply}>
-              Add card to collection
-            </div>
-            <div className="editCollections" 
-              onClick={setToEdit}>
-              Edit collections
-            </div>
-          </div>
-
           <ColumnTitles />
           <ul> 
-            {cards && cards.map((card, i) => (
+            {cards && cards.filter(this.cardFilter).map((card, i) => (
               <li key={i} className="cardInfo">
 
                 <div className="select">
@@ -85,7 +96,7 @@ class ManageCards extends Component {
                   <input id="stopShowing"
                     type="checkbox" 
                     checked={card.stop_showing} 
-                    onChange={() => toggleBool(card.id, 'stop_showing')} />
+                    onChange={() => this.toggleBool(card.id, 'stop_showing')} />
                   <label htmlFor="stopShowing"><span></span></label>
                 </div>
 
@@ -93,18 +104,18 @@ class ManageCards extends Component {
                   <input id="showLess"
                     type="checkbox"
                     checked={card.show_less} 
-                    onChange={() => toggleBool(card.id, 'show_less')} />
+                    onChange={() => this.toggleBool(card.id, 'show_less')} />
                   <label htmlFor="showLess"><span></span></label>
                 </div>
 
                 <div 
                   className="delete" 
-                  onClick={() => deleteThisCard(card.id, userID)}>
+                  onClick={() => this.deleteThisCard(card.id, userID)}>
                   X
                 </div>
                 <div className="collections">
                   { collectionInfo && collectionInfo.filter(info => info.card_id === card.id).map((info, i) => (
-                    <div className="collection" key={i}>
+                    <div className="collection" key={i} onClick={_ => setParentState('collectionID', info.id)} >
                       {info.name}
                       <span className="unapply" 
                         onClick={() => this.unapplyThisCollection(userID)}>
@@ -128,8 +139,14 @@ class ManageCards extends Component {
   }
 }
 
-function mapStateToProps({ cards, collections, collectionInfo, userID, selectedCardIDs }) {
-  return { cards, collections, collectionInfo, userID, selectedCardIDs };
+function mapStateToProps({ cards, collectionInfo, userID, selectedCardIDs }) {
+  return { cards, collectionInfo, userID, selectedCardIDs };
 }
 
-export default connect(mapStateToProps, { setCardIDs })(ManageCards);
+export default connect(mapStateToProps, { setCards, setCardIDs })(ManageCards);
+
+
+
+{/* <h3>Choose an option above, or edit cards directly below.</h3>
+<p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
+</p> */}

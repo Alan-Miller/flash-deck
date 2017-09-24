@@ -1,9 +1,22 @@
+// initialState
+const initialState = {
+  userID: 7 // hard-coded for no-auth dev testing
+  // userID: 0 // 0 (falsy) for production
+  ,cards: []
+  ,deck: []
+  ,collections: []
+  ,collectionInfo: []
+  ,selectedCardIDs: []
+  ,selectedCollectionIDs: []
+}
+
 // Action types
 const GET_USER_ID = 'GET_USER_ID';
 const SET_USER_ID = 'SET_USER_ID';
 const SET_CARDS = 'SET_CARDS';
 const SET_DECK = 'SET_DECK';
 const SET_CARD_IDS = 'SET_CARD_IDS';
+const SET_EDIT_ITEM = 'SET_EDIT_ITEM';
 const SET_COLLECTIONS = 'SET_COLLECTIONS';
 const SET_COLLECTION_IDS = 'SET_COLLECTION_IDS';
 const SET_COLLECTION_INFO = 'SET_COLLECTION_INFO';
@@ -38,6 +51,12 @@ export function setCardIDs(cardIDs) {
     ,cardIDs
   }
 }
+export function setEditItem(editItem) {
+  return {
+    type: SET_EDIT_ITEM
+    ,editItem
+  }
+}
 export function setCollections(collections) {
   return {
     type: SET_COLLECTIONS
@@ -57,18 +76,6 @@ export function setCollectionInfo(collectionInfo) {
   }
 }
 
-// initialState
-const initialState = {
-  userID: 7 // hard-coded for no-auth dev testing
-  // userID: 0 // 0 (falsy) for production
-  ,cards: []
-  ,deck: []
-  ,collections: []
-  ,collectionInfo: []
-  ,selectedCardIDs: []
-  ,selectedCollectionIDs: []
-}
-
 // Reducers
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -82,6 +89,8 @@ export default function reducer(state = initialState, action) {
       return Object.assign({}, state, { deck: action.deck });
     case SET_CARD_IDS:
       return Object.assign({}, state, { selectedCardIDs: action.cardIDs });
+    case SET_EDIT_ITEM: 
+      return Object.assign({}, state, { editItem: action.editItem });
     case SET_COLLECTIONS:
       return Object.assign({}, state, { collections: action.collections });
     case SET_COLLECTION_INFO:
