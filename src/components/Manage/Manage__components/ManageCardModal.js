@@ -10,10 +10,9 @@ import { saveCollection } from '../../../services/collectionService';
 import { getAllCards, saveCard, saveCards, editCard } from '../../../services/cardService';
 
 import { flipCard } from '../../../utils/deckUtils';
-import CollectionsList from '../Manage__components/CollectionsList';
 import ApplyCollections from '../Manage__components/ApplyCollections';
 
-class ManageModal extends Component {
+class ManageCardModal extends Component {
 
   constructor() {
     super()
@@ -35,7 +34,7 @@ class ManageModal extends Component {
   }
 
   handleKeyDown(e) {
-    const { content1, content2, reveal, editItem } = this.props;
+    const { content1, content2, reveal, cardMode } = this.props;
 
     // Tab flips card and focuses cursor
     if (e.which === 9) this.flip();
@@ -44,15 +43,15 @@ class ManageModal extends Component {
     if (e.which === 13) {
       e.preventDefault();
       if (content1.length && content2.length) {
-        if (editItem === 'newCard') this.makeCard();
-        if (editItem === 'front' || editItem === 'back') this.editCard();
+        if (cardMode === 'newCard') this.makeCard();
+        if (cardMode === 'front' || cardMode === 'back') this.editCard();
       }
       else if ((content1 && !reveal) || (content2 && reveal)) this.flip();
     }
 
     // Esc leaves modal
     if (e.which === 27) { 
-      this.props.setParentState('editItem', '');
+      this.props.setParentState('cardMode', '');
       this.props.setParentState('content1', '');
       this.props.setParentState('content2', '');
     }
@@ -69,14 +68,14 @@ class ManageModal extends Component {
   }
 
   editCard() {
-    const { editItem, content1, content2, cardID } = this.props;
-    console.log('id in ManageModal', cardID);
+    const { cardMode, content1, content2, cardID } = this.props;
+    console.log('id in ManageCardModal', cardID);
     const { userID } = this.props;
-    const newContent = editItem === 'front' ? content1 : content2;
+    const newContent = cardMode === 'front' ? content1 : content2;
 
-    editCard(editItem, newContent, cardID, userID)
+    editCard(cardMode, newContent, cardID, userID)
     .then(cards => {
-      this.props.setParentState('editItem', '');
+      this.props.setParentState('cardMode', '');
       this.props.setParentState('content1', '');
       this.props.setParentState('content2', '');
       this.props.setCards(cards);
@@ -91,7 +90,7 @@ class ManageModal extends Component {
 
     saveCard(this.props.userID, content1, content2)
       .then(cards => { 
-        // this.props.setParentState('editItem', ''); // Closes modal after making a card
+        // this.props.setParentState('cardMode', ''); // Closes modal after making a card
         this.props.setParentState('content1', '');
         this.props.setParentState('content2', '');
         this.props.setParentState('reveal', false);
@@ -138,7 +137,7 @@ class ManageModal extends Component {
   }
 
   render() {
-    const { content1, content2, reveal, editItem } = this.props;
+    const { content1, content2, reveal, cardMode } = this.props;
     // const $redsuit = `#C24444`;
     const $blacksuit = `#205050`;
     const styleFront = {
@@ -152,14 +151,14 @@ class ManageModal extends Component {
 
     return (
       <div className="editModal" ref="editModal" id="dropZone"
-        style={{display: editItem ? 'flex' : 'none'}}>
+        style={{display: cardMode ? 'flex' : 'none'}}>
 
-        <div className="editBox" style={{display: editItem ? 'flex' : 'none'}}>
+        <div className="editBox" style={{display: cardMode ? 'flex' : 'none'}}>
 
           <div className="x"
-            style={{opacity: editItem ? 1 : 0}}
+            style={{opacity: cardMode ? 1 : 0}}
             onClick={_ => {
-              this.props.setParentState('editItem', '');
+              this.props.setParentState('cardMode', '');
               this.props.setParentState('content1', '');
               this.props.setParentState('content2', '');
             }}>
@@ -173,7 +172,7 @@ class ManageModal extends Component {
 
               <div className="front face" style={styleFront}>
                 <form className="newCard form" 
-                  style={{display: editItem ? 'flex' : 'none'}}>
+                  style={{display: cardMode ? 'flex' : 'none'}}>
                   <textarea id="frontTextarea"
                     value={content1}
                     placeholder="Add content to front"
@@ -184,7 +183,7 @@ class ManageModal extends Component {
 
               <div className="back face" style={styleBack}>
                 <form className="newCard form" 
-                  style={{display: editItem ? 'flex' : 'none'}}>
+                  style={{display: cardMode ? 'flex' : 'none'}}>
                   <textarea id="backTextarea"
                     value={content2}
                     placeholder="Add content to back"
@@ -207,7 +206,7 @@ class ManageModal extends Component {
           </div>
 
           <div className="editCollections"
-            style={{display: editItem === 'editCollections' ? 'flex' : 'none'}}>
+            style={{display: cardMode === 'editCollections' ? 'flex' : 'none'}}>
             <form className="newCollection form" onSubmit={this.makeCollection}>
               <input id="newCollectionFocus"
                 value={content1}
@@ -220,10 +219,10 @@ class ManageModal extends Component {
                 Save
               </div>
             </form>
-            <CollectionsList editItem={editItem} />
+            
           </div>
 
-          <ApplyCollections content={content1} editItem={editItem} makeCollection={this.makeCollection} />
+          <ApplyCollections content={content1} cardMode={cardMode} makeCollection={this.makeCollection} />
         </div>
       </div>
     )
@@ -234,4 +233,4 @@ function mapStateToProps({userID}) {
   return { userID }
 }
 
-export default connect(mapStateToProps, { setCards })(ManageModal);
+export default connect(mapStateToProps, { setCards })(ManageCardModal);

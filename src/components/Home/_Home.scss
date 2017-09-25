@@ -5,7 +5,7 @@ main.Home {
 }
 
 .Home ul {
-    @include position(relative, $top: -7vh, $deg: -11deg);
+    @include position(relative, $t: -7vh, $deg: -11deg);
     h1 { @include big3D($redsuit); }
     li { @include lil3D($redsuit); }
     *:last-child li { @include lil3D($blacksuit); }

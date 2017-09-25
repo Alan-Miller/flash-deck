@@ -17,6 +17,6 @@ export default function(props) {
 // <div className="back cardContent">
 //   {card.back}
 //   <EditContent onClick={_ => {this.setState(
-//     {editItem: 'back', cardID: card.id, oldContent: card.back}
+//     {cardMode: 'back', cardID: card.id, oldContent: card.back}
 //   )}} />
 // </div>

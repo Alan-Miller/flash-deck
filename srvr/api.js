@@ -78,6 +78,8 @@ module.exports = function(app) {
     })
   });
 
+  //————————————————————————————————————————————>> Collections
+
   // Get all existing collection names
   app.get('/api/collections/:userID', (req, res) => {
     app.get('db').get_collections([req.params.userID])

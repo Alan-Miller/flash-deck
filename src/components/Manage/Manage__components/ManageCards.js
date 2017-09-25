@@ -64,7 +64,7 @@ class ManageCards extends Component {
     const { userID, collectionInfo, cards, editCardContent, setParentState } = this.props;
 
     return (
-      <div className="Manage__cards">
+      <div className="ManageCards">
 
         <div className="Manage__card">
 
@@ -73,13 +73,13 @@ class ManageCards extends Component {
             {cards && cards.filter(this.cardFilter).map((card, i) => (
               <li key={i} className="cardInfo">
 
-                <div className="select">
+                <div id="select">
                   <input id="select"
                     type="checkbox" 
                     ref={`card${card.id}`}
                     checked={this.isACardOnState(card.id)}
                     onChange={ _ => this.handleSelect(card.id) } />
-                  <label htmlFor="select"><span></span></label>
+                  <label htmlFor="select"><span className="checkboxCircle"></span></label>
                 </div>
 
                 <div className="front cardContent">
@@ -128,7 +128,6 @@ class ManageCards extends Component {
               </li>
             ))}
           </ul>
-
           
         </div>
       </div>
@@ -147,6 +146,6 @@ export default connect(mapStateToProps, { setCards, setCardIDs })(ManageCards);
 
 
 
-{/* <h3>Choose an option above, or edit cards directly below.</h3>
+/* <h3>Choose an option above, or edit cards directly below.</h3>
 <p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
-</p> */}
+</p> */

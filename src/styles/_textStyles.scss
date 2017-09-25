@@ -40,3 +40,10 @@
     word-wrap: $val;
     word-break: $val;
 }
+
+%wordBreak {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-break: break-word;
+}

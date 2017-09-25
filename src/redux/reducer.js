@@ -16,7 +16,7 @@ const SET_USER_ID = 'SET_USER_ID';
 const SET_CARDS = 'SET_CARDS';
 const SET_DECK = 'SET_DECK';
 const SET_CARD_IDS = 'SET_CARD_IDS';
-const SET_EDIT_ITEM = 'SET_EDIT_ITEM';
+const SET_CARD_MODE = 'SET_CARD_MODE';
 const SET_COLLECTIONS = 'SET_COLLECTIONS';
 const SET_COLLECTION_IDS = 'SET_COLLECTION_IDS';
 const SET_COLLECTION_INFO = 'SET_COLLECTION_INFO';
@@ -51,10 +51,10 @@ export function setCardIDs(cardIDs) {
     ,cardIDs
   }
 }
-export function setEditItem(editItem) {
+export function setCardMode(cardMode) {
   return {
-    type: SET_EDIT_ITEM
-    ,editItem
+    type: SET_CARD_MODE
+    ,cardMode
   }
 }
 export function setCollections(collections) {
@@ -89,8 +89,8 @@ export default function reducer(state = initialState, action) {
       return Object.assign({}, state, { deck: action.deck });
     case SET_CARD_IDS:
       return Object.assign({}, state, { selectedCardIDs: action.cardIDs });
-    case SET_EDIT_ITEM: 
-      return Object.assign({}, state, { editItem: action.editItem });
+    case SET_CARD_MODE: 
+      return Object.assign({}, state, { cardMode: action.cardMode });
     case SET_COLLECTIONS:
       return Object.assign({}, state, { collections: action.collections });
     case SET_COLLECTION_INFO:

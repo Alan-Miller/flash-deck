@@ -25,10 +25,6 @@ begin
 end
 $update_collections$;
 
--- return all collections
--- select id, name from collections
--- where user_id = $1
--- order by name asc;
 
 select 
   collections.id as "id", 
