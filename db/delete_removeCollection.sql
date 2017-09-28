@@ -1,3 +1,5 @@
+delete from cards_in_collections where id = $2;
+
 select 
   collections.id as "id", 
   collections.name as "name", 

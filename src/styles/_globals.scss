@@ -58,7 +58,7 @@ a {
 
 //————————————————————————————————————————————>> global mixins
 
-@mixin bgColor($color) {
+@mixin bgColor($color:#222) {
     background-color: $color;
 }
 
@@ -75,12 +75,18 @@ a {
     align-items: $alignI;
 }
 
+
 @mixin prefix($property, $value) {
     #{'-webkit-' + $property}: $value;
-     #{'-khtml-' + $property}: $value;
-       #{'-moz-' + $property}: $value;
-        #{'-ms-' + $property}: $value;
-            #{'' + $property}: $value;
+    #{'-khtml-' + $property}: $value;
+    #{'-moz-' + $property}: $value;
+    #{'-ms-' + $property}: $value;
+    #{'' + $property}: $value;
+}
+
+div.flexContainer {
+    @include flexBox($alignI:flex-start);
+    @include prefix(filter, grayscale(50%))
 }
 
 @mixin position(

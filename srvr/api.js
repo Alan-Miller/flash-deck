@@ -110,6 +110,14 @@ module.exports = function(app) {
         res.status(200).send(response);
     });
   });
+
+  // Remove single collection from card
+  app.delete('/api/collections/:userID/:cardsInCollectionsID', (req, res) => {
+    app.get('db').delete_removeCollection([req.params.userID, req.params.cardsInCollectionsID])
+    .then(response => {
+        res.status(200).send(response);
+    });
+  });
   
   app.post('/api/collection/:id', (req, res) => {
     app.get('db').post_saveCollection([req.params.id, req.body.name])
