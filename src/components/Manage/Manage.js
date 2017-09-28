@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setCards, setUserID, setEditItem, setCollections, setCollectionInfo } from '../../redux/reducer';
+import { setCards, setUserID, setCardMode, setCollections, setCollectionInfo } from '../../redux/reducer';
 
 import { getUserID } from '../../services/mainService';
 import { getCollections, getAllCollectionInfo } from '../../services/collectionService';
@@ -9,7 +8,8 @@ import { getAllCards } from '../../services/cardService';
 
 import ManageHeader from './Manage__components/ManageHeader';
 import ManageCards from './Manage__components/ManageCards';
-import ManageModal from './Manage__components/ManageModal';
+import ManageCardModal from './Manage__components/ManageCardModal';
+import ManageCollectionModal from './Manage__components/ManageCollectionModal';
 
 class Manage extends Component {
 
@@ -19,7 +19,8 @@ class Manage extends Component {
     this.state = {
       content1: ''
       ,content2: ''
-      ,editItem: ''
+      ,cardMode: ''
+      ,collectionMode: ''
       ,collectionID: 0
       ,scrollY: 0
       ,reveal: false
@@ -51,7 +52,7 @@ class Manage extends Component {
   }
 
   editCardContent(face, card) {
-    this.setState({ editItem: face, cardID: card.id });
+    this.setState({ cardMode: face, cardID: card.id });
     if (face === 'front') {
       this.setState({reveal: false, content1: card[face], content2: card.back});
     }
@@ -61,13 +62,20 @@ class Manage extends Component {
   }
 
   render() {
-    const { setEditItem, collections } = this.props;
-    const { content1, content2, editItem, cardID, collectionID, scrollY, reveal } = this.state;
-    const frontTextarea = document.getElementById('frontTextarea');
-    const backTextarea = document.getElementById('backTextarea');
+    const { collections } = this.props;
+    const { 
+      reveal 
+      ,scrollY 
+      ,content1 
+      ,content2 
+      ,cardID 
+      ,cardMode 
+      ,collectionID 
+      ,collectionMode 
+    } = this.state;
 
     return (
-      <section className="Manage" style={scrollY > 100 ? {'padding-top': '180px'} : null}>
+      <section className="Manage" style={scrollY > 100 ? {'paddingTop': '180px'} : null}>
         
         <ManageHeader 
           collections={collections}
@@ -75,12 +83,16 @@ class Manage extends Component {
           scrollY={scrollY}
           setParentState={(prop, val) => this.setState({[prop]: val})} />
 
-        <ManageModal
+        <ManageCardModal
           cardID={cardID}
           reveal={reveal}
           content1={content1}
           content2={content2}
-          editItem={editItem}
+          cardMode={cardMode}
+          setParentState={(prop, val) => this.setState({[prop]: val})} />
+
+        <ManageCollectionModal
+          collectionMode={collectionMode}
           setParentState={(prop, val) => this.setState({[prop]: val})} />
 
         <ManageCards 
@@ -100,7 +112,7 @@ function mapStateToProps({ userID, cards, collections }) {
 }
 
 let outputActions = {
-  setCards, setUserID, setEditItem, setCollections, setCollectionInfo
+  setCards, setUserID, setCardMode, setCollections, setCollectionInfo
 }
 
 export default connect(mapStateToProps, outputActions)(Manage);

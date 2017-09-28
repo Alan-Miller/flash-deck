@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setCards, setCardIDs } from '../../../redux/reducer';
+import { setCards, setCardIDs, setCollectionInfo } from '../../../redux/reducer';
 import { unapplyCollection } from '../../../services/collectionService';
 
 import EditContent from './EditContent';
@@ -36,9 +36,11 @@ class ManageCards extends Component {
       .then(cards => { this.props.setCards(cards); })
   }
 
-  unapplyThisCollection(userID) {
-    unapplyCollection(userID)
-    .then(collections => { this.props.setCollections(collections); });
+  unapplyThisCollection(cardsInCollectionsID) {
+    unapplyCollection(this.props.userID, cardsInCollectionsID)
+    .then(collectionInfo => { 
+      this.props.setCollectionInfo(collectionInfo); 
+    });
   }
 
   isACardOnState(cardID) { return this.props.selectedCardIDs.indexOf(cardID) !== -1; }
@@ -64,7 +66,7 @@ class ManageCards extends Component {
     const { userID, collectionInfo, cards, editCardContent, setParentState } = this.props;
 
     return (
-      <div className="Manage__cards">
+      <div className="ManageCards">
 
         <div className="Manage__card">
 
@@ -73,13 +75,13 @@ class ManageCards extends Component {
             {cards && cards.filter(this.cardFilter).map((card, i) => (
               <li key={i} className="cardInfo">
 
-                <div className="select">
+                <div id="select">
                   <input id="select"
                     type="checkbox" 
                     ref={`card${card.id}`}
                     checked={this.isACardOnState(card.id)}
                     onChange={ _ => this.handleSelect(card.id) } />
-                  <label htmlFor="select"><span></span></label>
+                  <label htmlFor="select"><span className="checkboxCircle"></span></label>
                 </div>
 
                 <div className="front cardContent">
@@ -115,10 +117,10 @@ class ManageCards extends Component {
                 </div>
                 <div className="collections">
                   { collectionInfo && collectionInfo.filter(info => info.card_id === card.id).map((info, i) => (
-                    <div className="collection" key={i} onClick={_ => setParentState('collectionID', info.id)} >
-                      {info.name}
+                    <div className="collection" key={i} >
+                      <span onClick={_ => setParentState('collectionID', info.id)}>{info.name}</span>
                       <span className="unapply" 
-                        onClick={() => this.unapplyThisCollection(userID)}>
+                        onClick={() => {this.unapplyThisCollection(info.info_id)}}>
                         x
                       </span>
                     </div>
@@ -128,7 +130,6 @@ class ManageCards extends Component {
               </li>
             ))}
           </ul>
-
           
         </div>
       </div>
@@ -143,10 +144,10 @@ function mapStateToProps({ cards, collectionInfo, userID, selectedCardIDs }) {
   return { cards, collectionInfo, userID, selectedCardIDs };
 }
 
-export default connect(mapStateToProps, { setCards, setCardIDs })(ManageCards);
+export default connect(mapStateToProps, { setCards, setCardIDs, setCollectionInfo })(ManageCards);
 
 
 
-{/* <h3>Choose an option above, or edit cards directly below.</h3>
+/* <h3>Choose an option above, or edit cards directly below.</h3>
 <p>PRO TIP: To create many cards at once, simply drag a .csv file and drop it anywhere on this page. Each row of the file will become a new card. The file should have two columns. The first column will become the front of the card, and the second column will become the back.
-</p> */}
+</p> */

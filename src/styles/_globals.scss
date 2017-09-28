@@ -58,45 +58,52 @@ a {
 
 //————————————————————————————————————————————>> global mixins
 
-@mixin bgColor($color) {
+@mixin bgColor($color:#222) {
     background-color: $color;
 }
 
-@mixin size($width: null, $height: null) {
-    width: $width;
-    height: $height;
+@mixin size($w: null, $h: null) {
+    width: $w;
+    height: $h;
 }
 
-@mixin flexBox($direction:row, $justify:center, $align:center) {
+@mixin flexBox($direction:row, $justify:center, $alignC:center, $alignI:center) {
     display: flex;
     flex-direction: $direction;
     justify-content: $justify;
-    align-items: $align;
+    align-content: $alignC;
+    align-items: $alignI;
 }
+
 
 @mixin prefix($property, $value) {
     #{'-webkit-' + $property}: $value;
-     #{'-khtml-' + $property}: $value;
-       #{'-moz-' + $property}: $value;
-        #{'-ms-' + $property}: $value;
-            #{'' + $property}: $value;
+    #{'-khtml-' + $property}: $value;
+    #{'-moz-' + $property}: $value;
+    #{'-ms-' + $property}: $value;
+    #{'' + $property}: $value;
+}
+
+div.flexContainer {
+    @include flexBox($alignI:flex-start);
+    @include prefix(filter, grayscale(50%))
 }
 
 @mixin position(
-    $position: relative, 
-    $left: unset, 
-    $top: unset, 
-    $bottom: unset, 
-    $right: unset,
+    $pos: relative, 
+    $l: unset, 
+    $t: unset, 
+    $b: unset, 
+    $r: unset,
     $x: 0,
     $y: 0,
     $deg: 0deg
 ) {
-    position: $position;
-    top: $top;
-    left: $left;
-    bottom: $bottom;
-    right: $right;
+    position: $pos;
+    top: $t;
+    left: $l;
+    bottom: $b;
+    right: $r;
     transform: translate($x, $y) rotate($deg);
 }
 

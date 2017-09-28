@@ -16,9 +16,9 @@ export function getAllCollectionInfo(userID) {
 //     .then(response => response.data);
 // }
 
-export function unapplyCollection(userID) {
-  // return axios.put(`${URL}/collections/${userID}`)
-  //   .then(response => response.data);
+export function unapplyCollection(userID, cardsInCollectionsID) {
+  return axios.delete(`${URL}/collections/${userID}/${cardsInCollectionsID}`)
+    .then(response => response.data);
 }
 
 export function saveCollection(userID, name) {

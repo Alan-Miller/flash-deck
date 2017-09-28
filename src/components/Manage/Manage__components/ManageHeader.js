@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { setCollectionIDs } from '../../../redux/reducer';
 
 class ManageHeader extends Component {
-
-  constructor() {
-    super() 
-    // this.state = {scrollY: 0}
-  }
 
   componentDidMount() {
     document.addEventListener('scroll', _ => {
@@ -15,7 +12,7 @@ class ManageHeader extends Component {
   }
 
   render() {
-    const { scrollY, collections, collectionID, setParentState } = this.props;
+    const { scrollY, collections, collectionID, setParentState, setCollectionIDs } = this.props;
     const colSelect = document.getElementById('colSelect');
     const headerStyles = scrollY > 100 ? 
     {
@@ -24,7 +21,8 @@ class ManageHeader extends Component {
       'width': '100vw',
       'height': '80px',
       'justifyContent': 'flex-end'
-    } : {};
+    } 
+    : {};
 
     return (
       <div id="header" style={headerStyles}>
@@ -35,25 +33,24 @@ class ManageHeader extends Component {
         <ul className="headerList">
           <li onClick={_ => {
             setParentState('reveal', false);
-            setParentState('editItem', 'newCard');
+            setParentState('cardMode', 'newCard');
           }}>
             Make new card
           </li>
         </ul>
 
         <div className="editOptions">
-          <div className="applyCollections" 
-            onClick={_ => setParentState('editItem', 'applyCollections')}>
-            Add card to collection
-          </div>
           <div className="editCollections" 
-            onClick={_ => setParentState('editItem', 'editCollections')}>
+            onClick={_ => {
+              setParentState('collectionMode', 'editCollections');
+              setCollectionIDs([]);
+            }}>
             Edit collections
           </div>
         </div>
         <div className="collectionSelect">
           Filter cards by collection <br/>
-          <select id="colSelect" onChange={_ => {console.log('ID', collectionID); setParentState('collectionID', +colSelect.value)}}>
+          <select id="colSelect" onChange={_ => {setParentState('collectionID', +colSelect.value)}}>
             <option defaultValue value="0">ALL COLLECTIONS</option>
             {collections.map((col, i) => (
               <option key={i} value={col.id} selected={col.id === collectionID}>
@@ -67,4 +64,4 @@ class ManageHeader extends Component {
   }
 }
 
-export default ManageHeader;
+export default connect(null, { setCollectionIDs })(ManageHeader);

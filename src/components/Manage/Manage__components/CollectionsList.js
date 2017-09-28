@@ -31,10 +31,13 @@ class CollectionsList extends Component {
   }
 
   render() {
+    const { cardMode } = this.props;
+
     return (
       <div className="collectionsList"
         onMouseOver={() => {document.body.style.overflow = 'hidden'}} 
         onMouseOut={() => {document.body.style.overflow = 'auto'}}
+        style={{display: cardMode === 'applyCollections' ? 'flex' : 'none'}}>
       >
         {this.props.collections && this.props.collections.map((collection, i) => (
           <div className="collectionListItem" key={i}>

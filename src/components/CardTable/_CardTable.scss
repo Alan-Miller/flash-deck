@@ -5,7 +5,7 @@
   .card-space {
       @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
       z-index: 2;
-      @include flexBox($justify: space-between);
+      @include flexBox($justify:space-between);
       @include size(100%, $cardHeight);
   }
   
@@ -38,12 +38,12 @@
 
           &.upper {
               bottom: $cardHeight;
-              @include flexBox($justify: flex-start);
+              @include flexBox($justify:flex-start);
               button { border-radius: 27px 27px 0 0; }
           }
           &.lower {
               top: $cardHeight;
-              @include flexBox($justify: flex-end);
+              @include flexBox($justify:flex-end);
               button { border-radius: 0 0 27px 27px; }
           }
 

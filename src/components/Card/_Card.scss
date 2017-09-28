@@ -1,14 +1,15 @@
 .card-container {
   @include size($cardWidth, $cardHeight);
+  @extend %translateCenter;
   transition: .7s ease;
   position: absolute;
-  @extend %translateCenter;
-  perspective: 1000;
+//   @include prefix(perspective, 1000);
+  perspective: 1000px;
 }
 
 .card {
   @include size($cardWidth, $cardHeight);
-  @include wordBreak;
+  @extend %wordBreak;
   @include cardColor($blacksuit);
   display: block;
   transform-style: preserve-3d;
@@ -17,15 +18,16 @@
 
   .face {
       @include size(100%, 100%);
-      transform-style: preserve-3d; // seems to fix see-pip-through-card bug
+      transform-style: preserve-3d; // seems to fix see-pip-through-card bug?
       position: absolute;
-      backface-visibility: hidden;
       border-radius: 18px;
       box-shadow: 2px 2px 2px 0px rgba(22, 22, 22, .2);
       padding: 5px 10px;
       cursor: pointer;
       @include prefix('user-select', none);
       -webkit-touch-callout: none; // Safari's user-select property
+      // backface-visibility: hidden; // fix disappearing card bug, but first card starts off wrong
+      // &:nth-child(2) { backface-visibility: hidden; }
 
       &.front {
           @include flexBox(column, space-between, auto);
@@ -37,6 +39,7 @@
               color: $white;
               padding: 5px;
               font-weight: 200;
+              @extend %wordBreak;
           }
       }
 
@@ -47,6 +50,7 @@
           color: $white;
           background-color: $white;
           transform: rotateY(-180deg);
+          -webkit-transform: rotateY(-180deg);
           overflow: scroll;
       }
   } // end of .face

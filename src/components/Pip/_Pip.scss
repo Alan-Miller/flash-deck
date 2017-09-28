@@ -2,6 +2,7 @@
   font-size: 2.3rem;
   @include wordBreak(normal);
   @include flexBox(row, flex-start);
+  @include size(100%, null);
 
   &.lower { transform: rotateZ(180deg); }
   & .pip { @include flexBox(column); }

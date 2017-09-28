@@ -31,7 +31,7 @@ $radioSize: 1.4rem;
   }
   & .home {
     @include flexBox;
-    @include position(fixed, $left:0, $top:0);
+    @include position(fixed, $l:0, $t:0);
     @include size(150px, $headerHeight);
     font-size: 1.7rem;
     padding: 0;
@@ -53,7 +53,7 @@ $radioSize: 1.4rem;
   z-index: 5;
 }
 .flipButtonContainer {
-  @include position(absolute, 50%, $top:0, $x:-50%);
+  @include position(absolute, 50%, $t:0, $x:-50%);
   @include flexBox(column);
   z-index: 100;
   div {
@@ -72,7 +72,7 @@ $radioSize: 1.4rem;
 }
 .saveButtonContainer {
   @extend .flipButtonContainer;
-  @include position(absolute, 50%, $bottom:0, $x:-50%);
+  @include position(absolute, 50%, $b:0, $x:-50%);
 }
 .editBox {
   @include position(absolute, 50%, 50%, $x: -50%, $y: -50%);
@@ -94,7 +94,7 @@ $radioSize: 1.4rem;
   .newCard.form {
     @include flexBox(column);
     textarea {
-      @include position(absolute, $top:50%, $y:-50%);
+      @include position(absolute, $t:50%, $y:-50%);
       border: none;
       font-size: 1rem;
       padding: 12px;
@@ -128,7 +128,7 @@ $radioSize: 1.4rem;
   }
 
   .x {
-    @include position(absolute, $right:0, $top:0);
+    @include position(absolute, $r:0, $t:0);
     font-size: 2rem;
     font-weight: 200;
     padding: 25px;
@@ -141,7 +141,7 @@ $radioSize: 1.4rem;
   }
 }
 
-.Manage__cards {
+.ManageCards {
   width: 80vw;
   margin: 0px 0 70px 0;
   h3 { font-size: 1.2rem; }
@@ -174,7 +174,7 @@ $radioSize: 1.4rem;
       border-right: thin solid $blacksuit;
       grid-column-end: span 1;
       position: relative;
-      word-break: break-word;
+      @extend %wordBreak;
       &:hover .edit { opacity: .95; }
     }
     
@@ -200,7 +200,7 @@ $radioSize: 1.4rem;
       grid-column: 1 / span 6;
     }
   } // end .Manage__card
-} // end .Manage__cards
+} // end .ManageCards
 
 input[type=checkbox] {
   @include size(2rem, 2rem);
@@ -259,7 +259,7 @@ input[type=submit] {
 .edit {
   @include flexBox;
   @include size(100%, 100%);
-  @include position(absolute, $left: 0, $top: 0);
+  @include position(absolute, $l: 0, $t: 0);
   box-shadow: inset 0 0 200px 0 #555;
   background: $gray;
   opacity: 0;

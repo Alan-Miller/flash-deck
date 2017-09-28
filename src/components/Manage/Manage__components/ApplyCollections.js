@@ -9,11 +9,11 @@ class ApplyCollections extends Component {
   }
 
   render() {
-    const { makeCollection, content, editItem } = this.props;
+    const { makeCollection, content, cardMode } = this.props;
 
     return (
       <div className="applyCollections"
-        style={{display: editItem === 'applyCollections' ? 'flex' : 'none'}}>
+        style={{display: cardMode === 'applyCollections' ? 'flex' : 'none'}}>
         <div className="formContainer">
           <form className="applyCollections form">
             <input id="applyCollectionsFocus"
@@ -29,7 +29,7 @@ class ApplyCollections extends Component {
             Save
           </div>
         </div>
-        <CollectionsList editItem={editItem} />
+        <CollectionsList cardMode={cardMode} />
       </div>
     )
   }

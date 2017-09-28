@@ -1,7 +1,7 @@
 .Play, .Quiz {
     background-color: $darkbluegreen;
     @include size (100%, 100vh);
-    @include flexBox(column, $justify: space-between);
+    @include flexBox(column, $justify:space-between);
 
     .main {
         @include size(auto, 100%);
@@ -13,7 +13,7 @@
         @include size(100%, $headerHeight);
         @include flexBox;
         .info {
-            @include flexBox(column, $align: flex-start);
+            @include flexBox(column, $alignI:flex-start);
             padding: 0 10px;
             background-color: $redsuit;
             max-width: 400px;

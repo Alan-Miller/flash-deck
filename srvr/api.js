@@ -78,6 +78,8 @@ module.exports = function(app) {
     })
   });
 
+  //————————————————————————————————————————————>> Collections
+
   // Get all existing collection names
   app.get('/api/collections/:userID', (req, res) => {
     app.get('db').get_collections([req.params.userID])
@@ -104,6 +106,14 @@ module.exports = function(app) {
   // Add all selected collections to all selected cards
   app.put('/api/collections/:userID', (req, res) => {
     app.get('db').put_editCollections([req.params.userID, req.body.cardIDs, req.body.collectionIDs])
+    .then(response => {
+        res.status(200).send(response);
+    });
+  });
+
+  // Remove single collection from card
+  app.delete('/api/collections/:userID/:cardsInCollectionsID', (req, res) => {
+    app.get('db').delete_removeCollection([req.params.userID, req.params.cardsInCollectionsID])
     .then(response => {
         res.status(200).send(response);
     });
