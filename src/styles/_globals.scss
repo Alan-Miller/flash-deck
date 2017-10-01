@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+@import url('https://fonts.googleapis.com/css?family=Geo');
 
 //————————————————————————————————————————————>> color
 
@@ -42,6 +43,7 @@ html {
         color: #555; 
         size: 1em;
         family: 'Montserrat', sans-serif;
+        // family: 'Geo', sans-serif;
     }
 }
 
@@ -82,11 +84,6 @@ a {
     #{'-moz-' + $property}: $value;
     #{'-ms-' + $property}: $value;
     #{'' + $property}: $value;
-}
-
-div.flexContainer {
-    @include flexBox($alignI:flex-start);
-    @include prefix(filter, grayscale(50%))
 }
 
 @mixin position(
