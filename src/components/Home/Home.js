@@ -6,7 +6,7 @@ import { getUserID } from '../../services/mainService';
 const URL = process.env.REACT_APP_LOGIN;
 
 class Home extends Component {
-
+  
   componentDidMount() {
     if (!this.props.userID) {
       getUserID()
