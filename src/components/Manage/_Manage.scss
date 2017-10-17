@@ -156,7 +156,7 @@ $radioSize: 1.4rem;
       grid-template-columns: 4fr 35fr 35fr 7fr 7fr 8fr;
       grid-row: 1fr;
       background-color: $blacksuit;
-      // height: 80px;
+      // transition: top height .2s;
       .cardTitle, .boolTitle, .deleteTitle { 
         @include flexBox; 
         color: $white;
@@ -164,6 +164,7 @@ $radioSize: 1.4rem;
       }
       .L {
         transform: rotateZ(45deg) rotateY(180deg);
+        font-family: 'Montserrat', sans-serif !important;
       }
     }
     .cardInfo {

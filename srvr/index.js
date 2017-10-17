@@ -1,5 +1,5 @@
 /*———————————————————————————————————————————————————————————————*
-  Requires
+  Requirements
 /*———————————————————————————————————————————————————————————————*/
 require('dotenv').config();
 
@@ -10,6 +10,7 @@ const express = require('express')
     , massive = require('massive')
     , api = require('./api.js')
     , auth = require('./auth')
+    // , ac = require('./controller')
 
     , { port } = require('../config')
     , app = module.exports = express();
@@ -30,7 +31,7 @@ massive({
   ,user: 'ashman'
 })
 .then(function(db) {
-  app.set('db', db)
+  app.set('db', db);
 });
 
 app.use(bodyParser.json());
@@ -40,15 +41,18 @@ app.use((req, res, next) => { console.log(req.url); next(); });
 
 
 /*———————————————————————————————————————————————————————————————*
-  Endpoints
+  Auth endpoints and middleware
 /*———————————————————————————————————————————————————————————————*/
 auth(app);
 
+
+/*———————————————————————————————————————————————————————————————*
+  API endpoints
+/*———————————————————————————————————————————————————————————————*/
 api(app);
+
 
 /*———————————————————————————————————————————————————————————————*
   Listen
 /*———————————————————————————————————————————————————————————————*/
-app.listen(port, function() {
-    console.log(`Listening on port ${port}.`);
-});
+app.listen(port, _ => { console.log(`Listening on port ${port}.`); });

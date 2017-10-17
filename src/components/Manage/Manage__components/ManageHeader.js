@@ -64,4 +64,8 @@ class ManageHeader extends Component {
   }
 }
 
-export default connect(null, { setCollectionIDs })(ManageHeader);
+function mapStateToProps({collections}) {
+  return {collections};
+}
+
+export default connect(mapStateToProps, { setCollectionIDs })(ManageHeader);
