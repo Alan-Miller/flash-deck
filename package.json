@@ -2,7 +2,7 @@
   "name": "flash-deck",
   "version": "0.1.0",
   "private": true,
-  "main": "srvr/index.js",
+  "main": "srvr/server.js",
   "proxy": {
     "/api": {
       "target": "http://localhost:3021/",
