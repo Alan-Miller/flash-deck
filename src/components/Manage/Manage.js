@@ -75,10 +75,9 @@ class Manage extends Component {
     } = this.state;
 
     return (
-      <section className="Manage" style={scrollY > 100 ? {'paddingTop': '180px'} : null}>
+      <section className="Manage" style={scrollY > 100 ? {'paddingTop': '230px'} : null}>
         
         <ManageHeader 
-          collections={collections}
           collectionID={collectionID}
           scrollY={scrollY}
           setParentState={(prop, val) => this.setState({[prop]: val})} />
@@ -98,7 +97,6 @@ class Manage extends Component {
         <ManageCards 
           scrollY={scrollY} 
           collectionID={collectionID}
-          deleteThisCard={this.deleteThisCard}
           editCardContent={this.editCardContent}
           setParentState={(prop, val) => this.setState({[prop]: val})} />
 

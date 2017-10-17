@@ -1,13 +1,13 @@
 // initialState
 const initialState = {
-  userID: 7 // hard-coded for no-auth dev testing
-  // userID: 0 // 0 (falsy) for production
-  ,cards: []
-  ,deck: []
-  ,collections: []
-  ,collectionInfo: []
-  ,selectedCardIDs: []
-  ,selectedCollectionIDs: []
+  userID: 7, // hard-coded for no-auth dev testing
+  // userID: 0, // 0 (falsy) for production
+  cards: [],
+  deck: [],
+  collections: [],
+  collectionInfo: [],
+  selectedCardIDs: [],
+  selectedCollectionIDs: [],
 }
 
 // Action types
@@ -22,65 +22,58 @@ const SET_COLLECTION_IDS = 'SET_COLLECTION_IDS';
 const SET_COLLECTION_INFO = 'SET_COLLECTION_INFO';
 
 // Action creators
-export function getUserID() {
-  return {
-    type: GET_USER_ID
-  }
-}
 export function setUserID(userID) {
   return {
-    type: SET_USER_ID
-    ,userID
+    type: SET_USER_ID,
+    userID
   }
 }
 export function setCards(cards) {
   return {
-    type: SET_CARDS
-    ,cards
+    type: SET_CARDS,
+    cards
   }
 }
 export function setDeck(deck) {
   return {
-    type: SET_DECK
-    ,deck
+    type: SET_DECK,
+    deck
   }
 }
 export function setCardIDs(cardIDs) {
   return {
-    type: SET_CARD_IDS
-    ,cardIDs
+    type: SET_CARD_IDS,
+    cardIDs
   }
 }
 export function setCardMode(cardMode) {
   return {
-    type: SET_CARD_MODE
-    ,cardMode
+    type: SET_CARD_MODE,
+    cardMode
   }
 }
 export function setCollections(collections) {
   return {
-    type: SET_COLLECTIONS
-    ,collections
+    type: SET_COLLECTIONS,
+    collections
   }
 }
 export function setCollectionIDs(collectionIDs) {
   return {
-    type: SET_COLLECTION_IDS
-    ,collectionIDs
+    type: SET_COLLECTION_IDS,
+    collectionIDs
   }
 }
 export function setCollectionInfo(collectionInfo) {
   return {
-    type: SET_COLLECTION_INFO
-    ,collectionInfo
+    type: SET_COLLECTION_INFO,
+    collectionInfo
   }
 }
 
 // Reducers
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case GET_USER_ID:
-      return state.userID;
     case SET_USER_ID:
       return Object.assign({}, state, { userID: action.userID });
     case SET_CARDS:

@@ -103,6 +103,7 @@ class ManageCardModal extends Component {
   }
 
   handleFileDrop(e) {
+    e.preventDefault();
     const readFile = fileReaderUtil(e);
 
     setTimeout(() => {
@@ -229,8 +230,8 @@ class ManageCardModal extends Component {
   }
 }
 
-function mapStateToProps({userID}) {
-  return { userID }
+function mapStateToProps({userID, cards}) {
+  return { userID, cards }
 }
 
 export default connect(mapStateToProps, { setCards })(ManageCardModal);

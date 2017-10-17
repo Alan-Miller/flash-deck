@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { setCards, setCardIDs, setCollectionInfo } from '../../../redux/reducer';
 import { unapplyCollection } from '../../../services/collectionService';
 
-import EditContent from './EditContent';
-import ColumnTitles from './ColumnTitles';
+// import CardColumnTitles from './CardColumnTitles';
+// import CardInfo from './CardInfo';
 
 import { switchBool, deleteCard } from '../../../services/cardService';
 
@@ -63,14 +63,33 @@ class ManageCards extends Component {
   }
 
   render() {
-    const { userID, collectionInfo, cards, editCardContent, setParentState } = this.props;
+    const { userID, scrollY, collectionInfo, cards, editCardContent, setParentState } = this.props;
+    const headerStyles = scrollY > 100 ? 
+    {
+      'position': 'fixed',
+      'left': '50%',
+      'transform': 'translate(-50%)',
+      'top': '80px',
+      'zIndex': '2',
+      'height': '50px',
+      'width': '80vw'
+    } 
+    : {};
 
     return (
       <div className="ManageCards">
 
         <div className="Manage__card">
 
-          <ColumnTitles />
+          <div className="columnTitles" style={headerStyles}>
+            <h2 className="cardTitle L">L</h2>
+            <h2 className="cardTitle">Card front</h2>
+            <h2 className="cardTitle">Card back</h2>
+            <div className="boolTitle">Stop showing</div>
+            <div className="boolTitle">Show less</div>
+            <div className="deleteTitle">Delete</div>
+          </div>
+          
           <ul> 
             {cards && cards.filter(this.cardFilter).map((card, i) => (
               <li key={i} className="cardInfo">
@@ -86,12 +105,20 @@ class ManageCards extends Component {
 
                 <div className="front cardContent">
                   {card.front}
-                  <EditContent onClick={_ => {editCardContent("front", card)}} />
+                  <div 
+                    className="edit"
+                    onClick={_ => {editCardContent("front", card)}}>
+                    EDIT
+                  </div>
                 </div>
 
                 <div className="back cardContent">
                   {card.back}
-                  <EditContent onClick={_ => {editCardContent("back", card)}} />
+                  <div 
+                    className="edit"
+                    onClick={_ => {editCardContent("back", card)}}>
+                    EDIT
+                  </div>
                 </div>
 
                 <div className="stopShowing bool">
