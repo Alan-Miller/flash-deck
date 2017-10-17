@@ -26,6 +26,7 @@ TRASH/
 src/**/*.css
 
 config
+config.js
 dev-notes.md
 db-notes.md
 flashdeck.sql
