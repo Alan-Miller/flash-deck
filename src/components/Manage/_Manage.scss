@@ -162,6 +162,9 @@ $radioSize: 1.4rem;
         color: $white;
         font-weight: 200;
       }
+      .L {
+        transform: rotateZ(45deg) rotateY(180deg);
+      }
     }
     .cardInfo {
       @extend .columnTitles;
