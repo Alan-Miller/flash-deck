@@ -36,6 +36,7 @@ export function setManageState(type, payload) {
 // Reducer
 export default function reducer(state = manageState, action) {
   const propName = action.type.replace('SET_', '');
+  
   if (manageState.hasOwnProperty(propName)) {
     return Object.assign({}, state, { [propName]: action.payload });
   }

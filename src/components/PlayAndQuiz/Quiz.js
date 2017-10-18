@@ -1,8 +1,8 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setCards } from '../../redux/appReducer';
 import { getAllCards } from '../../services/cardService';
+import { setAppState, SET_cards } from '../../redux/appReducer';
 import { shuffle } from '../../utils/deckUtils';
 import CardTable from '../CardTable/CardTable';
 
@@ -23,7 +23,7 @@ class Quiz extends Component {
 
     getAllCards(this.props.appState.userID)
     .then(cards => {
-      this.props.setCards(shuffle(cards));
+      this.props.setAppState(SET_cards, shuffle(cards));
     });
   }
   componentWillUnmount() {
@@ -102,9 +102,6 @@ function mapStateToProps({ appState }) {
     }
   }
 }
-
-let mapDispatchToProps = {
-  setCards
-}
+const mapDispatchToProps = { setAppState }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Quiz);

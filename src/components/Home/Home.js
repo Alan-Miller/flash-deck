@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux'
-import { setUserID } from '../../redux/appReducer';
+import { setAppState, SET_userID } from '../../redux/appReducer';
 import { getUserID } from '../../services/mainService';
 const URL = process.env.REACT_APP_LOGIN;
 
@@ -11,7 +11,7 @@ class Home extends Component {
     if (!this.props.appState.userID) {
       getUserID()
       .then(userID => {
-        this.props.setUserID(userID);
+        this.props.setAppState(SET_userID, userID);
       })
     }
   }
@@ -41,8 +41,9 @@ function mapStateToProps({ appState }) {
     appState: { userID: appState.userID }
   }
 }
+const mapDispatchToProps = { setAppState };
 
-export default connect(mapStateToProps, { setUserID })(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
 
 // <Link to="/share"><li>Share</li></Link>

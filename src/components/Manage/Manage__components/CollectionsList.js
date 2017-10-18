@@ -31,7 +31,7 @@ class CollectionsList extends Component {
   updateWithSelectedCollections() {
     const { userID, selectedCardIDs, selectedCollectionIDs } = this.props;
     updateCollections(userID, selectedCardIDs, selectedCollectionIDs)
-    .then(collections => {this.props.setManageState(SET_collections, collections); console.log('why', this.props.collections)});
+    .then(collections => {this.props.setManageState(SET_collections, collections); });
   }
 
   render() {

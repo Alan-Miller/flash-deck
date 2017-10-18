@@ -7,40 +7,21 @@ const appState = {
 }
 
 // Action constants
-const SET_USER_ID = 'SET_USER_ID';
-const SET_CARDS = 'SET_CARDS';
-const SET_DECK = 'SET_DECK';
+export const SET_userID = 'SET_userID';
+export const SET_cards = 'SET_cards';
+export const SET_deck = 'SET_deck';
+
+// Action creator
+export function setAppState(type, payload) {
+  return { type, payload }
+}
 
 // Reducer
 export default function reducer(state = appState, action) {
-  switch (action.type) {
-    case SET_USER_ID:
-      return Object.assign({}, state, { userID: action.payload });
-    case SET_CARDS:
-      return Object.assign({}, state, { cards: action.payload });
-    case SET_DECK:
-      return Object.assign({}, state, { deck: action.payload });
-    default:
-      return state;
+  const propName = action.type.replace('SET_', '');
+  
+  if (appState.hasOwnProperty(propName)) {
+    return Object.assign({}, state, { [propName]: action.payload });
   }
-}
-
-// Action creators
-export function setUserID(userID) {
-  return {
-    type: SET_USER_ID,
-    payload: userID
-  }
-}
-export function setCards(cards) {
-  return {
-    type: SET_CARDS,
-    payload: cards
-  }
-}
-export function setDeck(deck) {
-  return {
-    type: SET_DECK,
-    payload: deck
-  }
+  else return state;
 }

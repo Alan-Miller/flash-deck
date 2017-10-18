@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setCards } from '../../../redux/appReducer';
+import { setAppState, SET_cards } from '../../../redux/appReducer';
 import { 
   setManageState, 
   SET_selectedCardIDs,
@@ -41,7 +41,7 @@ class ManageCards extends Component {
 
   toggleBool(cardID, colName) {
     switchBool(cardID, colName, this.props.appState.userID)
-      .then(cards => { this.props.setCards(cards); })
+      .then(cards => { this.props.setAppState(SET_cards, cards); })
   }
 
   unapplyThisCollection(cardsInCollectionsID) {
@@ -67,7 +67,7 @@ class ManageCards extends Component {
 
   deleteThisCard(userID, cardID) {
     deleteCard(userID, cardID)
-      .then(cards => { this.props.setCards(cards); });
+      .then(cards => { this.props.setAppState(SET_cards, cards); });
   }
 
   editCardContent(face, card) {
@@ -206,8 +206,9 @@ function mapStateToProps({ appState, manageState }) {
     }
   }
 }
+const mapDispatchToProps = { setAppState, setManageState };
 
-export default connect(mapStateToProps, { setCards, setManageState })(ManageCards);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageCards);
 
 
 

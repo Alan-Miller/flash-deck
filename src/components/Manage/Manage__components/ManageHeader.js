@@ -41,7 +41,7 @@ class ManageHeader extends Component {
 
         <ul className="headerList">
           <li onClick={_ => {
-            this.props.setManageState(SET_reveal, false);
+            setManageState(SET_reveal, false);
             setManageState(SET_cardMode, 'newCard');
           }}>
             Make new card
@@ -51,7 +51,6 @@ class ManageHeader extends Component {
         <div className="editOptions">
           <div className="editCollections" 
             onClick={_ => {
-              console.log('cm', SET_collectionMode)
               setManageState(SET_collectionMode, 'editCollections');
               setManageState(SET_selectedCollectionIDs, []);
             }}>
@@ -62,9 +61,9 @@ class ManageHeader extends Component {
           Filter cards by collection <br/>
           <select id="colSelect" onChange={_ => {setManageState(SET_collectionID, +colSelect.value)}}>
             <option defaultValue value="0">ALL COLLECTIONS</option>
-            {collections.map((col, i) => (
-              <option key={i} value={col.id} selected={col.id === collectionID}>
-                { col.name }
+            {collections.map((collection, i) => (
+              <option key={i} value={collection.id} selected={collection.id === collectionID}>
+                { collection.name }
               </option>
             ))}
           </select>
@@ -79,11 +78,11 @@ function mapStateToProps({ manageState }) {
     manageState: { 
       collections: manageState.collections,
       scrollY: manageState.scrollY,
-      collectionMode: manageState.collectionMode
+      collectionMode: manageState.collectionMode,
+      collectionID: manageState.collectionID
     }
   }
 }
-
 const mapDispatchToProps = { setManageState };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageHeader);

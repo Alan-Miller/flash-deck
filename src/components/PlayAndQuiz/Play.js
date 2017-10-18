@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setCards, setDeck } from '../../redux/appReducer';
+import { setAppState, SET_deck } from '../../redux/appReducer';
 import { getAllCards } from '../../services/cardService';
 import { buildDeck } from '../../utils/deckUtils';
 import { tallyPoints } from '../../utils/playUtils';
@@ -28,7 +28,7 @@ class Play extends Component {
     const playMode = true;
     getAllCards(this.props.appState.userID)
     .then(cards => {
-      this.props.setDeck(buildDeck(cards, playMode));
+      this.props.setAppState(SET_deck, buildDeck(cards, playMode));
     });
   }
   componentWillUnmount() {
@@ -127,9 +127,6 @@ function mapStateToProps({ appState }) {
     }
   }
 }
-
-let mapDispatchToProps = {
-  setCards, setDeck
-};
+const mapDispatchToProps = { setAppState };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Play);

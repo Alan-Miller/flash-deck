@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setCards, setUserID } from '../../redux/appReducer';
+import { setAppState, SET_userID, SET_cards } from '../../redux/appReducer';
 import { 
+  setManageState,
   SET_collections, 
-  SET_collectionInfo, 
-  setManageState
+  SET_collectionInfo
 } from '../../redux/manageReducer';
 
 import { getUserID } from '../../services/mainService';
@@ -28,7 +28,7 @@ class Manage extends Component {
     else {
       getUserID()
       .then(userID => {
-        this.props.setUserID(userID);
+        this.props.setAppState(SET_userID, userID);
         this.getInfo(userID);
       })
     }
@@ -36,7 +36,7 @@ class Manage extends Component {
 
   getInfo(userID) {
     getAllCards(userID)
-      .then(cards => { this.props.setCards(cards); }
+      .then(cards => { this.props.setAppState(SET_cards, cards); }
     );
     getCollections(userID)
       .then(collections => { this.props.setManageState(SET_collections, collections); }
@@ -66,8 +66,7 @@ function mapStateToProps({ appState, manageState }) {
   }
 }
 const mapDispatchToProps = {
-  setCards, 
-  setUserID, 
+  setAppState,
   setManageState
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setCards } from '../../../redux/appReducer';
+import { setAppState, SET_cards } from '../../../redux/appReducer';
 import { 
   setManageState, 
   SET_reveal, 
@@ -85,7 +85,7 @@ class ManageCardModal extends Component {
       setManageState(SET_content1, '');
       setManageState(SET_content2, '');
       setManageState(SET_cardMode, '');
-      this.props.setCards(cards);
+      this.props.setAppState(SET_cards, cards);
     })
   }
 
@@ -102,7 +102,7 @@ class ManageCardModal extends Component {
         setManageState(SET_reveal, false);
         setManageState(SET_content1, '');
         setManageState(SET_content2, '');
-        this.props.setCards(cards);
+        this.props.setAppState(SET_cards, cards);
       });
   }
 
@@ -115,11 +115,11 @@ class ManageCardModal extends Component {
         const newCards = await readFile();
         await saveCards(this.props.appState.userID, newCards);
         let cards = this.props.appState.cards.concat(newCards);
-        this.props.setCards(cards);
+        this.props.setAppState(SET_cards, cards);
       }
       createNewCards()
       .then(_ => getAllCards(this.props.appState.userID))
-      .then(cards => { this.props.setCards(cards) })
+      .then(cards => { this.props.setAppState(SET_cards, cards) })
     }, 100);
   }
 
@@ -250,5 +250,6 @@ function mapStateToProps({ appState, manageState }) {
     }
   }
 }
+const mapDispatchToProps = { setAppState, setManageState };
 
-export default connect(mapStateToProps, { setManageState, setCards })(ManageCardModal);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageCardModal);
