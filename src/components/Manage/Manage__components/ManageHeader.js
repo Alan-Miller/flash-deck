@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setCollectionIDs, setScrollY, setReveal } from '../../../redux/manageReducer';
+import { 
+  setManageState, 
+  SET_selectedCollectionIDs, 
+  SET_scrollY, 
+  SET_reveal,
+  SET_cardMode,
+  SET_collectionMode,
+  SET_collectionID
+} from '../../../redux/manageReducer';
 
 class ManageHeader extends Component {
 
   componentDidMount() {
     document.addEventListener('scroll', _ => {
-      // this.props.setParentState('scrollY', window.scrollY);
-      this.props.setScrollY(window.scrollY);
+      this.props.setManageState(SET_scrollY, window.scrollY);
     });
   }
 
   render() {
-    const { collectionID, setParentState, setCollectionIDs } = this.props;
-    const { collections, scrollY } = this.props.manageState;
+    const { setManageState } = this.props;
+    const { collections, scrollY, collectionID } = this.props.manageState;
     const colSelect = document.getElementById('colSelect');
     const headerStyles = scrollY > 100 ? 
     {
@@ -34,8 +41,8 @@ class ManageHeader extends Component {
 
         <ul className="headerList">
           <li onClick={_ => {
-            this.props.setReveal(false);
-            setParentState('cardMode', 'newCard');
+            this.props.setManageState(SET_reveal, false);
+            setManageState(SET_cardMode, 'newCard');
           }}>
             Make new card
           </li>
@@ -44,15 +51,16 @@ class ManageHeader extends Component {
         <div className="editOptions">
           <div className="editCollections" 
             onClick={_ => {
-              setParentState('collectionMode', 'editCollections');
-              setCollectionIDs([]);
+              console.log('cm', SET_collectionMode)
+              setManageState(SET_collectionMode, 'editCollections');
+              setManageState(SET_selectedCollectionIDs, []);
             }}>
             Edit collections
           </div>
         </div>
         <div className="collectionSelect">
           Filter cards by collection <br/>
-          <select id="colSelect" onChange={_ => {setParentState('collectionID', +colSelect.value)}}>
+          <select id="colSelect" onChange={_ => {setManageState(SET_collectionID, +colSelect.value)}}>
             <option defaultValue value="0">ALL COLLECTIONS</option>
             {collections.map((col, i) => (
               <option key={i} value={col.id} selected={col.id === collectionID}>
@@ -69,12 +77,13 @@ class ManageHeader extends Component {
 function mapStateToProps({ manageState }) {
   return {
     manageState: { 
-      collections: manageState.collections, 
-      scrollY: manageState.scrollY 
+      collections: manageState.collections,
+      scrollY: manageState.scrollY,
+      collectionMode: manageState.collectionMode
     }
   }
 }
 
-const mapDispatchToProps = { setCollectionIDs, setScrollY, setReveal };
+const mapDispatchToProps = { setManageState };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageHeader);

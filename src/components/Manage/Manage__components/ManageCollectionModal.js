@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { 
-  setCardIDs, setCollections, setCollectionIDs, setCollectionInfo 
+  setManageState, 
+  SET_selectedCardIDs, 
+  SET_selectedCollectionIDs, 
+  SET_collectionInfo ,
+  SET_collectionMode
 } from '../../../redux/manageReducer';
 import { updateCollections } from '../../../services/collectionService';
 
@@ -19,33 +23,30 @@ class ManageCollectionModal extends Component {
     const index = selectedCollectionIDs.indexOf(collectionId);
     if (this.isACollectionOnState(collectionId)) selectedCollectionIDs.splice(index, 1);
     else selectedCollectionIDs.push(collectionId);
-    this.props.setCollectionIDs(selectedCollectionIDs);
+    this.props.setManageState(SET_selectedCollectionIDs, selectedCollectionIDs);
   }
   isACollectionOnState(collectionId) { 
     return this.props.manageState.selectedCollectionIDs.indexOf(collectionId) !== -1; 
   }
 
   updateWithSelectedCollections() {
-    const { 
-      setCardIDs, 
-      setCollectionIDs, 
-      setParentState 
-    } = this.props;
+    const { setManageState } = this.props;
     const { userID } = this.props.appState;
     const { 
       selectedCardIDs, 
       selectedCollectionIDs, 
     } = this.props.manageState;
-    setCardIDs([]);
-    setCollectionIDs([]);
-    setParentState('collectionMode', '');
+
+    setManageState(SET_selectedCardIDs, []);
+    setManageState(SET_selectedCollectionIDs, []);
+    setManageState(SET_collectionMode, '');
+    
     updateCollections(userID, selectedCardIDs, selectedCollectionIDs)
-    .then(collectionInfo => {this.props.setCollectionInfo(collectionInfo);});
+    .then(collectionInfo => {this.props.setManageState(SET_collectionInfo, collectionInfo);});
   }
 
   render() {
-    const { collectionMode } = this.props;
-    const { collections } = this.props.manageState;
+    const { collections, collectionMode } = this.props.manageState;
 
     return (
       <div className="collectionsModal" 
@@ -84,6 +85,7 @@ function mapStateToProps({ appState, manageState }) {
     },
     manageState: {
       collections: manageState.collections,
+      collectionMode: manageState.collectionMode,
       selectedCardIDs: manageState.selectedCardIDs,
       selectedCollectionIDs: manageState.selectedCollectionIDs
     }
@@ -91,10 +93,7 @@ function mapStateToProps({ appState, manageState }) {
 }
 
 const mapDispatchToProps = { 
-  setCollections, 
-  setCardIDs,
-  setCollectionIDs, 
-  setCollectionInfo 
+  setManageState
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCollectionModal);

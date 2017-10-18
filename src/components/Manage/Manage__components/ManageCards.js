@@ -2,11 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { setCards } from '../../../redux/appReducer';
-import { setCardIDs, setCollectionInfo } from '../../../redux/manageReducer';
+import { 
+  setManageState, 
+  SET_selectedCardIDs,
+  SET_collectionInfo,
+  SET_collectionID,
+  SET_cardMode,
+  SET_reveal, 
+  SET_content1,
+  SET_content2
+} from '../../../redux/manageReducer';
 import { unapplyCollection } from '../../../services/collectionService';
-
-// import CardColumnTitles from './CardColumnTitles';
-// import CardInfo from './CardInfo';
 
 import { switchBool, deleteCard } from '../../../services/cardService';
 
@@ -21,6 +27,7 @@ class ManageCards extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.isACardOnState = this.isACardOnState.bind(this);
     this.deleteThisCard = this.deleteThisCard.bind(this);
+    this.editCardContent = this.editCardContent.bind(this);
     this.unapplyThisCollection = this.unapplyThisCollection.bind(this);
   }
 
@@ -29,7 +36,7 @@ class ManageCards extends Component {
     const index = selectedCardIDs.indexOf(cardID);
     if (this.isACardOnState(cardID)) selectedCardIDs.splice(index, 1);
     else selectedCardIDs.push(cardID);
-    this.props.setCardIDs(selectedCardIDs);
+    this.props.setManageState(SET_selectedCardIDs, selectedCardIDs);
   }
 
   toggleBool(cardID, colName) {
@@ -40,7 +47,7 @@ class ManageCards extends Component {
   unapplyThisCollection(cardsInCollectionsID) {
     unapplyCollection(this.props.appState.userID, cardsInCollectionsID)
     .then(collectionInfo => { 
-      this.props.setCollectionInfo(collectionInfo); 
+      this.props.setManageState(SET_collectionInfo, collectionInfo); 
     });
   }
 
@@ -48,7 +55,7 @@ class ManageCards extends Component {
 
   cardFilter(card, index, cards) {
     const info = this.props.manageState.collectionInfo;
-    const collectionID = this.props.collectionID;
+    const { collectionID } = this.props.manageState;
 
     // If nothing to filter by, do not filter
     if (!collectionID) return card; 
@@ -63,8 +70,23 @@ class ManageCards extends Component {
       .then(cards => { this.props.setCards(cards); });
   }
 
+  editCardContent(face, card) {
+    const { setManageState } = this.props;
+    setManageState('cardID', card.id)
+    setManageState(SET_reveal, false);
+    setManageState(SET_cardMode, face)
+    if (face === 'front') {
+      setManageState(SET_content1, card[face]);
+      setManageState(SET_content2, card.back);
+    }
+    if (face === 'back') {
+      setManageState(SET_content1, card.front);
+      setManageState(SET_content2, card[face]);
+    }
+  }
+
   render() {
-    const { editCardContent, setParentState } = this.props;
+    const { setManageState } = this.props;
     const { userID, cards } = this.props.appState;
     const { collectionInfo, scrollY } = this.props.manageState;
     const headerStyles = scrollY > 100 ? 
@@ -110,7 +132,7 @@ class ManageCards extends Component {
                   {card.front}
                   <div 
                     className="edit"
-                    onClick={_ => {editCardContent("front", card)}}>
+                    onClick={_ => {this.editCardContent("front", card)}}>
                     EDIT
                   </div>
                 </div>
@@ -119,7 +141,7 @@ class ManageCards extends Component {
                   {card.back}
                   <div 
                     className="edit"
-                    onClick={_ => {editCardContent("back", card)}}>
+                    onClick={_ => {this.editCardContent("back", card)}}>
                     EDIT
                   </div>
                 </div>
@@ -148,7 +170,7 @@ class ManageCards extends Component {
                 <div className="collections">
                   { collectionInfo && collectionInfo.filter(info => info.card_id === card.id).map((info, i) => (
                     <div className="collection" key={i} >
-                      <span onClick={_ => setParentState('collectionID', info.id)}>{info.name}</span>
+                      <span onClick={_ => setManageState(SET_collectionID, info.id)}>{info.name}</span>
                       <span className="unapply" 
                         onClick={() => {this.unapplyThisCollection(info.info_id)}}>
                         x
@@ -179,12 +201,13 @@ function mapStateToProps({ appState, manageState }) {
     manageState: {
       selectedCardIDs: manageState.selectedCardIDs,
       collectionInfo: manageState.collectionInfo,
-      scrollY: manageState.scrollY
+      scrollY: manageState.scrollY,
+      collectionID: manageState.collectionID
     }
   }
 }
 
-export default connect(mapStateToProps, { setCards, setCardIDs, setCollectionInfo })(ManageCards);
+export default connect(mapStateToProps, { setCards, setManageState })(ManageCards);
 
 
 
