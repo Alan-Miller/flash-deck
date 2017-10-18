@@ -172,7 +172,9 @@ $radioSize: 1.4rem;
       background-color: $white;
       border: 2px solid $blacksuit;
       & > * { padding: 10px; }
-      &:nth-child(odd) { background-color: #cfcfcf; }  
+      &:nth-child(odd) { 
+        background-color: #cfcfcf; 
+      }  
     }
     .cardContent {
       border-right: thin solid $blacksuit;
@@ -182,14 +184,13 @@ $radioSize: 1.4rem;
       &:hover .edit { opacity: .95; }
     }
     
-
-    .select, .bool, .delete {
+    #select, .bool, .delete {
       @include flexBox;
       cursor: pointer;
       grid-column-end: span 1;
       transition: .3s;
     }
-    .select, .bool {
+    #select, .bool {
       border-right: thin solid $blacksuit;
     }
     .delete:hover {

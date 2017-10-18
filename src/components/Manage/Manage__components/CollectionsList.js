@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setCollections, setCollectionIDs } from '../../../redux/reducer';
+import { setCollections, setCollectionIDs } from '../../../redux/manageReducer';
 import { updateCollections } from '../../../services/collectionService';
 
 class CollectionsList extends Component {

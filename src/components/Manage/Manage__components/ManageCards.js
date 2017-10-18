@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setCards, setCardIDs, setCollectionInfo } from '../../../redux/reducer';
+import { setCards } from '../../../redux/appReducer';
+import { setCardIDs, setCollectionInfo } from '../../../redux/manageReducer';
 import { unapplyCollection } from '../../../services/collectionService';
 
 // import CardColumnTitles from './CardColumnTitles';
@@ -24,7 +25,7 @@ class ManageCards extends Component {
   }
 
   handleSelect(cardID) {
-    const selectedCardIDs = [...this.props.selectedCardIDs];
+    const selectedCardIDs = [...this.props.manageState.selectedCardIDs];
     const index = selectedCardIDs.indexOf(cardID);
     if (this.isACardOnState(cardID)) selectedCardIDs.splice(index, 1);
     else selectedCardIDs.push(cardID);
@@ -32,21 +33,21 @@ class ManageCards extends Component {
   }
 
   toggleBool(cardID, colName) {
-    switchBool(cardID, colName, this.props.userID)
+    switchBool(cardID, colName, this.props.appState.userID)
       .then(cards => { this.props.setCards(cards); })
   }
 
   unapplyThisCollection(cardsInCollectionsID) {
-    unapplyCollection(this.props.userID, cardsInCollectionsID)
+    unapplyCollection(this.props.appState.userID, cardsInCollectionsID)
     .then(collectionInfo => { 
       this.props.setCollectionInfo(collectionInfo); 
     });
   }
 
-  isACardOnState(cardID) { return this.props.selectedCardIDs.indexOf(cardID) !== -1; }
+  isACardOnState(cardID) { return this.props.manageState.selectedCardIDs.indexOf(cardID) !== -1; }
 
   cardFilter(card, index, cards) {
-    const info = this.props.collectionInfo;
+    const info = this.props.manageState.collectionInfo;
     const collectionID = this.props.collectionID;
 
     // If nothing to filter by, do not filter
@@ -63,7 +64,9 @@ class ManageCards extends Component {
   }
 
   render() {
-    const { userID, scrollY, collectionInfo, cards, editCardContent, setParentState } = this.props;
+    const { editCardContent, setParentState } = this.props;
+    const { userID, cards } = this.props.appState;
+    const { collectionInfo, scrollY } = this.props.manageState;
     const headerStyles = scrollY > 100 ? 
     {
       'position': 'fixed',
@@ -167,8 +170,18 @@ class ManageCards extends Component {
   }
 }
 
-function mapStateToProps({ cards, collectionInfo, userID, selectedCardIDs }) {
-  return { cards, collectionInfo, userID, selectedCardIDs };
+function mapStateToProps({ appState, manageState }) {
+  return {
+    appState: {
+      userID: appState.userID,
+      cards: appState.cards
+    },
+    manageState: {
+      selectedCardIDs: manageState.selectedCardIDs,
+      collectionInfo: manageState.collectionInfo,
+      scrollY: manageState.scrollY
+    }
+  }
 }
 
 export default connect(mapStateToProps, { setCards, setCardIDs, setCollectionInfo })(ManageCards);

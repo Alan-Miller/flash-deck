@@ -1,7 +1,7 @@
 import React, { Component } from 'react'; 
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setCards } from '../../redux/reducer';
+import { setCards } from '../../redux/appReducer';
 import { getAllCards } from '../../services/cardService';
 import { shuffle } from '../../utils/deckUtils';
 import CardTable from '../CardTable/CardTable';
@@ -10,7 +10,6 @@ class Quiz extends Component {
 
   constructor() {
     super()
-
     this.state = {
       currentCardIndex: -1
       ,reveal: true
@@ -22,7 +21,7 @@ class Quiz extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeyDown);
 
-    getAllCards(this.props.userID)
+    getAllCards(this.props.appState.userID)
     .then(cards => {
       this.props.setCards(shuffle(cards));
     });
@@ -32,7 +31,7 @@ class Quiz extends Component {
   }
 
   advance(amt) {
-    const { cards } = this.props;
+    const { cards } = this.props.appState;
     const { currentCardIndex, reveal } = this.state;
     let nextIndex = this.state.currentCardIndex + amt;
     
@@ -57,7 +56,7 @@ class Quiz extends Component {
   }
 
   render() {
-    const deck = this.props.cards;
+    const deck = this.props.appState.cards;
     const { currentCardIndex, reveal } = this.state;
     
     return(
@@ -95,12 +94,17 @@ class Quiz extends Component {
   }
 }
 
-let outputActions = {
+function mapStateToProps({ appState }) {
+  return {
+    appState: {
+      userID: appState.userID,
+      cards: appState.cards
+    }
+  }
+}
+
+let mapDispatchToProps = {
   setCards
 }
 
-function mapStateToProps({ cards, userID }) {
-  return { cards, userID };
-}
-
-export default connect(mapStateToProps, outputActions)(Quiz);
+export default connect(mapStateToProps, mapDispatchToProps)(Quiz);
