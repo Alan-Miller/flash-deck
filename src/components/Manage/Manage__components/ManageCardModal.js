@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setCards } from '../../../redux/reducer';
+import { setCards } from '../../../redux/appReducer';
+import { setReveal } from '../../../redux/manageReducer';
 
 import { fileReaderUtil } from '../../../utils/fileReaderUtil';
 import { positionCard, styleCard } from '../../../utils/cardStyleUtils';
@@ -16,7 +17,6 @@ class ManageCardModal extends Component {
 
   constructor() {
     super()
-
     this.flip = this.flip.bind(this);
     this.editCard = this.editCard.bind(this);
     this.makeCard = this.makeCard.bind(this);
@@ -34,7 +34,8 @@ class ManageCardModal extends Component {
   }
 
   handleKeyDown(e) {
-    const { content1, content2, reveal, cardMode } = this.props;
+    const { content1, content2, cardMode } = this.props;
+    const { reveal } = this.props.manageState;
 
     // Tab flips card and focuses cursor
     if (e.which === 9) this.flip();
@@ -58,9 +59,9 @@ class ManageCardModal extends Component {
   }
 
   flip() {
-    this.props.setParentState('reveal', !this.props.reveal);
+    this.props.setReveal(!this.props.manageState.reveal);
     setTimeout(_ => {
-      const textarea = !this.props.reveal ? 
+      const textarea = !this.props.manageState.reveal ? 
         document.getElementById('frontTextarea') : 
         document.getElementById('backTextarea');
       textarea.focus();
@@ -70,7 +71,7 @@ class ManageCardModal extends Component {
   editCard() {
     const { cardMode, content1, content2, cardID } = this.props;
     console.log('id in ManageCardModal', cardID);
-    const { userID } = this.props;
+    const { userID } = this.props.appState;
     const newContent = cardMode === 'front' ? content1 : content2;
 
     editCard(cardMode, newContent, cardID, userID)
@@ -88,12 +89,12 @@ class ManageCardModal extends Component {
 
     document.getElementById('frontTextarea').focus();
 
-    saveCard(this.props.userID, content1, content2)
+    saveCard(this.props.appState.userID, content1, content2)
       .then(cards => { 
         // this.props.setParentState('cardMode', ''); // Closes modal after making a card
         this.props.setParentState('content1', '');
         this.props.setParentState('content2', '');
-        this.props.setParentState('reveal', false);
+        this.props.setReveal(false);
         this.props.setCards(cards);
       });
   }
@@ -109,12 +110,12 @@ class ManageCardModal extends Component {
     setTimeout(() => {
       let createNewCards = async () => {
         const newCards = await readFile();
-        await saveCards(this.props.userID, newCards);
-        let cards = this.props.cards.concat(newCards);
+        await saveCards(this.props.appState.userID, newCards);
+        let cards = this.props.appState.cards.concat(newCards);
         this.props.setCards(cards);
       }
       createNewCards()
-      .then(_ => getAllCards(this.props.userID))
+      .then(_ => getAllCards(this.props.appState.userID))
       .then(cards => { this.props.setCards(cards) })
     }, 100);
   }
@@ -125,7 +126,8 @@ class ManageCardModal extends Component {
 
   makeCollection(e) {
     e.preventDefault();
-    const { userID, content1 } = this.props;
+    const { content1 } = this.props;
+    const { userID } = this.props.appState;
 
     document.getElementById('newCollectionFocus').focus();
 
@@ -138,7 +140,8 @@ class ManageCardModal extends Component {
   }
 
   render() {
-    const { content1, content2, reveal, cardMode } = this.props;
+    const { content1, content2, cardMode } = this.props;
+    const { reveal } = this.props.manageState;    
     // const $redsuit = `#C24444`;
     const $blacksuit = `#205050`;
     const styleFront = {
@@ -230,8 +233,14 @@ class ManageCardModal extends Component {
   }
 }
 
-function mapStateToProps({userID, cards}) {
-  return { userID, cards }
+function mapStateToProps({ appState, manageState }) {
+  return {
+    appState: {
+      userID: appState.userID,
+      cards: appState.cards
+    },
+    manageState: { reveal: manageState.reveal }
+  }
 }
 
-export default connect(mapStateToProps, { setCards })(ManageCardModal);
+export default connect(mapStateToProps, { setCards, setReveal })(ManageCardModal);

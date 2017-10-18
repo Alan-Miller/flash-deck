@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setCards, setUserID, setCardMode, setCollections, setCollectionInfo } from '../../redux/reducer';
+import { setCards, setUserID } from '../../redux/appReducer';
+import { 
+  setCardMode, 
+  setCollections, 
+  setCollectionInfo, 
+  setReveal, 
+  setContent1,
+  setContent2
+} from '../../redux/manageReducer';
 
 import { getUserID } from '../../services/mainService';
 import { getCollections, getAllCollectionInfo } from '../../services/collectionService';
@@ -17,19 +25,16 @@ class Manage extends Component {
     super()
 
     this.state = {
-      content1: ''
-      ,content2: ''
-      ,cardMode: ''
+      cardMode: ''
       ,collectionMode: ''
       ,collectionID: 0
-      ,scrollY: 0
-      ,reveal: false
     }
     this.getInfo = this.getInfo.bind(this);
+    this.editCardContent = this.editCardContent.bind(this);
   }
 
   componentDidMount() {
-    if (this.props.userID) this.getInfo(this.props.userID);
+    if (this.props.appState.userID) this.getInfo(this.props.appState.userID);
     else {
       getUserID()
       .then(userID => {
@@ -54,37 +59,35 @@ class Manage extends Component {
   editCardContent(face, card) {
     this.setState({ cardMode: face, cardID: card.id });
     if (face === 'front') {
-      this.setState({reveal: false, content1: card[face], content2: card.back});
+      this.props.setReveal(false);
+      this.props.setContent1(card[face]);
+      this.props.setContent2(card.back);
     }
     if (face === 'back') {
-      this.setState({reveal: true, content1: card.front, content2: card[face]});
+      this.props.setReveal(true);
+      this.props.setContent1(card.front);
+      this.props.setContent2(card[face]);
     }
   }
 
   render() {
-    const { collections } = this.props;
     const { 
-      reveal 
-      ,scrollY 
-      ,content1 
-      ,content2 
-      ,cardID 
+      cardID 
       ,cardMode 
       ,collectionID 
       ,collectionMode 
     } = this.state;
+    const { scrollY, content1, content2 } = this.props.manageState;
 
     return (
       <section className="Manage" style={scrollY > 100 ? {'paddingTop': '230px'} : null}>
         
         <ManageHeader 
-          collectionID={collectionID}
-          scrollY={scrollY}
-          setParentState={(prop, val) => this.setState({[prop]: val})} />
+          collectionID={collectionID} 
+          setParentState={(prop, val) => this.setState({[prop]: val})}/>
 
         <ManageCardModal
           cardID={cardID}
-          reveal={reveal}
           content1={content1}
           content2={content2}
           cardMode={cardMode}
@@ -95,7 +98,6 @@ class Manage extends Component {
           setParentState={(prop, val) => this.setState({[prop]: val})} />
 
         <ManageCards 
-          scrollY={scrollY} 
           collectionID={collectionID}
           editCardContent={this.editCardContent}
           setParentState={(prop, val) => this.setState({[prop]: val})} />
@@ -105,15 +107,25 @@ class Manage extends Component {
   }
 }
 
-function mapStateToProps({ userID, cards, collections }) {
-  return { userID, cards, collections };
+function mapStateToProps({ appState, manageState }) {
+  return {
+    appState: { userID: appState.userID },
+    manageState: { scrollY: manageState.scrollY }
+  }
 }
 
-let outputActions = {
-  setCards, setUserID, setCardMode, setCollections, setCollectionInfo
+const mapDispatchToProps = {
+  setCards, 
+  setUserID, 
+  setCardMode, 
+  setCollections, 
+  setCollectionInfo, 
+  setReveal,
+  setContent1,
+  setContent2
 }
 
-export default connect(mapStateToProps, outputActions)(Manage);
+export default connect(mapStateToProps, mapDispatchToProps)(Manage);
 
 
 // setTimeout(_ => { frontTextarea.focus(); }, 0); // When you click Make New Card

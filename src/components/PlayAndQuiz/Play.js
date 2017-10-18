@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setCards, setDeck } from '../../redux/reducer';
+import { setCards, setDeck } from '../../redux/appReducer';
 import { getAllCards } from '../../services/cardService';
 import { buildDeck } from '../../utils/deckUtils';
 import { tallyPoints } from '../../utils/playUtils';
@@ -11,7 +11,6 @@ class Play extends Component {
 
   constructor() {
     super()
-
     this.state = {
       currentCardIndex: -1
       ,reveal: true
@@ -27,7 +26,7 @@ class Play extends Component {
     document.addEventListener('keydown', this.handleKeyDown);
     
     const playMode = true;
-    getAllCards(this.props.userID)
+    getAllCards(this.props.appState.userID)
     .then(cards => {
       this.props.setDeck(buildDeck(cards, playMode));
     });
@@ -37,7 +36,7 @@ class Play extends Component {
   }
 
   advance(amt) {
-    const { deck } = this.props;
+    const { deck } = this.props.appState;
     const { currentCardIndex, reveal } = this.state;
     let nextIndex = this.state.currentCardIndex + amt;
 
@@ -79,7 +78,7 @@ class Play extends Component {
 
   render() {
     const { currentCardIndex, points, score, reveal } = this.state;
-    const { deck } = this.props;
+    const { deck } = this.props.appState;
     
     return(
       <section className="Play">
@@ -120,13 +119,17 @@ class Play extends Component {
   }
 }
 
-let outputActions = {
+function mapStateToProps({ appState }) {
+  return {
+    appState: { 
+      userID: appState.userID, 
+      deck: appState.deck
+    }
+  }
+}
+
+let mapDispatchToProps = {
   setCards, setDeck
-}
+};
 
-function mapStateToProps({ userID, deck }) {
-  if (!userID || !deck) return {};
-  return { userID, deck };
-}
-
-export default connect(mapStateToProps, outputActions)(Play);
+export default connect(mapStateToProps, mapDispatchToProps)(Play);

@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setCollectionIDs } from '../../../redux/reducer';
+import { setCollectionIDs, setScrollY, setReveal } from '../../../redux/manageReducer';
 
 class ManageHeader extends Component {
 
   componentDidMount() {
     document.addEventListener('scroll', _ => {
-      this.props.setParentState('scrollY', window.scrollY);
+      // this.props.setParentState('scrollY', window.scrollY);
+      this.props.setScrollY(window.scrollY);
     });
   }
 
   render() {
-    const { scrollY, collections, collectionID, setParentState, setCollectionIDs } = this.props;
+    const { collectionID, setParentState, setCollectionIDs } = this.props;
+    const { collections, scrollY } = this.props.manageState;
     const colSelect = document.getElementById('colSelect');
     const headerStyles = scrollY > 100 ? 
     {
@@ -32,7 +34,7 @@ class ManageHeader extends Component {
 
         <ul className="headerList">
           <li onClick={_ => {
-            setParentState('reveal', false);
+            this.props.setReveal(false);
             setParentState('cardMode', 'newCard');
           }}>
             Make new card
@@ -64,8 +66,15 @@ class ManageHeader extends Component {
   }
 }
 
-function mapStateToProps({collections}) {
-  return {collections};
+function mapStateToProps({ manageState }) {
+  return {
+    manageState: { 
+      collections: manageState.collections, 
+      scrollY: manageState.scrollY 
+    }
+  }
 }
 
-export default connect(mapStateToProps, { setCollectionIDs })(ManageHeader);
+const mapDispatchToProps = { setCollectionIDs, setScrollY, setReveal };
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageHeader);

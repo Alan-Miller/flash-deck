@@ -1,5 +1,7 @@
 import { createStore, combineReducers } from 'redux';
-import reducer from './reducer';
+import appReducer from './appReducer';
+import manageReducer from './manageReducer';
 
-export default createStore(reducer);
-// export default createStore(combineReducers({manage}));
+const reducer = combineReducers({appState: appReducer, manageState: manageReducer});
+const store = createStore(reducer);
+export default store;

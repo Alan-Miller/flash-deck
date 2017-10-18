@@ -1,40 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { 
-  setCollections, setCardIDs, setCollectionIDs, setCollectionInfo 
-} from '../../../redux/reducer';
+  setCardIDs, setCollections, setCollectionIDs, setCollectionInfo 
+} from '../../../redux/manageReducer';
 import { updateCollections } from '../../../services/collectionService';
 
 class ManageCollectionModal extends Component {
 
   constructor() {
     super() 
-
     this.handleSelect = this.handleSelect.bind(this);
     this.isACollectionOnState = this.isACollectionOnState.bind(this);
     this.updateWithSelectedCollections = this.updateWithSelectedCollections.bind(this);
   }
 
   handleSelect(collectionId) {
-    const selectedCollectionIDs = [...this.props.selectedCollectionIDs];
+    const selectedCollectionIDs = [...this.props.manageState.selectedCollectionIDs];
     const index = selectedCollectionIDs.indexOf(collectionId);
     if (this.isACollectionOnState(collectionId)) selectedCollectionIDs.splice(index, 1);
     else selectedCollectionIDs.push(collectionId);
     this.props.setCollectionIDs(selectedCollectionIDs);
   }
   isACollectionOnState(collectionId) { 
-    return this.props.selectedCollectionIDs.indexOf(collectionId) !== -1; 
+    return this.props.manageState.selectedCollectionIDs.indexOf(collectionId) !== -1; 
   }
 
   updateWithSelectedCollections() {
     const { 
-      userID, 
-      selectedCardIDs, 
-      selectedCollectionIDs, 
       setCardIDs, 
       setCollectionIDs, 
       setParentState 
     } = this.props;
+    const { userID } = this.props.appState;
+    const { 
+      selectedCardIDs, 
+      selectedCollectionIDs, 
+    } = this.props.manageState;
     setCardIDs([]);
     setCollectionIDs([]);
     setParentState('collectionMode', '');
@@ -43,7 +44,8 @@ class ManageCollectionModal extends Component {
   }
 
   render() {
-    const { collectionMode, collections } = this.props;
+    const { collectionMode } = this.props;
+    const { collections } = this.props.manageState;
 
     return (
       <div className="collectionsModal" 
@@ -75,15 +77,24 @@ class ManageCollectionModal extends Component {
   }
 }
 
-function mapStateToProps({ userID, collections, selectedCardIDs, selectedCollectionIDs }) {
-  return { userID, collections, selectedCardIDs, selectedCollectionIDs }
+function mapStateToProps({ appState, manageState }) {
+  return {
+    appState: {
+      userID: appState.userID
+    },
+    manageState: {
+      collections: manageState.collections,
+      selectedCardIDs: manageState.selectedCardIDs,
+      selectedCollectionIDs: manageState.selectedCollectionIDs
+    }
+  }
 }
 
-const outputActions = { 
+const mapDispatchToProps = { 
   setCollections, 
   setCardIDs,
   setCollectionIDs, 
   setCollectionInfo 
 };
 
-export default connect(mapStateToProps, outputActions)(ManageCollectionModal);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageCollectionModal);
