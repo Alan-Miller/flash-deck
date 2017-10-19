@@ -47,7 +47,6 @@ class Share extends Component {
   inviteFriend(inviteeId) {
     postFriendshipInvite(this.props.userID, inviteeId)
       .then(pending => {
-        console.log('pending', pending);
         this.setState({ pending });
       });
   }

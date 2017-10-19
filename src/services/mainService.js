@@ -13,7 +13,7 @@ export function getUserID() {
     console.log('mainService, userAuthId', userAuthId)
     return axios.get(`${URL}/user/${userAuthId}`)
     .then(response => {
-      console.log('mainService, axios get .then response', response)
+      console.log('mainService, /user/:userAuthID .then response', response)
       return response.data[0].id;
       // const userID = response.data[0].id;
       // this.props.setUserID(userID);

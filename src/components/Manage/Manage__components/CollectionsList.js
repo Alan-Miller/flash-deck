@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setCollections, setCollectionIDs } from '../../../redux/manageReducer';
+import { 
+  setManageState, 
+  SET_collections, 
+  SET_selectedCollectionIDs 
+} from '../../../redux/manageReducer';
 import { updateCollections } from '../../../services/collectionService';
 
 class CollectionsList extends Component {
@@ -18,7 +22,7 @@ class CollectionsList extends Component {
     const index = selectedCollectionIDs.indexOf(collectionId);
     if (this.isACollectionOnState(collectionId)) selectedCollectionIDs.splice(index, 1);
     else selectedCollectionIDs.push(collectionId);
-    this.props.setCollectionIDs(selectedCollectionIDs);
+    this.props.setManageState(SET_selectedCollectionIDs, selectedCollectionIDs);
   }
   isACollectionOnState(collectionId) { 
     return this.props.selectedCollectionIDs.indexOf(collectionId) !== -1; 
@@ -27,7 +31,7 @@ class CollectionsList extends Component {
   updateWithSelectedCollections() {
     const { userID, selectedCardIDs, selectedCollectionIDs } = this.props;
     updateCollections(userID, selectedCardIDs, selectedCollectionIDs)
-    .then(collections => {this.props.setCollections(collections); console.log('why', this.props.collections)});
+    .then(collections => {this.props.setManageState(SET_collections, collections); });
   }
 
   render() {
@@ -64,4 +68,4 @@ function mapStateToProps({ userID, collections, collectionInfo, selectedCardIDs,
   return { userID, collections, collectionInfo, selectedCardIDs, selectedCollectionIDs }
 }
 
-export default connect(mapStateToProps, { setCollections, setCollectionIDs })(CollectionsList);
+export default connect(mapStateToProps, { setManageState })(CollectionsList);

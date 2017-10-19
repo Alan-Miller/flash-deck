@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { setCards } from '../../../redux/appReducer';
-import { setReveal } from '../../../redux/manageReducer';
+import { setAppState, SET_cards } from '../../../redux/appReducer';
+import { 
+  setManageState, 
+  SET_reveal, 
+  SET_content1, 
+  SET_content2, 
+  SET_cardMode 
+} from '../../../redux/manageReducer';
 
 import { fileReaderUtil } from '../../../utils/fileReaderUtil';
 import { positionCard, styleCard } from '../../../utils/cardStyleUtils';
@@ -20,7 +26,6 @@ class ManageCardModal extends Component {
     this.flip = this.flip.bind(this);
     this.editCard = this.editCard.bind(this);
     this.makeCard = this.makeCard.bind(this);
-    this.handleInput = this.handleInput.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleFileDrop = this.handleFileDrop.bind(this);
     this.makeCollection = this.makeCollection.bind(this);
@@ -34,8 +39,8 @@ class ManageCardModal extends Component {
   }
 
   handleKeyDown(e) {
-    const { content1, content2, cardMode } = this.props;
-    const { reveal } = this.props.manageState;
+    const { reveal, content1, content2, cardMode } = this.props.manageState;
+    const { setManageState } = this.props;
 
     // Tab flips card and focuses cursor
     if (e.which === 9) this.flip();
@@ -52,14 +57,14 @@ class ManageCardModal extends Component {
 
     // Esc leaves modal
     if (e.which === 27) { 
-      this.props.setParentState('cardMode', '');
-      this.props.setParentState('content1', '');
-      this.props.setParentState('content2', '');
+      setManageState(SET_cardMode, '');
+      setManageState(SET_content1, '');
+      setManageState(SET_content2, '');
     }
   }
 
   flip() {
-    this.props.setReveal(!this.props.manageState.reveal);
+    this.props.setManageState(SET_reveal, !this.props.manageState.reveal);
     setTimeout(_ => {
       const textarea = !this.props.manageState.reveal ? 
         document.getElementById('frontTextarea') : 
@@ -69,38 +74,36 @@ class ManageCardModal extends Component {
   }
 
   editCard() {
-    const { cardMode, content1, content2, cardID } = this.props;
-    console.log('id in ManageCardModal', cardID);
     const { userID } = this.props.appState;
+    const { cardID, content1, content2, cardMode } = this.props.manageState;
     const newContent = cardMode === 'front' ? content1 : content2;
+    const { setManageState } = this.props;
+    // if (cardMode === 'back') this.flip();
 
     editCard(cardMode, newContent, cardID, userID)
     .then(cards => {
-      this.props.setParentState('cardMode', '');
-      this.props.setParentState('content1', '');
-      this.props.setParentState('content2', '');
-      this.props.setCards(cards);
+      setManageState(SET_content1, '');
+      setManageState(SET_content2, '');
+      setManageState(SET_cardMode, '');
+      this.props.setAppState(SET_cards, cards);
     })
   }
 
   makeCard() {
-    const { content1, content2 } = this.props;
+    const { userID } = this.props.appState;
+    const { content1, content2 } = this.props.manageState;
+    const { setManageState } = this.props;
+
     if (!content1 || !content2) return;
 
     document.getElementById('frontTextarea').focus();
-
-    saveCard(this.props.appState.userID, content1, content2)
+    saveCard(userID, content1, content2)
       .then(cards => { 
-        // this.props.setParentState('cardMode', ''); // Closes modal after making a card
-        this.props.setParentState('content1', '');
-        this.props.setParentState('content2', '');
-        this.props.setReveal(false);
-        this.props.setCards(cards);
+        setManageState(SET_reveal, false);
+        setManageState(SET_content1, '');
+        setManageState(SET_content2, '');
+        this.props.setAppState(SET_cards, cards);
       });
-  }
-
-  handleInput(e, stateVal) {
-    this.props.setParentState(stateVal, e.target.value);
   }
 
   handleFileDrop(e) {
@@ -112,11 +115,11 @@ class ManageCardModal extends Component {
         const newCards = await readFile();
         await saveCards(this.props.appState.userID, newCards);
         let cards = this.props.appState.cards.concat(newCards);
-        this.props.setCards(cards);
+        this.props.setAppState(SET_cards, cards);
       }
       createNewCards()
       .then(_ => getAllCards(this.props.appState.userID))
-      .then(cards => { this.props.setCards(cards) })
+      .then(cards => { this.props.setAppState(SET_cards, cards) })
     }, 100);
   }
 
@@ -126,22 +129,21 @@ class ManageCardModal extends Component {
 
   makeCollection(e) {
     e.preventDefault();
-    const { content1 } = this.props;
     const { userID } = this.props.appState;
+    const { content1 } = this.props.manageState;
 
     document.getElementById('newCollectionFocus').focus();
 
     saveCollection(userID, content1)
       .then(collections => { 
-        // this.setState({content1: ''}); 
-        this.props.setParentState(content1, '');
+        this.props.setManageState(SET_content1, '');
         this.props.setCollections(collections);
       });
   }
 
   render() {
-    const { content1, content2, cardMode } = this.props;
-    const { reveal } = this.props.manageState;    
+    const { reveal, content1, content2, cardMode } = this.props.manageState;  
+    const { setManageState } = this.props; 
     // const $redsuit = `#C24444`;
     const $blacksuit = `#205050`;
     const styleFront = {
@@ -162,9 +164,9 @@ class ManageCardModal extends Component {
           <div className="x"
             style={{opacity: cardMode ? 1 : 0}}
             onClick={_ => {
-              this.props.setParentState('cardMode', '');
-              this.props.setParentState('content1', '');
-              this.props.setParentState('content2', '');
+              setManageState(SET_cardMode, '');
+              setManageState(SET_content1, '');
+              setManageState(SET_content2, '');
             }}>
             x
           </div>
@@ -180,7 +182,7 @@ class ManageCardModal extends Component {
                   <textarea id="frontTextarea"
                     value={content1}
                     placeholder="Add content to front"
-                    onChange={e => this.handleInput(e, 'content1') }>
+                    onChange={e => this.props.setManageState(SET_content1, e.target.value) }>
                   </textarea>
                 </form>
               </div>
@@ -191,7 +193,7 @@ class ManageCardModal extends Component {
                   <textarea id="backTextarea"
                     value={content2}
                     placeholder="Add content to back"
-                    onChange={e => this.handleInput(e, 'content2') }>
+                    onChange={e => this.props.setManageState(SET_content2, e.target.value) }>
                   </textarea>
                 </form>
               </div>
@@ -239,8 +241,15 @@ function mapStateToProps({ appState, manageState }) {
       userID: appState.userID,
       cards: appState.cards
     },
-    manageState: { reveal: manageState.reveal }
+    manageState: { 
+      reveal: manageState.reveal,
+      cardID: manageState.cardID,
+      content1: manageState.content1,
+      content2: manageState.content2,
+      cardMode: manageState.cardMode
+    }
   }
 }
+const mapDispatchToProps = { setAppState, setManageState };
 
-export default connect(mapStateToProps, { setCards, setReveal })(ManageCardModal);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageCardModal);
