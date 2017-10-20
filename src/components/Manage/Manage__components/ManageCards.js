@@ -14,7 +14,7 @@ import {
 } from '../../../redux/manageReducer';
 import { unapplyCollection } from '../../../services/collectionService';
 
-import { switchBool, deleteCard } from '../../../services/cardService';
+import { switchBool, deleteCard, deleteCards, addToDeck, removeFromDeck } from '../../../services/cardService';
 
 
 class ManageCards extends Component {
@@ -22,13 +22,17 @@ class ManageCards extends Component {
   constructor() {
     super() 
     this.state = { selectedCardIDs: [] };
+    this.selectAll = this.selectAll.bind(this);
     this.cardFilter = this.cardFilter.bind(this);
     this.toggleBool = this.toggleBool.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.isACardOnState = this.isACardOnState.bind(this);
     this.deleteThisCard = this.deleteThisCard.bind(this);
     this.editCardContent = this.editCardContent.bind(this);
+    this.deleteTheseCards = this.deleteTheseCards.bind(this);
+    this.addTheseCardsToDeck = this.addTheseCardsToDeck.bind(this);
     this.unapplyThisCollection = this.unapplyThisCollection.bind(this);
+    this.removeTheseCardsFromDeck = this.removeTheseCardsFromDeck.bind(this);
   }
 
   handleSelect(cardID) {
@@ -37,6 +41,15 @@ class ManageCards extends Component {
     if (this.isACardOnState(cardID)) selectedCardIDs.splice(index, 1);
     else selectedCardIDs.push(cardID);
     this.props.setManageState(SET_selectedCardIDs, selectedCardIDs);
+  }
+
+  selectAll() {
+    let refIDs = [], newSelection = [];
+    for (var id in this.refs) refIDs.push(+id);
+    if (refIDs.some(id => !this.isACardOnState(id))) {
+      refIDs.forEach(id => { newSelection.push(id); });
+    }
+    this.props.setManageState(SET_selectedCardIDs, newSelection);
   }
 
   toggleBool(cardID, colName) {
@@ -65,8 +78,23 @@ class ManageCards extends Component {
     }
   }
 
-  deleteThisCard(userID, cardID) {
-    deleteCard(userID, cardID)
+  deleteThisCard(cardID, userID) {
+    deleteCard(cardID, userID)
+      .then(cards => { this.props.setAppState(SET_cards, cards); });
+  }
+
+  deleteTheseCards() {
+    deleteCards(this.props.manageState.selectedCardIDs, this.props.appState.userID)
+      .then(cards => { this.props.setAppState(SET_cards, cards); });
+  }
+
+  addTheseCardsToDeck() {
+    addToDeck(this.props.manageState.selectedCardIDs, this.props.appState.userID)
+      .then(cards => { this.props.setAppState(SET_cards, cards); });
+  }
+
+  removeTheseCardsFromDeck() {
+    removeFromDeck(this.props.manageState.selectedCardIDs, this.props.appState.userID)
       .then(cards => { this.props.setAppState(SET_cards, cards); });
   }
 
@@ -89,14 +117,13 @@ class ManageCards extends Component {
     const { setManageState } = this.props;
     const { userID, cards } = this.props.appState;
     const { collectionInfo, scrollY } = this.props.manageState;
-    const headerStyles = scrollY > 100 ? 
+    const titleStyles = scrollY > 100 ? 
     {
       'position': 'fixed',
       'left': '50%',
       'transform': 'translate(-50%)',
       'top': '80px',
       'zIndex': '2',
-      'height': '50px',
       'width': '80vw'
     } 
     : {};
@@ -106,14 +133,20 @@ class ManageCards extends Component {
 
         <div className="Manage__card">
 
-          <div className="columnTitles" style={headerStyles}>
-            <h2 className="cardTitle L">L</h2>
+          <div className="columnTitles" style={titleStyles}>
+            <h2 className="cardTitle L" onClick={this.selectAll}>L</h2>
             <h2 className="cardTitle">Card front</h2>
             <h2 className="cardTitle">Card back</h2>
             <div className="boolTitle">Stop showing</div>
-            <div className="boolTitle">Show less</div>
+            <div className="boolTitle">Added to deck</div>
             <div className="deleteTitle">Delete</div>
+            <div className="batchActions">
+              <span onClick={this.addTheseCardsToDeck}>Add selected to deck</span>
+              <span onClick={this.removeTheseCardsFromDeck}>Remove selected from deck</span>
+              <span onClick={this.deleteTheseCards}>Delete selected</span>
+            </div>
           </div>
+
           
           <ul> 
             {cards && cards.filter(this.cardFilter).map((card, i) => (
@@ -122,7 +155,7 @@ class ManageCards extends Component {
                 <div id="select">
                   <input id="select"
                     type="checkbox" 
-                    ref={`card${card.id}`}
+                    ref={card.id}
                     checked={this.isACardOnState(card.id)}
                     onChange={ _ => this.handleSelect(card.id) } />
                   <label htmlFor="select"><span className="checkboxCircle"></span></label>
@@ -157,8 +190,8 @@ class ManageCards extends Component {
                 <div className="showLess bool">
                   <input id="showLess"
                     type="checkbox"
-                    checked={card.show_less} 
-                    onChange={() => this.toggleBool(card.id, 'show_less')} />
+                    checked={card.current_deck} 
+                    onChange={() => this.toggleBool(card.id, 'current_deck')} />
                   <label htmlFor="showLess"><span></span></label>
                 </div>
 
