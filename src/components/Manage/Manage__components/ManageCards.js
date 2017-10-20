@@ -35,6 +35,10 @@ class ManageCards extends Component {
     this.removeTheseCardsFromDeck = this.removeTheseCardsFromDeck.bind(this);
   }
 
+  componentWillMount() {
+    this.props.setManageState(SET_selectedCardIDs, []);
+  }
+
   handleSelect(cardID) {
     const selectedCardIDs = [...this.props.manageState.selectedCardIDs];
     const index = selectedCardIDs.indexOf(cardID);
@@ -210,7 +214,7 @@ class ManageCards extends Component {
                       <span onClick={_ => {
                         // clicking collection tag sets current collection ID and deselects all cards
                         setManageState(SET_collectionID, info.id);
-                        this.props.setManageState(SET_selectedCardIDs, []);
+                        setManageState(SET_selectedCardIDs, []);
                       }}>{info.name}</span>
                       <span className="unapply" 
                         onClick={() => {this.unapplyThisCollection(info.info_id)}}>
