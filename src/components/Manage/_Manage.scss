@@ -182,8 +182,12 @@ $radioSize: 1.4rem;
       }
       .L {
         transform: rotateZ(45deg) rotateY(180deg);
+        margin: 10px;
         font-family: 'Montserrat', sans-serif !important;
         cursor: pointer;
+        @include size(25px, 25px);
+        border-radius: 50%;
+        border: thin solid white;
       }
     }
     .batchActions {
