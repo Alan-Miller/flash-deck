@@ -43,6 +43,24 @@ $radioSize: 1.4rem;
     z-index: 4;
     & > li { padding: 0 0 0 40px; }
   }
+
+  .collectionSelect {
+    select {
+      @include prefix(appearance, none);
+      background-color: rgba(255, 255, 255, 0.0);
+      padding: 5px 10px;
+      border-radius: 0;
+      border: 2px dotted #777;
+      // border: none;
+      // border-left: 2px solid #777;
+      // border-right: 2px solid #777;
+      color: white;
+      font-size: 1rem;
+    }
+    option {
+      background-color: pink;
+    }
+  }
 }
 
 .editModal {
@@ -154,7 +172,7 @@ $radioSize: 1.4rem;
     .columnTitles {
       display: grid;
       grid-template-columns: 4fr 35fr 35fr 7fr 7fr 8fr;
-      grid-row: 1fr;
+      grid-row: 1fr 1fr;
       background-color: $blacksuit;
       // transition: top height .2s;
       .cardTitle, .boolTitle, .deleteTitle { 
@@ -165,6 +183,17 @@ $radioSize: 1.4rem;
       .L {
         transform: rotateZ(45deg) rotateY(180deg);
         font-family: 'Montserrat', sans-serif !important;
+      }
+    }
+    .batchActions {
+      @include flexBox($justify:center);
+      // background-color: pink;
+      height: 50px;
+      grid-column: 1 / span 6;
+      // width: 80vw;
+      span {
+        margin: 0 20px;
+        cursor: pointer;
       }
     }
     .cardInfo {

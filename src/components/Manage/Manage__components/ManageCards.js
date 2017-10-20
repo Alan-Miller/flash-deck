@@ -89,14 +89,13 @@ class ManageCards extends Component {
     const { setManageState } = this.props;
     const { userID, cards } = this.props.appState;
     const { collectionInfo, scrollY } = this.props.manageState;
-    const headerStyles = scrollY > 100 ? 
+    const titleStyles = scrollY > 100 ? 
     {
       'position': 'fixed',
       'left': '50%',
       'transform': 'translate(-50%)',
       'top': '80px',
       'zIndex': '2',
-      'height': '50px',
       'width': '80vw'
     } 
     : {};
@@ -106,14 +105,19 @@ class ManageCards extends Component {
 
         <div className="Manage__card">
 
-          <div className="columnTitles" style={headerStyles}>
+          <div className="columnTitles" style={titleStyles}>
             <h2 className="cardTitle L">L</h2>
             <h2 className="cardTitle">Card front</h2>
             <h2 className="cardTitle">Card back</h2>
             <div className="boolTitle">Stop showing</div>
-            <div className="boolTitle">Show less</div>
+            <div className="boolTitle">Added to deck</div>
             <div className="deleteTitle">Delete</div>
+            <div className="batchActions">
+              <span>Add selected to deck</span>
+              <span>Delete selected</span>
+            </div>
           </div>
+
           
           <ul> 
             {cards && cards.filter(this.cardFilter).map((card, i) => (
@@ -157,8 +161,8 @@ class ManageCards extends Component {
                 <div className="showLess bool">
                   <input id="showLess"
                     type="checkbox"
-                    checked={card.show_less} 
-                    onChange={() => this.toggleBool(card.id, 'show_less')} />
+                    checked={card.current_deck} 
+                    onChange={() => this.toggleBool(card.id, 'current_deck')} />
                   <label htmlFor="showLess"><span></span></label>
                 </div>
 

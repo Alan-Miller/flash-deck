@@ -140,7 +140,7 @@ module.exports = function(app) {
     });
   });
 
-  app.put('/api/card/:cardID/show_less', (req, res) => {
+  app.put('/api/card/:cardID/current_deck', (req, res) => {
     app.get('db').put_showLess([req.params.cardID, req.body.userID])
     .then(response => {
         res.status(200).send(response);
