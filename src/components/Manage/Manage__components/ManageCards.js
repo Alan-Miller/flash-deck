@@ -85,7 +85,10 @@ class ManageCards extends Component {
 
   deleteTheseCards() {
     deleteCards(this.props.manageState.selectedCardIDs, this.props.appState.userID)
-      .then(cards => { this.props.setAppState(SET_cards, cards); });
+      .then(cards => { 
+        this.props.setAppState(SET_cards, cards); 
+        this.props.setManageState(SET_selectedCardIDs, []);
+      });
   }
 
   addTheseCardsToDeck() {
@@ -187,12 +190,12 @@ class ManageCards extends Component {
                   <label htmlFor="stopShowing"><span></span></label>
                 </div>
 
-                <div className="showLess bool">
-                  <input id="showLess"
+                <div className="currentDeck bool">
+                  <input id="currentDeck"
                     type="checkbox"
                     checked={card.current_deck} 
                     onChange={() => this.toggleBool(card.id, 'current_deck')} />
-                  <label htmlFor="showLess"><span></span></label>
+                  <label htmlFor="currentDeck"><span></span></label>
                 </div>
 
                 <div 
@@ -201,9 +204,14 @@ class ManageCards extends Component {
                   X
                 </div>
                 <div className="collections">
-                  { collectionInfo && collectionInfo.filter(info => info.card_id === card.id).map((info, i) => (
+                  { // Collection tags
+                    collectionInfo && collectionInfo.filter(info => info.card_id === card.id).map((info, i) => (
                     <div className="collection" key={i} >
-                      <span onClick={_ => setManageState(SET_collectionID, info.id)}>{info.name}</span>
+                      <span onClick={_ => {
+                        // clicking collection tag sets current collection ID and deselects all cards
+                        setManageState(SET_collectionID, info.id);
+                        this.props.setManageState(SET_selectedCardIDs, []);
+                      }}>{info.name}</span>
                       <span className="unapply" 
                         onClick={() => {this.unapplyThisCollection(info.info_id)}}>
                         x
