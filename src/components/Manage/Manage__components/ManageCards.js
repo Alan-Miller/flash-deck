@@ -35,7 +35,7 @@ class ManageCards extends Component {
     this.removeTheseCardsFromDeck = this.removeTheseCardsFromDeck.bind(this);
   }
 
-  componentWillMount() {
+  componentWillUnmount() {
     this.props.setManageState(SET_selectedCardIDs, []);
   }
 
