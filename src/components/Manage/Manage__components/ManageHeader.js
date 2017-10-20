@@ -22,7 +22,7 @@ class ManageHeader extends Component {
   render() {
     const { setManageState } = this.props;
     const { collections, scrollY, collectionID } = this.props.manageState;
-    const colSelect = document.getElementById('colSelect');
+    const collSelect = document.getElementById('collSelect');
     const headerStyles = scrollY > 100 ? 
     {
       'position': 'fixed',
@@ -59,7 +59,7 @@ class ManageHeader extends Component {
         </div>
         <div className="collectionSelect">
           Filter cards by collection <br/>
-          <select id="colSelect" onChange={_ => {setManageState(SET_collectionID, +colSelect.value)}}>
+          <select id="collSelect" onChange={_ => {setManageState(SET_collectionID, +collSelect.value)}}>
             <option defaultValue value="0">ALL COLLECTIONS</option>
             {collections.map((collection, i) => (
               <option key={i} value={collection.id} selected={collection.id === collectionID}>
