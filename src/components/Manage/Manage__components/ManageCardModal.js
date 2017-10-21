@@ -42,10 +42,10 @@ class ManageCardModal extends Component {
     const { reveal, content1, content2, cardMode } = this.props.manageState;
     const { setManageState } = this.props;
 
-    // Tab flips card and focuses cursor
+    // 'Tab' flips card and focuses cursor
     if (e.which === 9) this.flip();
 
-    // Return (from back of card) saves card
+    // 'Return' (from back of card) saves card
     if (e.which === 13) {
       e.preventDefault();
       if (content1.length && content2.length) {
@@ -55,7 +55,7 @@ class ManageCardModal extends Component {
       else if ((content1 && !reveal) || (content2 && reveal)) this.flip();
     }
 
-    // Esc leaves modal
+    // 'Esc' leaves modal
     if (e.which === 27) { 
       setManageState(SET_cardMode, '');
       setManageState(SET_content1, '');
@@ -208,7 +208,7 @@ class ManageCardModal extends Component {
           </div>
           <div className="saveButtonContainer">
             <span>Click to save, or press 'Return'</span>
-            <div onClick={this.makeCard}>Save</div>
+            <div onClick={cardMode === 'newCard' ? this.makeCard : this.editCard}>Save</div>
           </div>
 
           <div className="editCollections"
