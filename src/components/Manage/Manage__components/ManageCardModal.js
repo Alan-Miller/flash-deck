@@ -124,6 +124,7 @@ class ManageCardModal extends Component {
   }
 
   handleDragOver(e) {
+    console.log('e', e);
     e.preventDefault();
   }
 

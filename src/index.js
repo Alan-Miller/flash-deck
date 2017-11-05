@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { HashRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import { unregister } from './registerServiceWorker';
+// import { unregister } from './registerServiceWorker';
 
 import './styles/main.css';
 import App from './App';
@@ -16,4 +16,4 @@ ReactDOM.render(
     </Router>
   </Provider>
   , document.getElementById('root'));
-unregister();
+// unregister();
