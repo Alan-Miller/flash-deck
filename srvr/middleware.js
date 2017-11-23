@@ -1,4 +1,5 @@
 const cors = require('cors')
+    , express = require('express')
     , bodyParser = require('body-parser')
 
 module.exports = app => {
