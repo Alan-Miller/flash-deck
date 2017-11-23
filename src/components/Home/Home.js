@@ -11,6 +11,7 @@ class Home extends Component {
     if (!this.props.appState.userID) {
       getUserID()
       .then(userID => {
+        console.log('THE USER ID ', userID);
         this.props.setAppState(SET_userID, userID);
       })
     }

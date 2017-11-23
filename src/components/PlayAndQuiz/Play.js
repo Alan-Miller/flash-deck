@@ -31,6 +31,7 @@ class Play extends Component {
       this.props.setAppState(SET_deck, buildDeck(cards, playMode));
     });
   }
+  
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
   }

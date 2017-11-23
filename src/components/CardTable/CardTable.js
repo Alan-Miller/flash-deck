@@ -11,7 +11,7 @@ class CardTable extends Component {
       <div className="table">
         <div className="card-space">
           
-          <div className="place-cards-here" onClick={ _ => advance(-1) }></div>
+          <div className="place-cards-here" onClick={ () => advance(-1) }></div>
 
           <div className="center-of-table">
             <div className="upper bar">
@@ -19,7 +19,7 @@ class CardTable extends Component {
                 buttonText[0] && // If buttonText[0] is not empty string, display button text
                 <button
                   disabled={!reveal && 'disabled'}
-                  onClick={ _ => { advance(1); playMode && this.updateScore(true); }} >
+                  onClick={ () => { advance(1); playMode && this.updateScore(true); }} >
                     { buttonText[0] }
                 </button>
               }
@@ -29,14 +29,14 @@ class CardTable extends Component {
                 buttonText[1] && // If buttonText[1] is not empty string, display button text
                 <button 
                   disabled={!reveal && 'disabled'}
-                  onClick={ _ => { advance(1); playMode && this.updateScore(false); }} >
+                  onClick={ () => { advance(1); playMode && this.updateScore(false); }} >
                     { buttonText[1] }
                 </button>
               }
             </div>
           </div>
 
-          <div className="place-cards-here" onClick={ _ => advance(1) }></div>
+          <div className="place-cards-here" onClick={ () => advance(1) }></div>
 
           { // Display cards
             deck && deck.map((card, i) => (

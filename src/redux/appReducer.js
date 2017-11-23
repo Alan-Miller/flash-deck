@@ -1,7 +1,7 @@
 // initialState
 const appState = {
-  userID: 7, // hard-coded for no-auth dev testing
-  // userID: 0, // 0 (falsy) for production
+  // userID: 7, // hard-coded for no-auth dev testing
+  userID: 0, // 0 (falsy) for production
   cards: [],
   deck: [],
 }

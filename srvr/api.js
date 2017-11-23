@@ -2,6 +2,7 @@ module.exports = function(app) {
 
   //————————————————————————————————————————————>> User
   app.get('/api/user/:userAuthID', (req, res) => {
+    // console.log('user AuthID', req.params.userAuthID);
     app.get('db').get_userID([req.params.userAuthID])
     .then(response => { res.status(200).send(response); })
     .catch(err => { console.log(err) });

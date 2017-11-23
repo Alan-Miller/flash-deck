@@ -14,7 +14,7 @@ export function fileReaderUtil(e) {
   var reader = new FileReader();
   reader.readAsText(file);
   
-  return reader.onload = _ => {
+  return reader.onload = () => {
     return reader.result.split('\r').map((card, index) => {
       return card.split(/,(.+)/).filter(side => side);
     }).filter(card => card.length === 2);
