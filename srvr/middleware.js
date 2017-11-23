@@ -8,5 +8,5 @@ module.exports = app => {
     console.log(`endpoint hit: ${req.method} ${req.url}`, '\n\n'); 
     next(); 
   }); 
-  // app.use(express.static( `${__dirname}/../build` )); // Turn off for dev testing
+  app.use(express.static( `${__dirname}/../build` )); // Turn off for dev testing
 }
