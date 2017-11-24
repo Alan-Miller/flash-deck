@@ -1,5 +1,3 @@
-// import { log } from 'util';
-
 /*———————————————————————————————————————————————————————————————*
   Auth requirements
 /*———————————————————————————————————————————————————————————————*/
@@ -12,6 +10,8 @@ const session = require('express-session')
   Auth exports
 /*———————————————————————————————————————————————————————————————*/
 module.exports = function(app) {
+
+    console.log('ENV', process.env);
   
   app.use(session({
       secret: process.env.SESSION_SECRET,
