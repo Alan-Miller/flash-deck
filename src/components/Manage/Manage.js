@@ -28,6 +28,7 @@ class Manage extends Component {
     else {
       getUserID()
       .then(userID => {
+        console.log('userID', userID);
         this.props.setAppState(SET_userID, userID);
         this.getInfo(userID);
       })

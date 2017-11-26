@@ -4,7 +4,7 @@ const URL = process.env.REACT_APP_URL;
 
 export function getAllCards(userID) {
   return axios.get(`${URL}/cards/${userID}`)
-    .then(response => response.data);
+    .then(response => {console.log('response', response); response.data});
 }
 
 export function getDeck(userID) {
