@@ -11,7 +11,7 @@ const session = require('express-session')
 /*———————————————————————————————————————————————————————————————*/
 module.exports = function(app) {
 
-    console.log('ENV', process.env);
+    // console.log('ENV', process.env);
   
   app.use(session({
       secret: process.env.SESSION_SECRET,
