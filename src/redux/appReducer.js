@@ -13,6 +13,7 @@ export const SET_deck = 'SET_deck';
 
 // Action creator
 export function setAppState(type, payload) {
+  console.log('type', type, 'payload', payload);
   return { type, payload }
 }
 
