@@ -18,4 +18,4 @@ auth(app);
 
 api(app);
 
-app.listen(port, _ => { console.log(`Listening on port ${port}.`); });
+app.listen(port, 'localhost', () => { console.log(`Listening on port ${port}.`); });
