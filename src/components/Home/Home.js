@@ -23,7 +23,6 @@ class Home extends Component {
         <ul className="Home_ul">
           <h1>Flash Deck</h1>
           <Link to="/play"><li>Play</li></Link>
-          <Link to="/quiz"><li>Quiz</li></Link>
           <Link to="/manage"><li>Manage</li></Link>
           
           { this.props.appState.userID ? 
